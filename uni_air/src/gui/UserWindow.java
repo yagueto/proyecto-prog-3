@@ -1,12 +1,11 @@
 package gui;
 
-import javax.swing.JFrame;
 
-public class User extends AbstractWindow {
+public class UserWindow extends AbstractWindow {
 	private static final long serialVersionUID = 7345092960587394070L;
 
-	public User(JFrame frame) {
-		super(frame);
+	public UserWindow() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 

@@ -17,10 +17,10 @@ public abstract class AbstractWindow extends JFrame{
 	 * Configura las propiedades al crear la ventana.
 	 * @param frame	El JFrame a configurar
 	 */
-	public AbstractWindow (JFrame frame) {
-		frame.setLocationRelativeTo(null);
-		frame.setSize(640, 480);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public AbstractWindow () {
+		this.setLocationRelativeTo(null);
+		this.setSize(640, 480);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// TODO: podría ser interesante añadir un icono a la ventana
 		
