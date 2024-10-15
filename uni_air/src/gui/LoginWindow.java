@@ -1,36 +1,38 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class Login extends JFrame {
-
+public class LoginWindow extends AbstractWindow {
 	private static final long serialVersionUID = -1392377673421616906L;
-	
-	
 
 	//Declaración de los componentes de la ventana
-	private JButton btnIniciarSesion, btnCerrarSesion;
-	private JPanel pNorte, pSur, pEste, pOeste, pCentro;
-	private JLabel lblTitulo, lblNombreUsuario, lblContraseniaUsuario;
-	private JTextField txtNombreUsuario;
-	private JPasswordField txtContraseniaUsuario;
+		private JButton btnIniciarSesion, btnCerrarSesion;
+		private JPanel pNorte, pSur, pEste, pOeste, pCentro;
+		private JLabel lblTitulo, lblNombreUsuario, lblContraseniaUsuario;
+		private JTextField txtNombreUsuario;
+		
+
 	
-	public Login() {
-		//La primera sentencia siempre es super();
+	public LoginWindow() {
 		super();
+		// TODO Auto-generated constructor stub
+	
+	
+	
+
+		
+	
+		//La primera sentencia siempre es super();
 		//Modificar el tamaño y posición inicial de la ventana
-		Config.windowConfig(null);;
 		
 		//Instanciamos los paneles
 		pNorte = new JPanel();
@@ -59,7 +61,7 @@ public class Login extends JFrame {
 		lblContraseniaUsuario = new JLabel("Introduce tu contraseña: ");
 		
 		txtNombreUsuario = new JTextField(10);
-		txtContraseniaUsuario = new JPasswordField(10);
+		JPasswordField txtContraseniaUsuario = new JPasswordField(10);
 		
 		//Añadimos los componentes a la ventana
 		pSur.add(btnIniciarSesion);
@@ -107,21 +109,22 @@ public class Login extends JFrame {
 					vaciarCampos();
 				}
 			}
+
+			public void vaciarCampos() {
+				txtNombreUsuario.setText("");
+				txtContraseniaUsuario.setText("");
+			}
 		});
 		
 		
 		//La última sentencia siempre setVisible(true);
 		setVisible(true);
-	}
-	
-	//Para no repetir código a la hora de vaciar los campos, vamos a crear un método que se encargue de ello
-	public void vaciarCampos() {
-		txtNombreUsuario.setText("");
-		txtContraseniaUsuario.setText("");
+		
+		//Para no repetir código a la hora de vaciar los campos, vamos a crear un método que se encargue de ello
+		
 	}
 	
 	
-
 
 
 }
