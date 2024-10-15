@@ -2,13 +2,14 @@ package main;
 
 import javax.swing.JFrame;
 
+import gui.UserWindow;
+
 public class Main {
 	
-	JFrame ventanaActual;
+	public static JFrame ventanaActual;
 
 	public static void main(String[] args) {
-		System.out.println("Hello World");
-
+		ventanaActual = new UserWindow();
 	}
 
 }

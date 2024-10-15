@@ -23,6 +23,5 @@ public abstract class AbstractWindow extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// TODO: podría ser interesante añadir un icono a la ventana
-		
 	}
 }
