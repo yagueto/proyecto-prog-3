@@ -6,7 +6,12 @@ import javax.swing.JTable;
 
 public class UserWindow extends AbstractWindow {
 	private static final long serialVersionUID = 7345092960587394070L;
+<<<<<<< HEAD
 	
+=======
+
+
+>>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
 	public UserWindow() {
 		super();
 		JTabbedPane tabPane = new JTabbedPane();
