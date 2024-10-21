@@ -3,6 +3,7 @@ package main;
 import javax.swing.JFrame;
 
 import gui.EmployeeWindow;
+import gui.LoginWindow;
 
 public class Main {
 	
@@ -10,7 +11,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Hello World");
-		EmployeeWindow v = new EmployeeWindow();
+		//EmployeeWindow v = new EmployeeWindow();
+		LoginWindow l =new LoginWindow();
 	}
 
 }

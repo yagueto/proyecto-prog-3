@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -41,7 +43,6 @@ public class LoginWindow extends AbstractWindow {
 		pOeste = new JPanel();
 		pEste = new JPanel();
 		//Modificamos el Layout del panel centro
-		pCentro.setLayout(new BorderLayout(0, 0));
 		
 		
 		
@@ -56,7 +57,7 @@ public class LoginWindow extends AbstractWindow {
 		btnIniciarSesion = new JButton("INICIAR SESIÓN");
 		btnCerrarSesion = new JButton("CERRAR SESIÓN");
 		
-		lblTitulo = new JLabel("¿Bienvenido!");
+		lblTitulo = new JLabel("¡Bienvenido!");
 		lblNombreUsuario = new JLabel("Introduce tu nombre: ");
 		lblContraseniaUsuario = new JLabel("Introduce tu contraseña: ");
 		
@@ -94,7 +95,7 @@ public class LoginWindow extends AbstractWindow {
 				// y que en el JTextField contraseniaUsuario ha escrito Newton
 				String usuario = txtNombreUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
 				String contrasenia = txtContraseniaUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
-				if(usuario.equals("USUARIO 1") && contrasenia.equals("USUARIO1")) {
+				if(usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
 					//System.out.println("Has iniciado sesión correctamente");
 					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente");
 					//Vaciamos los campos (cuadros de texto)
@@ -120,9 +121,12 @@ public class LoginWindow extends AbstractWindow {
 		//La última sentencia siempre setVisible(true);
 		setVisible(true);
 		
-		//Para no repetir código a la hora de vaciar los campos, vamos a crear un método que se encargue de ello
 		
 	}
+
+
+
+	
 	
 	
 
