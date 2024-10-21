@@ -2,23 +2,17 @@ package main;
 
 import javax.swing.JFrame;
 
-<<<<<<< HEAD
-import gui.UserWindow;
-=======
 import gui.EmployeeWindow;
->>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
+import gui.LoginWindow;
 
 public class Main {
 	
-	public static JFrame ventanaActual;
+	JFrame ventanaActual;
 
 	public static void main(String[] args) {
-<<<<<<< HEAD
-		ventanaActual = new UserWindow();
-=======
 		System.out.println("Hello World");
-		EmployeeWindow v = new EmployeeWindow();
->>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
+		//EmployeeWindow v = new EmployeeWindow();
+		LoginWindow l = new LoginWindow();
 	}
 
 }
