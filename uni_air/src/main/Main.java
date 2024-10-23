@@ -1,18 +1,32 @@
 package main;
 
-import javax.swing.JFrame;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import gui.EmployeeWindow;
-import gui.LoginWindow;
+import javax.swing.SwingUtilities;
+
+import gui.AbstractWindow;
+import gui.UserWindow;
 
 public class Main {
-	
-	JFrame ventanaActual;
+
+	public static AbstractWindow w;
+	public static List<Vuelo> vuelos = List.of(
+			new Vuelo("IB1234", "LCG", "BIO", LocalDateTime.of(2024, 1, 1, 13, 0), LocalDateTime.of(2024, 1, 1, 13, 0),
+					20, 1),
+			new Vuelo("IB1234", "LCG", "BIO", LocalDateTime.of(2024, 1, 1, 13, 0), LocalDateTime.of(2024, 1, 1, 13, 0),
+					20, 1),
+			new Vuelo("IB1234", "LCG", "BIO", LocalDateTime.of(2024, 1, 1, 13, 0), LocalDateTime.of(2024, 1, 1, 13, 0),
+					20, 1),
+			new Vuelo("IB1234", "LCG", "BIO", LocalDateTime.of(2024, 1, 1, 13, 0), LocalDateTime.of(2024, 1, 1, 13, 0),
+					20, 1)
+
+	);
 
 	public static void main(String[] args) {
-		System.out.println("Hello World");
-		//EmployeeWindow v = new EmployeeWindow();
-		LoginWindow l = new LoginWindow();
+		System.out.println("Lanzando...");
+		// EmployeeWindow v = new EmployeeWindow();
+		SwingUtilities.invokeLater(() -> new UserWindow());
 	}
 
 }
