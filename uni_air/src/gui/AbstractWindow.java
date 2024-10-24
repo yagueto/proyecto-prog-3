@@ -19,6 +19,7 @@ public abstract class AbstractWindow extends JFrame{
 	 * Configura las propiedades al crear la ventana.
 	 * @param frame:	El JFrame a configurar
 	 */
+	
 	public AbstractWindow () {
 		this.setLocationRelativeTo(null);
 		this.setSize(640, 480);
@@ -37,4 +38,6 @@ public abstract class AbstractWindow extends JFrame{
 		Border border = BorderFactory.createTitledBorder(title);
 		return border;
 	}
+	
+	
 }

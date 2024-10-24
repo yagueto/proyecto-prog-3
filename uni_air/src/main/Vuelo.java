@@ -8,16 +8,18 @@ public class Vuelo {
 	private String destino;
 	private LocalDateTime fechaDespegue;
 	private LocalDateTime fechaAterrizaje;
+	private int pasajeros;
 	private int maxPasajeros;
 	private double precio;
 
 	public Vuelo(String codigo, String origen, String destino, LocalDateTime fechaDespegue,
-			LocalDateTime fechaAterrizaje, int maxPasajeros, double precio) {
+			LocalDateTime fechaAterrizaje, int pasajeros, int maxPasajeros, double precio) {
 		this.codigo = codigo;
 		this.origen = origen;
 		this.destino = destino;
 		this.fechaDespegue = fechaDespegue;
 		this.fechaAterrizaje = fechaAterrizaje;
+		this.pasajeros = pasajeros;
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
 	}
@@ -76,5 +78,13 @@ public class Vuelo {
 
 	public void setPrecio(double precio) {
 		this.precio = precio;
+	}
+
+	public int getPasajeros() {
+		return pasajeros;
+	}
+
+	public void setPasajeros(int pasajeros) {
+		this.pasajeros = pasajeros;
 	}
 }

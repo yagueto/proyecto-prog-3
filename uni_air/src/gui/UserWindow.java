@@ -13,6 +13,7 @@ import javax.swing.table.TableColumn;
 
 import main.Main;
 import main.ModeloVuelo;
+import main.ModeloVuelo.TipoVentana;
 
 public class UserWindow extends AbstractWindow {
 	private static final long serialVersionUID = 7345092960587394070L;
@@ -73,7 +74,7 @@ class FlightSearchPanel extends JPanel {
 		this.add(filtersPanel, BorderLayout.NORTH);
 
 		// JTable para mostrar resultados
-		ModeloVuelo modeloVuelo = new ModeloVuelo(Main.vuelos);
+		ModeloVuelo modeloVuelo = new ModeloVuelo(Main.vuelos, TipoVentana.USER);
 		JTable tabla = new JTable(modeloVuelo);
 		
 		TableColumn c = tabla.getColumnModel().getColumn(5);

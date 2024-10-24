@@ -16,12 +16,19 @@ public class ModeloVuelo extends AbstractTableModel {
 
 	private static final long serialVersionUID = 7420003808520688709L;
 	
+	public enum TipoVentana{
+		ADMIN, EMPLOYEE, LOGIN, USER
+	}
+	private TipoVentana tipoVentana;
+	
 	private List<Vuelo> vuelos;
+
 
 	// NOTE: 	¿podría ser útil pasar un parámetro para mostrar 
 	//			datos diferentes en función de la tabla a mostrar?
-	public ModeloVuelo(List<Vuelo> vuelos) {
+	public ModeloVuelo(List<Vuelo> vuelos, TipoVentana tipoVentana) {
 		this.vuelos = vuelos;
+		this.tipoVentana = tipoVentana;
 	}
 
 	@Override
@@ -38,7 +45,17 @@ public class ModeloVuelo extends AbstractTableModel {
 		case 4:
 			return "Llegada";
 		case 5:
-			return "";
+			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
+				return "Pasajeros";
+			} else {
+				return "";
+			}
+		case 6:
+			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
+				return "";
+			} else {
+				return null;
+			}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + column);
 		}
@@ -48,7 +65,7 @@ public class ModeloVuelo extends AbstractTableModel {
 	public Class<?> getColumnClass(int columnIndex) {
 		if (columnIndex == 3 || columnIndex == 4) { 
 			return LocalDate.class;
-		} else if (columnIndex == 5) {
+		} else if (columnIndex == 5 || columnIndex == 6 && this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
 			return CellButtonRendererEditor.class;
 		} else {
 			return String.class;
@@ -62,7 +79,11 @@ public class ModeloVuelo extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 6;
+		if (this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
+				return 7;
+			} else {
+				return 6;
+			}
 	}
 
 	@Override
@@ -80,7 +101,17 @@ public class ModeloVuelo extends AbstractTableModel {
 		case 4:
 			return v.getFechaAterrizaje();
 		case 5:
-			return "→";
+			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
+				return v.getPasajeros();
+			} else {
+				return "→";
+			}
+		case 6:
+			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
+				return "→";
+			} else {
+				return null;
+			}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}

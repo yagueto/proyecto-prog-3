@@ -1,11 +1,17 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import main.Main;
+import main.ModeloVuelo;
+import main.ModeloVuelo.TipoVentana;
 import main.Vuelo;
 
 public class EmployeeWindow extends AbstractWindow {
@@ -18,18 +24,19 @@ public class EmployeeWindow extends AbstractWindow {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(createBorder("Empleado"));
-		this.add(panel);
+		this.add(panel, BorderLayout.NORTH);
 		
-//		List<Vuelo> vuelos = List.of(
-//				new Vuelo("A123", 2.0, 45),
-//				new Vuelo("B234", 5.0, 150),
-//				new Vuelo("C345", 6.0, 89)
-//
-//		);
+		ModeloVuelo vuelos = new ModeloVuelo(Main.vuelos, TipoVentana.EMPLOYEE);
+		JTable tabla = new JTable(vuelos);
 		
-		JTable tabla = new JTable();
-		panel.add(tabla);
+		TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
+		tableColumn.setCellEditor(new CellButtonRendererEditor());
+		tableColumn.setCellRenderer(new CellButtonRendererEditor());
 		
+		JScrollPane scrollPane = new JScrollPane(tabla);
+		this.add(scrollPane);
+		
+
 		setVisible(true);
 		}
 
