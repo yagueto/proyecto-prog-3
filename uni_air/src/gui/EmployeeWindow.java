@@ -30,8 +30,11 @@ public class EmployeeWindow extends AbstractWindow {
 		JTable tabla = new JTable(vuelos);
 		
 		TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
-		tableColumn.setCellEditor(new CellButtonRendererEditor());
-		tableColumn.setCellRenderer(new CellButtonRendererEditor());
+		
+		tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
+			// TODO: implementar onClick
+		}));
+		// tableColumn.setCellRenderer(new CellButtonRendererEditor());
 		
 		JScrollPane scrollPane = new JScrollPane(tabla);
 		this.add(scrollPane);
