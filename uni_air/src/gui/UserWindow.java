@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -62,7 +61,7 @@ class FlightSearchPanel extends JPanel {
 
 		JTextField origenField = new JTextField(10); // TODO: se podría añadir un placeholder?
 		JTextField destField = new JTextField(10);
-		JTextField datePicker = new JTextField(8); 	// TODO: se podría añadir un datePicker? añadir al menos lógica de
+		JTextField datePicker = new JTextField(8); // TODO: se podría añadir un datePicker? añadir al menos lógica de
 													// comprobación
 
 		JButton b = new JButton("Buscar"); // TODO: implementar
@@ -76,12 +75,22 @@ class FlightSearchPanel extends JPanel {
 		// JTable para mostrar resultados
 		ModeloVuelo modeloVuelo = new ModeloVuelo(Main.vuelos, TipoVentana.USER);
 		JTable tabla = new JTable(modeloVuelo);
-		
+
 		TableColumn c = tabla.getColumnModel().getColumn(5);
-		c.setCellEditor(new CellButtonRendererEditor());
-		c.setCellRenderer(new CellButtonRendererEditor());
-		
+		CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> {
+			new BuyWindow(Main.vuelos.get(row));
+		});
+		c.setCellEditor(cellButtonRendererEditor);
+//		c.setCellRenderer(cellButtonRendererEditor);
+
 		JScrollPane scrollPane = new JScrollPane(tabla);
+
+		// TEST: para actualizar la tabla al hacer la búsqueda
+//		b.addActionListener((e) -> {
+//			Main.vuelos.add(new Vuelo("a", "aa", "AAA", LocalDateTime.now(), LocalDateTime.now(), 1, 1L));
+//			modeloVuelo.fireTableDataChanged();
+//		});
+
 		this.add(scrollPane);
 	}
 }

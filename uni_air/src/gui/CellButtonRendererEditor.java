@@ -17,12 +17,13 @@ public class CellButtonRendererEditor extends AbstractCellEditor implements Tabl
 	private JButton b;
 	private int rowSelected;
 
-	public CellButtonRendererEditor() {
+	public CellButtonRendererEditor(Clickable c) {
 		
 		b = new JButton();
 		b.setText("→");
 		b.addActionListener(e -> {
 			System.out.println(rowSelected);
+			c.onClick(rowSelected);
 			fireEditingStopped();
 		});
 	}
@@ -43,6 +44,10 @@ public class CellButtonRendererEditor extends AbstractCellEditor implements Tabl
 			int row, int column) {
 		
 		return b;
+	}
+	
+	public interface Clickable {
+		void onClick(int row);
 	}
 
 }

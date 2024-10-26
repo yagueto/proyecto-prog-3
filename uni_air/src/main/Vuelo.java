@@ -87,4 +87,11 @@ public class Vuelo {
 	public void setPasajeros(int pasajeros) {
 		this.pasajeros = pasajeros;
 	}
+	@Override
+	public String toString() {
+		return "Vuelo [codigo=" + codigo + ", origen=" + origen + ", destino=" + destino + ", fechaDespegue="
+				+ fechaDespegue + ", fechaAterrizaje=" + fechaAterrizaje + ", maxPasajeros=" + maxPasajeros
+				+ ", precio=" + precio + "]";
+	}
+	
 }
