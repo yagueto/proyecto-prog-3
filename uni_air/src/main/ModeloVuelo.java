@@ -47,14 +47,14 @@ public class ModeloVuelo extends AbstractTableModel {
 		case 5:
 			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
 				return "Pasajeros";
-			} else {
+			} else if(this.tipoVentana.equals(tipoVentana.ADMIN)) {
 				return "";
 			}
 		case 6:
 			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
 				return "";
-			} else {
-				return null;
+			} else if(this.tipoVentana.equals(tipoVentana.ADMIN)) {
+				return "";
 			}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + column);
@@ -81,10 +81,14 @@ public class ModeloVuelo extends AbstractTableModel {
 	public int getColumnCount() {
 		if (this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
 				return 7;
-			} else {
+			} else if(this.tipoVentana.equals(TipoVentana.ADMIN)){
+				return 5;
+			}else {
 				return 6;
 			}
-	}
+				
+			}
+	
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
