@@ -31,13 +31,21 @@ public class Vuelo {
 	
 	public static ArrayList<Vuelo> getVuelos() {
 		if (vuelos == null) {
-			loadVuelos();
+			System.out.println("Empieza a cargar vuelos");
+			vuelos = new ArrayList<Vuelo>();
+			Thread t = new Thread(() -> {
+				loadVuelos();
+			});
+			t.start();
+			System.out.println("Vuelos cargados");
+		} else {
+			System.out.println("Vuelos ya cargados previamente, devolviendo");
 		}
 		return vuelos;
 	}
 	
+	// Llenar lista de vuelos desde archivo
 	private static void loadVuelos() {
-		vuelos = new ArrayList<Vuelo>();
 		try {
 			Scanner sc = new Scanner(new File("resources/flights_part1.csv"));
 			sc.nextLine();

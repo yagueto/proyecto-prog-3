@@ -16,6 +16,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 
 import main.Main;
@@ -113,7 +114,6 @@ class FlightHistoryPanel extends JSplitPane {
 	 * 
 	 */
 	JList<Vuelo> lista_vuelos = new JList<>();
-	DefaultListModel<Vuelo> modelo = new DefaultListModel<Vuelo>();
 
 	// En vez de un Label lo cambiaré para incluir mejor toda la información del
 	// vuelo
@@ -125,12 +125,13 @@ class FlightHistoryPanel extends JSplitPane {
 	private static final long serialVersionUID = 560276176324109821L;
 
 	public FlightHistoryPanel() {
+		DefaultListModel<Vuelo> modelo = new DefaultListModel<Vuelo>();
+
 		lista_vuelos.setCellRenderer(new VueloListRenderer());
 		// Ponemos el modelo para la lista de vuelos
 		lista_vuelos.setModel(modelo);
 
 		// Creamos 10 vuelos añadidos al modelo
-		modelo.addAll(Vuelo.getVuelos());
 		// Para Obtener/Seleccionar un vuelo de la lista de vuelos
 		lista_vuelos.getSelectionModel().addListSelectionListener(e -> {
 			// Cogemos un vuelo
@@ -153,7 +154,14 @@ class FlightHistoryPanel extends JSplitPane {
 		this.setBackground(Color.BLACK);
 		//add(panelDividido);
 		
-		
+		Thread t = new Thread(() -> {
+			SwingUtilities.invokeLater(() -> {
+				modelo.addAll(Vuelo.getVuelos());
+				lista_vuelos.ensureIndexIsVisible(modelo.getSize());
+			});
+			
+		});
+		t.start();
 
 	}
 	class VueloListRenderer extends DefaultListCellRenderer{
