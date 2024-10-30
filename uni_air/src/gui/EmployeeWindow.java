@@ -26,7 +26,7 @@ public class EmployeeWindow extends AbstractWindow {
 		panel.setBorder(createBorder("Empleado"));
 		this.add(panel, BorderLayout.NORTH);
 		
-		ModeloVuelo vuelos = new ModeloVuelo(Main.vuelos, TipoVentana.EMPLOYEE);
+		ModeloVuelo vuelos = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.EMPLOYEE);
 		JTable tabla = new JTable(vuelos);
 		
 		TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
