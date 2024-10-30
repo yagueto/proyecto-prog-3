@@ -1,21 +1,18 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
-import main.Main;
 import main.ModeloVuelo;
 import main.ModeloVuelo.TipoVentana;
 import main.Vuelo;
 
 public class EmployeeWindow extends AbstractWindow {
-	static final long serialVersionUID = 4922652717777952972L;
+	private static final long serialVersionUID = 4922652717777952972L;
 	
 	 
 	public EmployeeWindow() {

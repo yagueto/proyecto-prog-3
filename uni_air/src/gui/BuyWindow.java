@@ -1,26 +1,18 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 
 import main.Vuelo;
 
@@ -31,9 +23,9 @@ public class BuyWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = -5205219596554060756L;
 	
-	private JTextField nameField;
-	private JTextField passportField;
-	private JTextField phoneField;
+	private final JTextField nameField;
+	private final JTextField passportField;
+	private final JTextField phoneField;
 	
 	public BuyWindow(Vuelo v) {
 		super();

@@ -14,7 +14,7 @@ public class CellButtonRendererEditor extends AbstractCellEditor implements Tabl
 	 * 
 	 */
 	private static final long serialVersionUID = -2031353771384496925L;
-	private JButton b;
+	private final JButton b;
 	private int rowSelected;
 
 	public CellButtonRendererEditor(Clickable c) {

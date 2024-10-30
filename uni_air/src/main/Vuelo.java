@@ -32,7 +32,7 @@ public class Vuelo {
 	public static ArrayList<Vuelo> getVuelos() {
 		if (vuelos == null) {
 			System.out.println("Empieza a cargar vuelos");
-			vuelos = new ArrayList<Vuelo>();
+			vuelos = new ArrayList<>();
 			Thread t = new Thread(() -> {
 				loadVuelos();
 			});
@@ -50,14 +50,14 @@ public class Vuelo {
 			Scanner sc = new Scanner(new File("resources/flights_part1.csv"));
 			sc.nextLine();
 				
-			while(sc.hasNextLine()){
+			while(sc.hasNext()){
 				String linea = sc.nextLine();
 				String[] campos = linea.split(",");
 					
 				int year = Integer.parseInt(campos[0]);
 				int month = Integer.parseInt(campos[1]);
 				int day = Integer.parseInt(campos[2]);
-				// campos[3] es el día de la semana pero al tener la fecha no es un dato relevante
+				// campos[3] es el día de la semana, pero al tener la fecha no es un dato relevante
 				String airline = campos[4];
 				int flightNumber = Integer.parseInt(campos[5]);
 				String tailNumber = campos[6];
