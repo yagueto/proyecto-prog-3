@@ -2,9 +2,17 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.time.LocalDateTime;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -12,6 +20,7 @@ import javax.swing.table.TableColumn;
 
 import main.Main;
 import main.ModeloVuelo;
+import main.Vuelo;
 import main.ModeloVuelo.TipoVentana;
 import main.Vuelo;
 
@@ -25,15 +34,14 @@ public class UserWindow extends AbstractWindow {
 		super();
 		JTabbedPane tabPane = new JTabbedPane();
 
-		JPanel flightHistoryPanel = new FlightHistoryPanel();
+		JSplitPane flightHistoryPanel = new FlightHistoryPanel();
 		JPanel flightSearchPanel = new FlightSearchPanel();
 
 		tabPane.addTab("Mis Vuelos", flightHistoryPanel);
 		tabPane.addTab("Buscar vuelo", flightSearchPanel);
 
-		JTable table = new JTable();
-
-		flightHistoryPanel.add(table);
+		//JTable table = new JTable();
+		//flightHistoryPanel.add(table);
 
 		tabPane.setBorder(createBorder("Cliente"));
 		add(tabPane);
@@ -99,14 +107,75 @@ class FlightSearchPanel extends JPanel {
 /**
  * Panel para mostrar los vuelos comprados por el usuario
  */
-class FlightHistoryPanel extends JPanel {
+class FlightHistoryPanel extends JSplitPane {
 
 	/**
 	 * 
 	 */
+	JList<Vuelo> lista_vuelos = new JList<>();
+	DefaultListModel<Vuelo> modelo = new DefaultListModel<Vuelo>();
+
+	// En vez de un Label lo cambiaré para incluir mejor toda la información del
+	// vuelo
+	JLabel label = new JLabel();
+
+	JPanel panel = new JPanel();
+	// JSplitPane panelDividido = new JSplitPane();
+
 	private static final long serialVersionUID = 560276176324109821L;
 
-	public void FlightSearchPanel() {
-		// TODO
+	public FlightHistoryPanel() {
+		lista_vuelos.setCellRenderer(new VueloListRenderer());
+		// Ponemos el modelo para la lista de vuelos
+		lista_vuelos.setModel(modelo);
+
+		// Creamos 10 vuelos añadidos al modelo
+		for (int i = 0; i < 10; i++) {
+			modelo.addElement(
+					new Vuelo("Código: " + i, "Coruña", "Bilbao", LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0));
+		}
+		// Para Obtener/Seleccionar un vuelo de la lista de vuelos
+		lista_vuelos.getSelectionModel().addListSelectionListener(e -> {
+			// Cogemos un vuelo
+			Vuelo v = lista_vuelos.getSelectedValue();
+			/*
+			 * Ponemos los datos del Vuelo que queremos que aparezcan a la derecha de la
+			 * pantalla al seleccionar el vuelo que queremos ver
+			 */
+			label.setText("Origen: " + v.getOrigen() + " // Destino: " + v.getDestino());
+		});
+
+		// Añadimos a la izquierda del panel dividido un panel de scroll con la lista
+		this.setLeftComponent(new JScrollPane(lista_vuelos));
+
+		// Añadimos el label que contiene la info de origen y destino del vuelo al panel
+		// y
+		// el mismo luego al panel dividido de la derecha
+		panel.add(label);
+		this.setRightComponent(panel);
+		this.setBackground(Color.BLACK);
+		//add(panelDividido);
+		
+		
+
 	}
+	class VueloListRenderer extends DefaultListCellRenderer{
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			Vuelo v = (Vuelo) value;
+			c.setText(v.getCodigo());
+			return c;
+		}
+		
+		
+		
+		
+		
+	}
+	
 }
