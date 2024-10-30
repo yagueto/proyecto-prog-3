@@ -130,10 +130,7 @@ class FlightHistoryPanel extends JSplitPane {
 		lista_vuelos.setModel(modelo);
 
 		// Creamos 10 vuelos añadidos al modelo
-		for (int i = 0; i < 10; i++) {
-			modelo.addElement(
-					new Vuelo("Código: " + i, "Coruña", "Bilbao", LocalDateTime.now(), LocalDateTime.now(), 0, 0, 0));
-		}
+		modelo.addAll(Vuelo.getVuelos());
 		// Para Obtener/Seleccionar un vuelo de la lista de vuelos
 		lista_vuelos.getSelectionModel().addListSelectionListener(e -> {
 			// Cogemos un vuelo
@@ -168,7 +165,7 @@ class FlightHistoryPanel extends JSplitPane {
 				boolean cellHasFocus) {
 			VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Vuelo v = (Vuelo) value;
-			c.setText(v.getCodigo());
+			c.setText(Integer.toString(v.getCodigo()));
 			return c;
 		}
 		
