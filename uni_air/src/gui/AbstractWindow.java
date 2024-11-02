@@ -35,8 +35,7 @@ public abstract class AbstractWindow extends JFrame{
 	 * @return			el borde
 	 */
 	protected Border createBorder(String title) {
-		Border border = BorderFactory.createTitledBorder(title);
-		return border;
+        return BorderFactory.createTitledBorder(title);
 	}
 	
 	

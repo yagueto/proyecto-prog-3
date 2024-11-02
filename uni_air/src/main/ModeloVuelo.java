@@ -12,16 +12,14 @@ public class ModeloVuelo extends AbstractTableModel {
 	/**
 	 * 
 	 */
-	public static final String BUTTON = "";
-
 	private static final long serialVersionUID = 7420003808520688709L;
 	
 	public enum TipoVentana{
 		ADMIN, EMPLOYEE, LOGIN, USER
 	}
-	private TipoVentana tipoVentana;
+	private final TipoVentana tipoVentana;
 	
-	private List<Vuelo> vuelos;
+	private final List<Vuelo> vuelos;
 
 
 	// NOTE: 	¿podría ser útil pasar un parámetro para mostrar 
