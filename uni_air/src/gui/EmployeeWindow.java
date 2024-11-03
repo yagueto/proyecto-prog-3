@@ -29,7 +29,9 @@ public class EmployeeWindow extends AbstractWindow {
 		TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 		
 		tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
-			// TODO: implementar onClick
+			Vuelo.getVuelos().get(clickedRow).setPasajeros(Vuelo.getVuelos().get(clickedRow).getPasajeros() - 1);
+			vuelos.fireTableDataChanged();
+			// TODO mejorar el check-in
 		}));
 		// tableColumn.setCellRenderer(new CellButtonRendererEditor());
 		

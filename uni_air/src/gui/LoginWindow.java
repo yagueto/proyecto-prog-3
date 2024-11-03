@@ -4,12 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class LoginWindow extends AbstractWindow {
 	private static final long serialVersionUID = -1392377673421616906L;
@@ -95,7 +90,24 @@ public class LoginWindow extends AbstractWindow {
 				String contrasenia = txtContraseniaUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
 				if(usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
 					//System.out.println("Has iniciado sesión correctamente");
-					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente");
+					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+					SwingUtilities.invokeLater(UserWindow::new);
+					//Vaciamos los campos (cuadros de texto)
+					/*txtNombreUsuario.setText("");
+					txtContraseniaUsuario.setText("");*/
+					vaciarCampos();
+				} else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
+					//System.out.println("Has iniciado sesión correctamente");
+					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
+					SwingUtilities.invokeLater(AdminWindow::new);
+					//Vaciamos los campos (cuadros de texto)
+					/*txtNombreUsuario.setText("");
+					txtContraseniaUsuario.setText("");*/
+					vaciarCampos();
+				} else if (usuario.equals("EMPLEADO3") && contrasenia.equals("EMPLEADO3")) {
+					//System.out.println("Has iniciado sesión correctamente");
+					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
+					SwingUtilities.invokeLater(EmployeeWindow::new);
 					//Vaciamos los campos (cuadros de texto)
 					/*txtNombreUsuario.setText("");
 					txtContraseniaUsuario.setText("");*/

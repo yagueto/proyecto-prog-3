@@ -45,7 +45,7 @@ public class ModeloVuelo extends AbstractTableModel {
 		case 5:
 			if(this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
 				return "Pasajeros";
-			} else if(this.tipoVentana.equals(tipoVentana.ADMIN)) {
+			} else {
 				return "";
 			}
 		case 6:

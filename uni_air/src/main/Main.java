@@ -3,7 +3,7 @@ package main;
 import javax.swing.SwingUtilities;
 
 import gui.AbstractWindow;
-import gui.UserWindow;
+import gui.LoginWindow;
 
 public class Main {
 
@@ -13,7 +13,7 @@ public class Main {
 		
 		System.out.println("Lanzando...");
 		//SwingUtilities.invokeLater(() -> new EmployeeWindow());
-		SwingUtilities.invokeLater(() -> new UserWindow());
+		SwingUtilities.invokeLater(() -> new LoginWindow());
 	}
 
 }

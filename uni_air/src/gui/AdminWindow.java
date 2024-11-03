@@ -2,17 +2,13 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
 
-import main.Main;
 import main.ModeloVuelo;
 import main.ModeloVuelo.TipoVentana;
 import main.Vuelo;
