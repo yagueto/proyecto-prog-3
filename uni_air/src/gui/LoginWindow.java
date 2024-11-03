@@ -9,7 +9,7 @@ import javax.swing.*;
 public class LoginWindow extends AbstractWindow {
 	private static final long serialVersionUID = -1392377673421616906L;
 
-	//Declaración de los componentes de la ventana
+	
 		private JButton btnIniciarSesion, btnCerrarSesion;
 		private JPanel pNorte, pSur, pEste, pOeste, pCentro;
 		private JLabel lblTitulo, lblNombreUsuario, lblContraseniaUsuario;
@@ -19,34 +19,20 @@ public class LoginWindow extends AbstractWindow {
 	
 	public LoginWindow() {
 		super();
-		// TODO Auto-generated constructor stub
 	
-	
-	
-
-		
-	
-		//La primera sentencia siempre es super();
-		//Modificar el tamaño y posición inicial de la ventana
-		
-		//Instanciamos los paneles
 		pNorte = new JPanel();
 		pSur = new JPanel();
 		pCentro = new JPanel();
 		pOeste = new JPanel();
 		pEste = new JPanel();
-		//Modificamos el Layout del panel centro
 		
-		
-		
-		//Añadimos los paneles al panel principal de la ventana
 		getContentPane().add(pNorte, BorderLayout.NORTH);
 		getContentPane().add(pEste, BorderLayout.EAST);
 		getContentPane().add(pOeste, BorderLayout.WEST);
 		getContentPane().add(pSur, BorderLayout.SOUTH);
 		getContentPane().add(pCentro, BorderLayout.CENTER);
 		
-		//Instanciamos los componentes
+		
 		btnIniciarSesion = new JButton("INICIAR SESIÓN");
 		btnCerrarSesion = new JButton("CERRAR SESIÓN");
 		
@@ -57,26 +43,23 @@ public class LoginWindow extends AbstractWindow {
 		txtNombreUsuario = new JTextField(10);
 		JPasswordField txtContraseniaUsuario = new JPasswordField(10);
 		
-		//Añadimos los componentes a la ventana
+		
 		pSur.add(btnIniciarSesion);
 		pSur.add(btnCerrarSesion);
 		
 		pNorte.add(lblTitulo);
 		
-		//Para añadir en el panel central que es un GridLayout, tenemos que hacerlo
-		//en el orden en el que queremos que aparezca, de izda a dcha y de arriba a abajo
 		pCentro.add(lblNombreUsuario);
 		pCentro.add(txtNombreUsuario);
 		pCentro.add(lblContraseniaUsuario);
 		pCentro.add(txtContraseniaUsuario);
 		
-		//Añadir los listeners a los componentes
+		
 		btnCerrarSesion.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Aquí escribiremos el código que queremos que se ejecute cuando se haga click sobre el botón
-				System.exit(0); //Cerrar la aplicación
+				System.exit(0); 
 			}
 		});
 		
@@ -84,39 +67,27 @@ public class LoginWindow extends AbstractWindow {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//Vamos a comprobar que en el JTextField nombreUsuario ha escrito Marian
-				// y que en el JTextField contraseniaUsuario ha escrito Newton
 				String usuario = txtNombreUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
 				String contrasenia = txtContraseniaUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
 				if(usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
 					//System.out.println("Has iniciado sesión correctamente");
 					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
 					SwingUtilities.invokeLater(UserWindow::new);
-					//Vaciamos los campos (cuadros de texto)
-					/*txtNombreUsuario.setText("");
-					txtContraseniaUsuario.setText("");*/
+					
 					vaciarCampos();
 				} else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
 					//System.out.println("Has iniciado sesión correctamente");
 					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
 					SwingUtilities.invokeLater(AdminWindow::new);
-					//Vaciamos los campos (cuadros de texto)
-					/*txtNombreUsuario.setText("");
-					txtContraseniaUsuario.setText("");*/
 					vaciarCampos();
 				} else if (usuario.equals("EMPLEADO3") && contrasenia.equals("EMPLEADO3")) {
-					//System.out.println("Has iniciado sesión correctamente");
+					
 					JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
 					SwingUtilities.invokeLater(EmployeeWindow::new);
-					//Vaciamos los campos (cuadros de texto)
-					/*txtNombreUsuario.setText("");
-					txtContraseniaUsuario.setText("");*/
+					
 					vaciarCampos();
 				}else {
-					//System.out.println("Nombre de usuario y/o contraseña incorrectos");
 					JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos","ERROR",JOptionPane.ERROR_MESSAGE);
-					/*txtNombreUsuario.setText("");
-					txtContraseniaUsuario.setText("");*/
 					vaciarCampos();
 				}
 			}
@@ -128,7 +99,7 @@ public class LoginWindow extends AbstractWindow {
 		});
 		
 		
-		//La última sentencia siempre setVisible(true);
+		
 		setVisible(true);
 		
 		
