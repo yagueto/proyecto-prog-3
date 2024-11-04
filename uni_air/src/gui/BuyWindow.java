@@ -104,13 +104,7 @@ public class BuyWindow extends JFrame {
     private static JPanel getDetailsPanel(Vuelo v) {
         JPanel flightDetailsPanel = new JPanel();
         JTextArea flightDetailsField = new JTextArea();
-        flightDetailsField.setText(
-                "Vuelo " + v.getCodigo() +
-                        ": \n- Origen: " + v.getOrigen() +
-                        "\n- Destino: " + v.getDestino() +
-                        "\n- Fecha despegue: " + v.getFechaDespegue() +
-                        "\n - Fecha aterrizaje: " + v.getFechaAterrizaje()
-        );
+        flightDetailsField.setText("Vuelo " + v.getCodigo() + ": \n- Origen: " + v.getOrigen() + "\n- Destino: " + v.getDestino() + "\n- Fecha despegue: " + v.getFechaDespegue() + "\n - Fecha aterrizaje: " + v.getFechaAterrizaje());
         flightDetailsField.setOpaque(false);
         flightDetailsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         flightDetailsField.setEditable(false);
@@ -132,12 +126,7 @@ public class BuyWindow extends JFrame {
 
 
         if (!error.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    error + ", por favor, rellenelo antes de continuar",
-                    "¡Campos vacíos!",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, error + ", por favor, rellenelo antes de continuar", "¡Campos vacíos!", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

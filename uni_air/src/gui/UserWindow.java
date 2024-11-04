@@ -1,26 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumn;
-
 import main.ModeloVuelo;
-import main.Vuelo;
 import main.ModeloVuelo.TipoVentana;
+import main.Vuelo;
+
+import javax.swing.*;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 
 public class UserWindow extends AbstractWindow {
     private static final long serialVersionUID = 7345092960587394070L;
@@ -109,19 +95,16 @@ class FlightSearchPanel extends JPanel {
  */
 class FlightHistoryPanel extends JSplitPane {
 
+    private static final long serialVersionUID = 560276176324109821L;
     /**
      *
      */
     JList<Vuelo> lista_vuelos = new JList<>();
-
     // En vez de un Label lo cambiaré para incluir mejor toda la información del
     // vuelo
     JLabel label = new JLabel();
-
-    JPanel panel = new JPanel();
     // JSplitPane panelDividido = new JSplitPane();
-
-    private static final long serialVersionUID = 560276176324109821L;
+    JPanel panel = new JPanel();
 
     public FlightHistoryPanel() {
         DefaultListModel<Vuelo> modelo = new DefaultListModel<>();
@@ -169,8 +152,7 @@ class FlightHistoryPanel extends JSplitPane {
         private static final long serialVersionUID = 1L;
 
         @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                                                      boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             Vuelo v = (Vuelo) value;
             c.setText(Integer.toString(v.getCodigo()));
