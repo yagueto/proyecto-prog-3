@@ -40,6 +40,7 @@ public class LoginWindow extends AbstractWindow {
 
         btnIniciarSesion = new JButton("INICIAR SESIÓN");
         btnCerrarSesion = new JButton("CERRAR SESIÓN");
+        getRootPane().setDefaultButton(btnIniciarSesion);
 
         lblTitulo = new JLabel("¡Bienvenido!");
         lblNombreUsuario = new JLabel("Introduce tu nombre: ");
@@ -78,19 +79,17 @@ public class LoginWindow extends AbstractWindow {
                     //System.out.println("Has iniciado sesión correctamente");
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
                     SwingUtilities.invokeLater(UserWindow::new);
-
-                    vaciarCampos();
+                    dispose();
                 } else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
                     //System.out.println("Has iniciado sesión correctamente");
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
                     SwingUtilities.invokeLater(AdminWindow::new);
-                    vaciarCampos();
+                    dispose();
                 } else if (usuario.equals("EMPLEADO3") && contrasenia.equals("EMPLEADO3")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
                     SwingUtilities.invokeLater(EmployeeWindow::new);
-
-                    vaciarCampos();
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
                     vaciarCampos();

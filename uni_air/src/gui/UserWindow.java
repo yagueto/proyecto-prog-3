@@ -41,6 +41,8 @@ class FlightSearchPanel extends JPanel {
      * Random generated UID
      */
     private static final long serialVersionUID = 4735413587006131088L;
+    private static ModeloVuelo modeloVuelo;
+
 
     public FlightSearchPanel() {
         this.setLayout(new BorderLayout());
@@ -50,7 +52,7 @@ class FlightSearchPanel extends JPanel {
         this.add(filtersPanel, BorderLayout.NORTH);
 
         // JTable para mostrar resultados
-        ModeloVuelo modeloVuelo = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.USER);
+        modeloVuelo = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.USER);
         JTable tabla = new JTable(modeloVuelo);
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
