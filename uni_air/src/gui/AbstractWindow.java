@@ -20,8 +20,8 @@ public abstract class AbstractWindow extends JFrame {
      */
 
     public AbstractWindow() {
-        this.setLocationRelativeTo(null);
         this.setSize(640, 480);
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // TODO: añadir título a la ventana
