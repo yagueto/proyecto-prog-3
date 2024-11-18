@@ -7,8 +7,10 @@ import main.Vuelo;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.io.Serial;
 
 public class EmployeeWindow extends AbstractWindow {
+    @Serial
     private static final long serialVersionUID = 4922652717777952972L;
 
 
@@ -26,9 +28,9 @@ public class EmployeeWindow extends AbstractWindow {
         TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 
         tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
-            Vuelo.getVuelos().get(clickedRow).setPasajeros(Vuelo.getVuelos().get(clickedRow).getPasajeros() - 1);
-            vuelos.fireTableDataChanged();
-            // TODO mejorar el check-in
+            // Vuelo.getVuelos().get(clickedRow).setPasajeros(Vuelo.getVuelos().get(clickedRow).getPasajeros() - 1);
+            SwingUtilities.invokeLater(() -> new CheckInWindow(this, Vuelo.getVuelos().get(clickedRow)));
+            setVisible(false);
         }));
         // tableColumn.setCellRenderer(new CellButtonRendererEditor());
 
