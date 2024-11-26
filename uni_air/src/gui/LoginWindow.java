@@ -65,7 +65,7 @@ public class LoginWindow extends AbstractWindow {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                exit();
             }
         });
 
