@@ -30,6 +30,12 @@ public class DBManager {
 		}
 	}
 	
+	/*
+	 * OIHAN
+	public static User login(String email, String password) {
+		
+	}
+	*/
 
 	
 }

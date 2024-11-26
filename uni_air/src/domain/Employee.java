@@ -1,48 +1,13 @@
 package domain;
 
-public class Employee {
+public class Employee extends User{
 
-	private int dni;
-	private String name;
-	private String surname;
-	private String mail;
+	
 	private EmployeeType type;
 
-	public Employee(int id, String nom, String apellido, String mail, EmployeeType type) {
-		super();
-		this.dni = id;
-		this.name = nom;
-		this.surname = apellido;
-		this.mail = mail;
+	public Employee(int id, String name, String surname, String mail, EmployeeType type) {
+		super(id, name, surname, mail);
 		this.type = type;
-	}
-
-	public int getId() {
-		return dni;
-	}
-
-	public String getNom() {
-		return name;
-	}
-
-	public void setNom(String nom) {
-		this.name = nom;
-	}
-
-	public String getApellido() {
-		return surname;
-	}
-
-	public void setApellido(String apellido) {
-		this.surname = apellido;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
 	}
 
 	public EmployeeType getType() {
@@ -55,8 +20,8 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return "Employee [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", type=" + type
-				+ "]";
+		return "Employee [dni=" + this.getDni() + ", name=" + this.getName() + ", surname=" 
+				+ this.getSurname() + ", mail=" + this.getMail() + ", type=" + type + "]";
 	}
 
 	enum EmployeeType {
