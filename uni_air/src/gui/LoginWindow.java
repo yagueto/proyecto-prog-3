@@ -69,14 +69,15 @@ public class LoginWindow extends AbstractWindow {
             }
         });
 
-        btnIniciarSesion.addActionListener(new ActionListener() {
+        ActionListener actionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = txtNombreUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
-                String contrasenia = txtContraseniaUsuario.getText(); //Obtenemos el texto escrito en el cuadro de texto
+                String usuario = txtNombreUsuario.getText(); 
+                @SuppressWarnings("deprecation")
+				String contrasenia = txtContraseniaUsuario.getText(); 
                 if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
-                    //System.out.println("Has iniciado sesión correctamente");
+                   
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
                     SwingUtilities.invokeLater(UserWindow::new);
                     dispose();
@@ -100,7 +101,9 @@ public class LoginWindow extends AbstractWindow {
                 txtNombreUsuario.setText("");
                 txtContraseniaUsuario.setText("");
             }
-        });
+        };
+		ActionListener l = actionListener;
+		btnIniciarSesion.addActionListener(l);
 
 
         setVisible(true);
