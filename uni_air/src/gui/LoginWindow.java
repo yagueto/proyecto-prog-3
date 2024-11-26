@@ -8,28 +8,14 @@ import java.awt.event.ActionListener;
 public class LoginWindow extends AbstractWindow {
     private static final long serialVersionUID = -1392377673421616906L;
 
-
-    private final JButton btnIniciarSesion;
-    private final JButton btnCerrarSesion;
-    private final JPanel pNorte;
-    private final JPanel pSur;
-    private final JPanel pEste;
-    private final JPanel pOeste;
-    private final JPanel pCentro;
-    private final JLabel lblTitulo;
-    private final JLabel lblNombreUsuario;
-    private final JLabel lblContraseniaUsuario;
     private final JTextField txtNombreUsuario;
 
-
     public LoginWindow() {
-        super();
-
-        pNorte = new JPanel();
-        pSur = new JPanel();
-        pCentro = new JPanel();
-        pOeste = new JPanel();
-        pEste = new JPanel();
+        JPanel pNorte = new JPanel();
+        JPanel pSur = new JPanel();
+        JPanel pCentro = new JPanel();
+        JPanel pOeste = new JPanel();
+        JPanel pEste = new JPanel();
 
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pEste, BorderLayout.EAST);
@@ -37,18 +23,16 @@ public class LoginWindow extends AbstractWindow {
         getContentPane().add(pSur, BorderLayout.SOUTH);
         getContentPane().add(pCentro, BorderLayout.CENTER);
 
-
-        btnIniciarSesion = new JButton("INICIAR SESIÓN");
-        btnCerrarSesion = new JButton("CERRAR SESIÓN");
+        JButton btnIniciarSesion = new JButton("INICIAR SESIÓN");
+        JButton btnCerrarSesion = new JButton("CERRAR SESIÓN");
         getRootPane().setDefaultButton(btnIniciarSesion);
 
-        lblTitulo = new JLabel("¡Bienvenido!");
-        lblNombreUsuario = new JLabel("Introduce tu nombre: ");
-        lblContraseniaUsuario = new JLabel("Introduce tu contraseña: ");
+        JLabel lblTitulo = new JLabel("¡Bienvenido!");
+        JLabel lblNombreUsuario = new JLabel("Introduce tu nombre: ");
+        JLabel lblContraseniaUsuario = new JLabel("Introduce tu contraseña: ");
 
         txtNombreUsuario = new JTextField(10);
         JPasswordField txtContraseniaUsuario = new JPasswordField(10);
-
 
         pSur.add(btnIniciarSesion);
         pSur.add(btnCerrarSesion);
@@ -69,15 +53,14 @@ public class LoginWindow extends AbstractWindow {
             }
         });
 
-        ActionListener actionListener = new ActionListener() {
+        ActionListener l = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = txtNombreUsuario.getText(); 
-                @SuppressWarnings("deprecation")
-				String contrasenia = txtContraseniaUsuario.getText(); 
+                String usuario = txtNombreUsuario.getText();
+                @SuppressWarnings("deprecation") String contrasenia = txtContraseniaUsuario.getText();
                 if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
-                   
+
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
                     SwingUtilities.invokeLater(UserWindow::new);
                     dispose();
@@ -102,14 +85,8 @@ public class LoginWindow extends AbstractWindow {
                 txtContraseniaUsuario.setText("");
             }
         };
-		ActionListener l = actionListener;
-		btnIniciarSesion.addActionListener(l);
-
+        btnIniciarSesion.addActionListener(l);
 
         setVisible(true);
-
-
     }
-
-
 }
