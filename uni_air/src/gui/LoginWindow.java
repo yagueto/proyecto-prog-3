@@ -45,13 +45,7 @@ public class LoginWindow extends AbstractWindow {
         pCentro.add(txtContraseniaUsuario);
 
 
-        btnCerrarSesion.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                exit();
-            }
-        });
+        btnCerrarSesion.addActionListener(e -> exit());
 
         ActionListener l = new ActionListener() {
 

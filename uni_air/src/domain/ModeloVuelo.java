@@ -118,7 +118,7 @@ public class ModeloVuelo extends AbstractTableModel {
     }
 
     public enum TipoVentana {
-        ADMIN, EMPLOYEE, LOGIN, USER
+        ADMIN, EMPLOYEE, USER
     }
 
 

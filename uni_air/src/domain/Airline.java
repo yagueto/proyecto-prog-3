@@ -2,8 +2,8 @@ package domain;
 
 public class Airline {
 
-	private String iata;
-	private String name;
+	private final String iata;
+	private final String name;
 
 	public Airline(String iata, String name) {
 		super();

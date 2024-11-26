@@ -28,14 +28,13 @@ public class Vuelo {
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
 	}
-	
+
+	@Deprecated
 	public static ArrayList<Vuelo> getVuelos() {
 		if (vuelos == null) {
 			System.out.println("Empieza a cargar vuelos");
 			vuelos = new ArrayList<>();
-			Thread t = new Thread(() -> {
-				loadVuelos();
-			});
+			Thread t = new Thread(() -> loadVuelos());
 			t.start();
 			System.out.println("Vuelos cargados");
 		} else {
@@ -45,6 +44,7 @@ public class Vuelo {
 	}
 	
 	// Llenar lista de vuelos desde archivo
+	@Deprecated
 	private static void loadVuelos() {
 		try {
 			Scanner sc = new Scanner(new File("resources/flights_part1.csv"));

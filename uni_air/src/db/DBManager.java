@@ -44,8 +44,7 @@ public class DBManager {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
-            File f;
-            if (!(f = new File(path)).exists()) {
+            if (!new File(path).exists()) {
                 conn = DriverManager.getConnection(connection_string + path);
                 this.createDB();
             } else {

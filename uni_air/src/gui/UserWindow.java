@@ -41,7 +41,6 @@ class FlightSearchPanel extends JPanel {
      * Random generated UID
      */
     private static final long serialVersionUID = 4735413587006131088L;
-    private static ModeloVuelo modeloVuelo;
 
 
     public FlightSearchPanel() {
@@ -52,13 +51,11 @@ class FlightSearchPanel extends JPanel {
         this.add(filtersPanel, BorderLayout.NORTH);
 
         // JTable para mostrar resultados
-        modeloVuelo = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.USER);
+        ModeloVuelo modeloVuelo = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.USER);
         JTable tabla = new JTable(modeloVuelo);
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
-        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> {
-            new BuyWindow(Vuelo.getVuelos().get(row));
-        });
+        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(Vuelo.getVuelos().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
 //		c.setCellRenderer(cellButtonRendererEditor);
 
@@ -83,6 +80,9 @@ class FlightSearchPanel extends JPanel {
         // comprobación
 
         JButton b = new JButton("Buscar"); // TODO: implementar
+        b.addActionListener(e -> {
+
+        });
 
         filtersPanel.add(origenField);
         filtersPanel.add(destField);
@@ -138,18 +138,15 @@ class FlightHistoryPanel extends JSplitPane {
         this.setBackground(Color.BLACK);
         //add(panelDividido);
 
-        Thread t = new Thread(() -> {
-            SwingUtilities.invokeLater(() -> {
-                modelo.addAll(Vuelo.getVuelos());
-                lista_vuelos.ensureIndexIsVisible(modelo.getSize());
-            });
-
-        });
+        Thread t = new Thread(() -> SwingUtilities.invokeLater(() -> {
+            modelo.addAll(Vuelo.getVuelos());
+            lista_vuelos.ensureIndexIsVisible(modelo.getSize());
+        }));
         t.start();
 
     }
 
-    class VueloListRenderer extends DefaultListCellRenderer {
+    static class VueloListRenderer extends DefaultListCellRenderer {
 
         private static final long serialVersionUID = 1L;
 
