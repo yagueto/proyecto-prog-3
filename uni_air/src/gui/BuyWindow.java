@@ -1,6 +1,6 @@
 package gui;
 
-import main.Vuelo;
+import domain.Vuelo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,6 +121,13 @@ public class BuyWindow extends JFrame {
         return flightDetailsPanel;
     }
 
+    private void resetFieldFormat() {
+        nameField.setBackground(null);
+        emailField.setBackground(null);
+        passportField.setBackground(null);
+        //phoneField.setBackground();
+    }
+
     private void onSubmit() {
         String error = "";
         if (nameField.getText().isEmpty()) {
@@ -133,12 +140,30 @@ public class BuyWindow extends JFrame {
             error = "No se ha especificado número de teléfono";
         }
 
-
         if (!error.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
                     error + ", por favor, rellenelo antes de continuar",
                     "¡Campos vacíos!",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (!emailField.getText().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            error = "Correo electrónico inválido";
+            emailField.setBackground(Color.RED);
+        } else if (!radioDni.isSelected() && !radioPassport.isSelected()) {
+            error = "No se ha seleccionado pasaporte o DNI";
+        } else if (!paypalRadio.isSelected() && !creditCardRadio.isSelected()) {
+            error = "No se ha seleccionado método de pago";
+        }
+
+        if (!error.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    error + ", por favor, revise los datos antes de continuar",
+                    "¡Campos inválidos!",
                     JOptionPane.ERROR_MESSAGE
             );
             return;

@@ -1,6 +1,6 @@
 package gui;
 
-import main.Vuelo;
+import domain.Vuelo;
 
 import javax.swing.*;
 import javax.swing.border.Border;

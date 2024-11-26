@@ -1,4 +1,4 @@
-package main;
+package domain;
 
 import java.io.File;
 import java.io.FileNotFoundException;

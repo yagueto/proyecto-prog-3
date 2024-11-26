@@ -1,8 +1,8 @@
 package gui;
 
-import main.ModeloVuelo;
-import main.ModeloVuelo.TipoVentana;
-import main.Vuelo;
+import domain.ModeloVuelo;
+import domain.ModeloVuelo.TipoVentana;
+import domain.Vuelo;
 
 import javax.swing.*;
 import java.awt.*;
