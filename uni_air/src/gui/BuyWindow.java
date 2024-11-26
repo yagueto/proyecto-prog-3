@@ -125,19 +125,25 @@ public class BuyWindow extends JFrame {
         nameField.setBackground(null);
         emailField.setBackground(null);
         passportField.setBackground(null);
-        //phoneField.setBackground();
+        phoneField.setBackground(null);
     }
 
     private void onSubmit() {
+        resetFieldFormat();
+
         String error = "";
         if (nameField.getText().isEmpty()) {
             error = "El nombre está vacío";
+            nameField.setBackground(Color.red);
         } else if (emailField.getText().isEmpty()) {
             error = "El correo electrónico está vacío";
+            emailField.setBackground(Color.red);
         } else if (passportField.getText().isEmpty()) {
             error = "El DNI/Pasaporte está vacío";
+            passportField.setBackground(Color.red);
         } else if (phoneField.getText().isEmpty()) {
             error = "No se ha especificado número de teléfono";
+            phoneField.setBackground(Color.red);
         }
 
         if (!error.isEmpty()) {
