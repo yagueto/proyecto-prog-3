@@ -11,7 +11,7 @@ import java.sql.Statement;
 
 public class DBManager {
     private static DBManager dbManager;
-    private Connection conn = null;
+    protected Connection conn = null;
 
     private DBManager() {
         this.connect(
@@ -89,6 +89,4 @@ public class DBManager {
 		
 	}
 	*/
-
-
 }

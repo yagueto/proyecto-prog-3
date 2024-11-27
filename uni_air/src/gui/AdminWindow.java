@@ -37,7 +37,6 @@ public class AdminWindow extends AbstractWindow {
             LocalDateTime salida = LocalDateTime.parse(JOptionPane.showInputDialog("Introduce la fecha y hora de salida. De la siguiente forma:'AÑO-MES-DIA-Thora:minuto'"));
             LocalDateTime llegada = LocalDateTime.parse(JOptionPane.showInputDialog("Introduce la fecha y hora de llegada. De la siguiente forma:'AÑO-MES-DIA-Thora:minuto'"));
 
-            Vuelo vuelo = new Vuelo(codigo, origen, destino, salida, llegada, codigo, codigo, getOpacity());
             JOptionPane.showMessageDialog(null, "Vuelo añadido correctamente");
 
 
