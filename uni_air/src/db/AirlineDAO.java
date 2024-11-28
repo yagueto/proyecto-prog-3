@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AirlineDAO implements Dao<Airline> {
@@ -22,7 +23,7 @@ public class AirlineDAO implements Dao<Airline> {
         this.conn = DBManager.getDBManager().conn;
         try {
             this.getAirlineByIdStatement = conn.prepareStatement("SELECT NAME FROM AIRLINE WHERE IATA_CODE=?");
-            this.getAllAirlinesStatement = conn.prepareStatement("SELECT * FROM AIRLINE");
+            this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE");
             this.saveAirlineStatement = conn.prepareStatement("INSERT INTO AIRLINE (IATA_CODE, NAME) VALUES (?, ?)");
             this.updateAirlineStatement = conn.prepareStatement("UPDATE AIRLINE SET NAME=? WHERE IATA_CODE=?");
             this.deleteAirlineStatement = conn.prepareStatement("DELETE FROM AIRLINE WHERE IATA_CODE=?");
@@ -55,22 +56,45 @@ public class AirlineDAO implements Dao<Airline> {
 
     @Override
     public List<Airline> getAll() {
-        // WIP
-        return List.of();
+        ArrayList<Airline> airlines = new ArrayList<>();
+        try {
+            ResultSet rs = getAllAirlinesStatement.executeQuery();
+            while (rs.next()) {
+                airlines.add(new Airline(rs.getString("IATA_CODE"), rs.getString("NAME")));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return airlines;
     }
 
     @Override
     public void save(Airline airline) {
-        // WIP
+        try {
+            saveAirlineStatement.setString(1, airline.getIata());
+            saveAirlineStatement.setString(2, airline.getName());
+            saveAirlineStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void update(Airline airline) {
-        // WIP
+        try {
+            updateAirlineStatement.setString(1, airline.getIata());
+            updateAirlineStatement.setString(2, airline.getName());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(Airline airline) {
-        // WIP
+        try {
+            deleteAirlineStatement.setString(1, airline.getIata());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
