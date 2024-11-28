@@ -12,7 +12,6 @@ import java.util.List;
 public class AirlineDAO implements Dao<Airline> {
     private static AirlineDAO airlineDAO;
 
-    private final Connection conn;
     private final PreparedStatement getAirlineByIdStatement;
     private final PreparedStatement getAllAirlinesStatement;
     private final PreparedStatement saveAirlineStatement;
@@ -20,7 +19,7 @@ public class AirlineDAO implements Dao<Airline> {
     private final PreparedStatement deleteAirlineStatement;
 
     private AirlineDAO() {
-        this.conn = DBManager.getDBManager().conn;
+        Connection conn = DBManager.getDBManager().conn;
         try {
             this.getAirlineByIdStatement = conn.prepareStatement("SELECT NAME FROM AIRLINE WHERE IATA_CODE=?");
             this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE");

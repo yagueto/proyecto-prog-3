@@ -1,6 +1,7 @@
 package gui;
 
 import db.AirlineDAO;
+import db.AirportDAO;
 import domain.Airline;
 import domain.Airport;
 import domain.ModeloVuelo;
@@ -125,9 +126,11 @@ class FlightSearchPanel extends JPanel {
         });
 
         // TODO: DEBUG: Temporal, mientras no existe aún la búsqueda de vuelos
-        Airport origen = new Airport("LCG", "CORUÑA", "CORUÑA", "ESPAÑA", 1, 1);
+        Airport origen = AirportDAO.getAirportDAO().get("LCG");
+        Airport destino = AirportDAO.getAirportDAO().get("BIO");
         Airline airline = AirlineDAO.getAirlineDAO().get("VLG");
-        List<Vuelo> vuelos = List.of(new Vuelo(1, origen, origen, airline, LocalDateTime.now(), LocalDateTime.now(), 1, 1, 1));
+        List<Vuelo> vuelos = List.of(new Vuelo(1, origen, destino, airline, LocalDateTime.now(), LocalDateTime.now(),
+                1, 1, 1));
         modeloVuelo.getVuelos().addAll(vuelos);
         SwingUtilities.invokeLater(() -> {
             modeloVuelo.fireTableDataChanged();
