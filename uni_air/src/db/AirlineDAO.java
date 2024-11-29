@@ -2,7 +2,6 @@ package db;
 
 import domain.Airline;
 
-import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,17 +39,13 @@ public class AirlineDAO implements Dao<Airline> {
     }
 
     @Override
-    public Airline get(int id) {
-        throw new InvalidParameterException("Se debe buscar aerolínea por código IATA (String).");
-    }
-
-    @Override
-    public Airline get(String param) {
+    public Airline get(Object param) {
+        String in = (String) param;
         try {
-            getAirlineByIdStatement.setString(1, param);
+            getAirlineByIdStatement.setString(1, in);
             ResultSet rs = getAirlineByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                return new Airline(param, rs.getString("NAME"));
+                return new Airline(in, rs.getString("NAME"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

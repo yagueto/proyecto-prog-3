@@ -3,9 +3,7 @@ package db;
 import java.util.List;
 
 public interface Dao<T> {
-    T get(int id);
-
-    T get(String param);
+    T get(Object param);
 
     List<T> getAll();
 

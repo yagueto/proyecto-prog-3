@@ -12,11 +12,11 @@ public class Vuelo {
 	private LocalDateTime fechaAterrizaje;
 	private int pasajeros;
 	private int maxPasajeros;
-	private double precio;
+	private int precio;
 	private static ArrayList<Vuelo> vuelos;
 
 	public Vuelo(int codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
-				 LocalDateTime fechaAterrizaje, int pasajeros, int maxPasajeros, double precio) {
+				 LocalDateTime fechaAterrizaje, int pasajeros, int maxPasajeros, int precio) {
 		this.codigo = codigo;
 		this.origen = origen;
 		this.destino = destino;
@@ -26,6 +26,9 @@ public class Vuelo {
 		this.pasajeros = pasajeros;
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
+	}
+
+	public Vuelo() {
 	}
 
 	@Deprecated
@@ -124,11 +127,11 @@ public class Vuelo {
 		this.maxPasajeros = maxPasajeros;
 	}
 
-	public double getPrecio() {
+	public int getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(double precio) {
+	public void setPrecio(int precio) {
 		this.precio = precio;
 	}
 
@@ -138,6 +141,14 @@ public class Vuelo {
 
 	public void setPasajeros(int pasajeros) {
 		this.pasajeros = pasajeros;
+	}
+
+	public Airline getAirline() {
+		return airline;
+	}
+
+	public void setAirline(Airline airline) {
+		this.airline = airline;
 	}
 
 	@Override
