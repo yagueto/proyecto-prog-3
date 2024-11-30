@@ -25,6 +25,7 @@ public class LoginWindow extends AbstractWindow {
 
         JButton btnIniciarSesion = new JButton("INICIAR SESIÓN");
         JButton btnCerrarSesion = new JButton("CERRAR SESIÓN");
+        JButton btnRegistrarse= new JButton("REGISTRARSE");
         getRootPane().setDefaultButton(btnIniciarSesion);
 
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
@@ -36,6 +37,7 @@ public class LoginWindow extends AbstractWindow {
 
         pSur.add(btnIniciarSesion);
         pSur.add(btnCerrarSesion);
+        pSur.add(btnRegistrarse);
 
         pNorte.add(lblTitulo);
 
@@ -59,7 +61,7 @@ public class LoginWindow extends AbstractWindow {
                     SwingUtilities.invokeLater(UserWindow::new);
                     dispose();
                 } else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
-                    //System.out.println("Has iniciado sesión correctamente");
+                    
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
                     SwingUtilities.invokeLater(AdminWindow::new);
                     dispose();
@@ -80,6 +82,7 @@ public class LoginWindow extends AbstractWindow {
             }
         };
         btnIniciarSesion.addActionListener(l);
+        btnRegistrarse.addActionListener(e -> SwingUtilities.invokeLater(SignInWindow::new));
 
         setVisible(true);
     }
