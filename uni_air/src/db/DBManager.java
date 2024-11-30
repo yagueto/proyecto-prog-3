@@ -3,12 +3,7 @@ package db;
 import io.PropertiesManager;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 
 public class DBManager {
@@ -86,10 +81,10 @@ public class DBManager {
         }
     }
 
-	public static void insertarUsuario(int dni, String name, String surname, String mail, String password) {
+    public void insertarUsuario(int dni, String name, String surname, String mail, String password) {
 		String sql = "INSERT INTO Usuario VALUES (?, ?, ?, ?, ?)";
 		try {
-			PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, dni);
 			ps.setString(2, name);
 			ps.setString(3, surname);
@@ -101,12 +96,12 @@ public class DBManager {
 			e.printStackTrace();
 		}
 	}
-		
-    public static boolean existeUsuario(int dni) {
+
+    public boolean existeUsuario(int dni) {
 		boolean existe = false;
 		String sql = "SELECT * FROM Usuario WHERE id = ?";
 		try {
-			PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, dni);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) { 
