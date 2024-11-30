@@ -1,18 +1,18 @@
 package domain;
 
 public class Employee extends User {
-    private EmployeeType type;
+    private UserType type;
 
-    public Employee(int id, String name, String surname, String mail, EmployeeType type) {
-        super(id, name, surname, mail);
+    public Employee(int dni, String name, String surname, String mail, UserType type) {
+        super(dni, name, surname, mail);
         this.type = type;
     }
 
-    public EmployeeType getType() {
+    public UserType getType() {
         return type;
     }
 
-    public void setType(EmployeeType type) {
+    public void setType(UserType type) {
         this.type = type;
     }
 
@@ -22,8 +22,5 @@ public class Employee extends User {
                 + this.getSurname() + ", mail=" + this.getMail() + ", type=" + type + "]";
     }
 
-    public enum EmployeeType {
-        STANDARD, ADMIN
-    }
 
 }

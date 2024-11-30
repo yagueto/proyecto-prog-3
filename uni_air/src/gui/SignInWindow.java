@@ -1,16 +1,10 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import db.DBManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Arrays;
 
 public class SignInWindow extends AbstractWindow{
 
@@ -20,7 +14,7 @@ public class SignInWindow extends AbstractWindow{
 	private JTextField txtDni;
 	private JTextField txtApellido;
 	private  JTextField txtMail;
-    @SuppressWarnings("deprecation")
+
 	public SignInWindow() {
         JPanel pNorte = new JPanel();
         JPanel pSur = new JPanel();
@@ -112,11 +106,11 @@ public class SignInWindow extends AbstractWindow{
 			String nombre = txtNombreUsuario.getText();
 			String apellido = txtApellido.getText();
 			String mail = txtMail.getText();
-			String contrasenia = txtContraseniaUsuario.getText();
-			if(DBManager.existeUsuario(dni)) {
+            String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+            if (DBManager.getDBManager().existeUsuario(dni)) {
 				JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
 			}else {
-				DBManager.insertarUsuario(dni, nombre, apellido, mail, contrasenia );
+                DBManager.getDBManager().insertarUsuario(dni, nombre, apellido, mail, contrasenia);
 				JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
 				
 				

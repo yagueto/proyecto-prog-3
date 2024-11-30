@@ -4,6 +4,7 @@ import gui.CellButtonRendererEditor;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModeloVuelo extends AbstractTableModel {
@@ -13,13 +14,15 @@ public class ModeloVuelo extends AbstractTableModel {
      */
     private static final long serialVersionUID = 7420003808520688709L;
     private final TipoVentana tipoVentana;
-    private final List<Vuelo> vuelos;
+    private final ArrayList<Vuelo> vuelos;
 
-    // NOTE: 	¿podría ser útil pasar un parámetro para mostrar
-    //			datos diferentes en función de la tabla a mostrar?
     public ModeloVuelo(List<Vuelo> vuelos, TipoVentana tipoVentana) {
-        this.vuelos = vuelos;
+        this.vuelos = new ArrayList<>(vuelos);
         this.tipoVentana = tipoVentana;
+    }
+
+    public List<Vuelo> getVuelos() {
+        return vuelos;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class ModeloVuelo extends AbstractTableModel {
                 return v.getFechaAterrizaje();
             case 5:
                 if (this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
-                    return v.getPasajeros();
+                    //return v.getPasajeros();
                 } else {
                     return "→";
                 }
@@ -113,7 +116,6 @@ public class ModeloVuelo extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        // TODO Auto-generated method stub
         return true;
     }
 

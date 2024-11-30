@@ -61,9 +61,4 @@ public abstract class User {
 		return "User [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
 				+ password + "]";
 	}
-	
-
-	
-	
-	
 }

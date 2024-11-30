@@ -1,5 +1,6 @@
 package gui;
 
+import db.FlightDAO;
 import domain.ModeloVuelo;
 import domain.ModeloVuelo.TipoVentana;
 import domain.Vuelo;
@@ -7,6 +8,7 @@ import domain.Vuelo;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.List;
 
 public class UserWindow extends AbstractWindow {
     private static final long serialVersionUID = 7345092960587394070L;
@@ -42,6 +44,10 @@ class FlightSearchPanel extends JPanel {
      */
     private static final long serialVersionUID = 4735413587006131088L;
 
+    private static JProgressBar progressBar;
+    private static JButton searchButton;
+
+    private static ModeloVuelo modeloVuelo;
 
     public FlightSearchPanel() {
         this.setLayout(new BorderLayout());
@@ -51,11 +57,11 @@ class FlightSearchPanel extends JPanel {
         this.add(filtersPanel, BorderLayout.NORTH);
 
         // JTable para mostrar resultados
-        ModeloVuelo modeloVuelo = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.USER);
+        modeloVuelo = new ModeloVuelo(List.of(), TipoVentana.USER);
         JTable tabla = new JTable(modeloVuelo);
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
-        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(Vuelo.getVuelos().get(row)));
+        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(modeloVuelo.getVuelos().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
 //		c.setCellRenderer(cellButtonRendererEditor);
 
@@ -63,7 +69,6 @@ class FlightSearchPanel extends JPanel {
 
         // TEST: para actualizar la tabla al hacer la búsqueda
 //		b.addActionListener((e) -> {
-//			Main.vuelos.add(new Vuelo("a", "aa", "AAA", LocalDateTime.now(), LocalDateTime.now(), 1, 1L));
 //			modeloVuelo.fireTableDataChanged();
 //		});
 
@@ -72,23 +77,61 @@ class FlightSearchPanel extends JPanel {
 
     private static JPanel createSearchPanel() {
         JPanel filtersPanel = new JPanel();
-        filtersPanel.setBackground(new Color(255, 0, 0)); // DEBUG: añadido color para visibilidad
+        JPanel buttonsPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(filtersPanel, BoxLayout.Y_AXIS);
+        filtersPanel.setLayout(boxLayout);
+
+        buttonsPanel.setBackground(UIManager.getColor("ProgressBar.foreground"));
 
         JTextField origenField = new JTextField(10); // TODO: se podría añadir un placeholder?
         JTextField destField = new JTextField(10);
         JTextField datePicker = new JTextField(8); // TODO: se podría añadir un datePicker? añadir al menos lógica de
-        // comprobación
 
-        JButton b = new JButton("Buscar"); // TODO: implementar
-        b.addActionListener(e -> {
+        searchButton = new JButton("Buscar");
+
+        progressBar = new JProgressBar();
+        progressBar.setIndeterminate(false);
+        progressBar.setBorderPainted(false);
+
+        buttonsPanel.add(origenField);
+        buttonsPanel.add(destField);
+        buttonsPanel.add(datePicker);
+        buttonsPanel.add(searchButton);
+        filtersPanel.add(buttonsPanel, BorderLayout.NORTH);
+        filtersPanel.add(progressBar, BorderLayout.SOUTH);
+
+        searchButton.addActionListener(e -> {
+            Thread t = new Thread(() -> {
+                updateTableData();
+            });
+            t.start();
 
         });
 
-        filtersPanel.add(origenField);
-        filtersPanel.add(destField);
-        filtersPanel.add(datePicker);
-        filtersPanel.add(b);
         return filtersPanel;
+    }
+
+
+    /**
+     * Carga datos de la búsqueda de vuelos en la tabla
+     */
+    private static void updateTableData() {
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setIndeterminate(true);
+            searchButton.setEnabled(false);
+        });
+
+        // TODO: DEBUG: Temporal, mientras no existe aún la búsqueda de vuelos
+        //Airport origen = AirportDAO.getAirportDAO().get("LCG");
+        //Airport destino = AirportDAO.getAirportDAO().get("BIO");
+        //Airline airline = AirlineDAO.getAirlineDAO().get("VLG");
+        modeloVuelo.getVuelos().addAll(FlightDAO.getFlightDAO().getAll());
+        SwingUtilities.invokeLater(() -> {
+            modeloVuelo.fireTableDataChanged();
+            progressBar.setIndeterminate(false);
+            searchButton.setEnabled(true);
+
+        });
     }
 }
 
@@ -138,10 +181,14 @@ class FlightHistoryPanel extends JSplitPane {
         this.setBackground(Color.BLACK);
         //add(panelDividido);
 
-        Thread t = new Thread(() -> SwingUtilities.invokeLater(() -> {
-            modelo.addAll(Vuelo.getVuelos());
-            lista_vuelos.ensureIndexIsVisible(modelo.getSize());
-        }));
+        Thread t = new Thread(() -> {
+            List<Vuelo> vuelos = Vuelo.getVuelos();
+            SwingUtilities.invokeLater(() -> {
+                modelo.addAll(vuelos);
+                lista_vuelos.setModel(modelo);
+                lista_vuelos.ensureIndexIsVisible(modelo.getSize());
+            });
+        });
         t.start();
 
     }
@@ -154,7 +201,7 @@ class FlightHistoryPanel extends JSplitPane {
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             Vuelo v = (Vuelo) value;
-            c.setText(Integer.toString(v.getCodigo()));
+            c.setText(v.getCodigo());
             return c;
         }
 
