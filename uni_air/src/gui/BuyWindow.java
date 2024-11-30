@@ -109,8 +109,8 @@ public class BuyWindow extends JFrame {
         JTextArea flightDetailsField = new JTextArea();
         flightDetailsField.setText(
                 "Vuelo " + v.getCodigo() +
-                        ": \n- Origen: " + v.getOrigen() +
-                        "\n- Destino: " + v.getDestino() +
+                        ": \n- Origen: " + v.getOrigen().getName() +
+                        "\n- Destino: " + v.getDestino().getName() +
                         "\n- Fecha despegue: " + v.getFechaDespegue() +
                         "\n- Fecha aterrizaje: " + v.getFechaAterrizaje()
         );

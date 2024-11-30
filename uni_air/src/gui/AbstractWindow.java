@@ -34,7 +34,8 @@ public abstract class AbstractWindow extends JFrame {
             }
         });
 
-        // TODO: añadir título a la ventana
+        this.setTitle("Uni-Air");
+
         // TODO: podría ser interesante añadir un icono a la ventana
     }
 
