@@ -1,23 +1,23 @@
 package domain;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Customer extends User {
 
-	private ZonedDateTime birthdate;
+	private LocalDate birthdate;
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-	public Customer(int id, String name, String surname, String mail, ZonedDateTime birthdate) {
+	public Customer(int id, String name, String surname, String mail, LocalDate birthdate) {
 		super(id, mail, mail, mail);
 		this.birthdate = birthdate;
 	}
 
-	public ZonedDateTime getBirthdate() {
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(ZonedDateTime birthdate) {
+	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
 

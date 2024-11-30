@@ -4,31 +4,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Vuelo {
-	private int codigo;
+	private String codigo;
 	private Airport origen;
 	private Airport destino;
 	private Airline airline;
 	private LocalDateTime fechaDespegue;
 	private LocalDateTime fechaAterrizaje;
-	private int pasajeros;
 	private int maxPasajeros;
 	private int precio;
 	private static ArrayList<Vuelo> vuelos;
 
-	public Vuelo(int codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
-				 LocalDateTime fechaAterrizaje, int pasajeros, int maxPasajeros, int precio) {
+	public Vuelo(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
+				 LocalDateTime fechaAterrizaje, int maxPasajeros, int precio) {
 		this.codigo = codigo;
 		this.origen = origen;
 		this.destino = destino;
 		this.airline = airline;
 		this.fechaDespegue = fechaDespegue;
 		this.fechaAterrizaje = fechaAterrizaje;
-		this.pasajeros = pasajeros;
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
-	}
-
-	public Vuelo() {
 	}
 
 	@Deprecated
@@ -78,12 +73,12 @@ public class Vuelo {
 //			System.err.println("Error al cargar los datos");
 //		}
 	}
-	
-	public int getCodigo() {
+
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 
@@ -135,14 +130,6 @@ public class Vuelo {
 		this.precio = precio;
 	}
 
-	public int getPasajeros() {
-		return pasajeros;
-	}
-
-	public void setPasajeros(int pasajeros) {
-		this.pasajeros = pasajeros;
-	}
-
 	public Airline getAirline() {
 		return airline;
 	}
@@ -160,7 +147,6 @@ public class Vuelo {
 				", airline=" + airline +
 				", fechaDespegue=" + fechaDespegue +
 				", fechaAterrizaje=" + fechaAterrizaje +
-				", pasajeros=" + pasajeros +
 				", maxPasajeros=" + maxPasajeros +
 				", precio=" + precio +
 				'}';

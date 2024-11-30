@@ -99,7 +99,7 @@ public class ModeloVuelo extends AbstractTableModel {
                 return v.getFechaAterrizaje();
             case 5:
                 if (this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
-                    return v.getPasajeros();
+                    //return v.getPasajeros();
                 } else {
                     return "→";
                 }

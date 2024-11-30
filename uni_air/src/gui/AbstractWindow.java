@@ -48,8 +48,11 @@ public abstract class AbstractWindow extends JFrame {
     }
 
     protected void exit() {
-        Thread t = new Thread(() -> DBManager.disconnect());
+        Thread t = new Thread(() -> {
+            DBManager.disconnect();
+            System.exit(0);
+        });
         t.start();
-        dispose();
+
     }
 }

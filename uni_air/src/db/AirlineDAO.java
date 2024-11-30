@@ -40,7 +40,9 @@ public class AirlineDAO implements Dao<Airline> {
 
     @Override
     public Airline get(Object param) {
-        String in = (String) param;
+        if (!(param instanceof String in)) {
+            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
+        }
         try {
             getAirlineByIdStatement.setString(1, in);
             ResultSet rs = getAirlineByIdStatement.executeQuery();

@@ -2,7 +2,6 @@ package db;
 
 import domain.Airport;
 
-import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,17 +40,15 @@ public class AirportDAO implements Dao<Airport> {
     }
 
     @Override
-    public Airport get(int id) {
-        throw new InvalidParameterException("Se debe buscar aerolínea por código IATA (String).");
-    }
-
-    @Override
-    public Airport get(String param) {
+    public Airport get(Object param) {
+        if (!(param instanceof String iata)) {
+            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
+        }
         try {
-            getAirportByIdStatement.setString(1, param);
+            getAirportByIdStatement.setString(1, iata);
             ResultSet rs = getAirportByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                return new Airport(param, rs.getString("FULL_NAME"), rs.getString("CITY"), rs.getString("COUNTRY"),
+                return new Airport(iata, rs.getString("FULL_NAME"), rs.getString("CITY"), rs.getString("COUNTRY"),
                         rs.getDouble("LONG"), rs.getDouble("LAT"));
             }
         } catch (SQLException e) {

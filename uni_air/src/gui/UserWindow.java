@@ -1,9 +1,6 @@
 package gui;
 
-import db.AirlineDAO;
-import db.AirportDAO;
-import domain.Airline;
-import domain.Airport;
+import db.FlightDAO;
 import domain.ModeloVuelo;
 import domain.ModeloVuelo.TipoVentana;
 import domain.Vuelo;
@@ -11,7 +8,6 @@ import domain.Vuelo;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserWindow extends AbstractWindow {
@@ -126,12 +122,10 @@ class FlightSearchPanel extends JPanel {
         });
 
         // TODO: DEBUG: Temporal, mientras no existe aún la búsqueda de vuelos
-        Airport origen = AirportDAO.getAirportDAO().get("LCG");
-        Airport destino = AirportDAO.getAirportDAO().get("BIO");
-        Airline airline = AirlineDAO.getAirlineDAO().get("VLG");
-        List<Vuelo> vuelos = List.of(new Vuelo(1, origen, destino, airline, LocalDateTime.now(), LocalDateTime.now(),
-                1, 1, 1));
-        modeloVuelo.getVuelos().addAll(vuelos);
+        //Airport origen = AirportDAO.getAirportDAO().get("LCG");
+        //Airport destino = AirportDAO.getAirportDAO().get("BIO");
+        //Airline airline = AirlineDAO.getAirlineDAO().get("VLG");
+        modeloVuelo.getVuelos().addAll(FlightDAO.getFlightDAO().getAll());
         SwingUtilities.invokeLater(() -> {
             modeloVuelo.fireTableDataChanged();
             progressBar.setIndeterminate(false);
@@ -207,7 +201,7 @@ class FlightHistoryPanel extends JSplitPane {
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             Vuelo v = (Vuelo) value;
-            c.setText(Integer.toString(v.getCodigo()));
+            c.setText(v.getCodigo());
             return c;
         }
 
