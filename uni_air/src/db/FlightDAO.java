@@ -1,20 +1,23 @@
 package db;
 
-import domain.Vuelo;
+import domain.Airport;
+import domain.Flight;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlightDAO implements Dao<Vuelo> {
+public class FlightDAO implements Dao<Flight> {
     private static FlightDAO flightDAO;
 
     private final PreparedStatement getByIdStatement;
     private final PreparedStatement getAllStatement;
+    private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
     //private final PreparedStatement updateStatement;
     //private final PreparedStatement deleteStatement;
@@ -25,6 +28,7 @@ public class FlightDAO implements Dao<Vuelo> {
             this.getByIdStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ID=?");
             this.getAllStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT");
             this.saveStatement = conn.prepareStatement("INSERT INTO FLIGHT(ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            this.searchStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, " + "DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ORIGIN_AIRPORT=? AND " + "DEST_AIRPORT=? AND DEPARTURE_TIME LIKE concat(?, '%')");
             //this.updateStatement = conn.prepareStatement("UPDATE FLIGHT SET NAME=? WHERE ID=?");
             //this.deleteStatement = conn.prepareStatement("DELETE FROM FLIGHT WHERE ID=?");
         } catch (SQLException e) {
@@ -40,7 +44,7 @@ public class FlightDAO implements Dao<Vuelo> {
     }
 
     @Override
-    public Vuelo get(Object param) {
+    public Flight get(Object param) {
         if (!(param instanceof Integer in)) {
             throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }
@@ -48,8 +52,7 @@ public class FlightDAO implements Dao<Vuelo> {
             getByIdStatement.setInt(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                return new Vuelo(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")),
-                        AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS"));
+                return new Flight(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")), AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -58,33 +61,51 @@ public class FlightDAO implements Dao<Vuelo> {
     }
 
     @Override
-    public List<Vuelo> getAll() {
-        ArrayList<Vuelo> vuelos = new ArrayList<>();
+    public List<Flight> getAll() {
+        ArrayList<Flight> flights = new ArrayList<>();
         try {
-            ResultSet rs = getAllStatement.executeQuery();
-            while (rs.next()) {
-                vuelos.add(new Vuelo(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")),
-                        AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS")));
-            }
+            getFlightsFromResultSet(flights, getAllStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(vuelos);
-        return vuelos;
+        System.out.println(flights);
+        return flights;
+    }
+
+    public List<Flight> search(Airport origin_airport, Airport destination_airport, LocalDate departure_date) {
+        ArrayList<Flight> flights = new ArrayList<>();
+        try {
+            searchStatement.setString(1, origin_airport.getIata());
+            searchStatement.setString(2, destination_airport.getIata());
+            searchStatement.setString(3, departure_date.toString());
+            System.out.println(departure_date.toString());
+            getFlightsFromResultSet(flights, searchStatement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(flights);
+        return flights;
+    }
+
+    private void getFlightsFromResultSet(ArrayList<Flight> flights, PreparedStatement searchStatement) throws SQLException {
+        ResultSet rs = searchStatement.executeQuery();
+        while (rs.next()) {
+            flights.add(new Flight(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")), AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS")));
+        }
     }
 
     @Override
-    public void save(Vuelo vuelo) {
+    public void save(Flight flight) {
         try {
-            saveStatement.setString(1, vuelo.getCodigo());
-            saveStatement.setString(2, vuelo.getOrigen().getName());
-            saveStatement.setString(3, vuelo.getDestino().getName());
-            saveStatement.setString(4, vuelo.getAirline().getName());
-            saveStatement.setString(5, vuelo.getFechaDespegue().toString());
-            saveStatement.setString(6, vuelo.getFechaAterrizaje().toString());
+            saveStatement.setString(1, flight.getCodigo());
+            saveStatement.setString(2, flight.getOrigen().getName());
+            saveStatement.setString(3, flight.getDestino().getName());
+            saveStatement.setString(4, flight.getAirline().getName());
+            saveStatement.setString(5, flight.getFechaDespegue().toString());
+            saveStatement.setString(6, flight.getFechaAterrizaje().toString());
             //saveStatement.setInt(7, vuelo.getPasajeros());
-            saveStatement.setInt(7, vuelo.getMaxPasajeros());
-            saveStatement.setInt(8, vuelo.getPrecio());
+            saveStatement.setInt(7, flight.getMaxPasajeros());
+            saveStatement.setInt(8, flight.getPrecio());
             saveStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,12 +113,12 @@ public class FlightDAO implements Dao<Vuelo> {
     }
 
     @Override
-    public void update(Vuelo vuelo) {
+    public void update(Flight flight) {
 
     }
 
     @Override
-    public void delete(Vuelo vuelo) {
+    public void delete(Flight flight) {
 
     }
 }

@@ -1,13 +1,20 @@
 package gui;
 
+import db.AirportDAO;
 import db.FlightDAO;
-import domain.ModeloVuelo;
-import domain.ModeloVuelo.TipoVentana;
-import domain.Vuelo;
+import domain.Airport;
+import domain.Flight;
+import domain.FlightModel;
+import domain.FlightModel.TipoVentana;
+import gui.misc.HintTextField;
+import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class UserWindow extends AbstractWindow {
@@ -47,7 +54,7 @@ class FlightSearchPanel extends JPanel {
     private static JProgressBar progressBar;
     private static JButton searchButton;
 
-    private static ModeloVuelo modeloVuelo;
+    private static FlightModel flightModel;
 
     public FlightSearchPanel() {
         this.setLayout(new BorderLayout());
@@ -57,20 +64,15 @@ class FlightSearchPanel extends JPanel {
         this.add(filtersPanel, BorderLayout.NORTH);
 
         // JTable para mostrar resultados
-        modeloVuelo = new ModeloVuelo(List.of(), TipoVentana.USER);
-        JTable tabla = new JTable(modeloVuelo);
+        flightModel = new FlightModel(List.of(), TipoVentana.USER);
+        JTable tabla = new JTable(flightModel);
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
-        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(modeloVuelo.getVuelos().get(row)));
+        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(flightModel.getFlights().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
 //		c.setCellRenderer(cellButtonRendererEditor);
 
         JScrollPane scrollPane = new JScrollPane(tabla);
-
-        // TEST: para actualizar la tabla al hacer la búsqueda
-//		b.addActionListener((e) -> {
-//			modeloVuelo.fireTableDataChanged();
-//		});
 
         this.add(scrollPane);
     }
@@ -83,9 +85,9 @@ class FlightSearchPanel extends JPanel {
 
         buttonsPanel.setBackground(UIManager.getColor("ProgressBar.foreground"));
 
-        JTextField origenField = new JTextField(10); // TODO: se podría añadir un placeholder?
-        JTextField destField = new JTextField(10);
-        JTextField datePicker = new JTextField(8); // TODO: se podría añadir un datePicker? añadir al menos lógica de
+        JTextField origenField = new HintTextField(11, "Aeropuerto de origen");
+        JTextField destField = new HintTextField(12, "Aeropuerto de destino");
+        JDatePicker datePicker = new JDatePicker();
 
         searchButton = new JButton("Buscar");
 
@@ -101,9 +103,14 @@ class FlightSearchPanel extends JPanel {
         filtersPanel.add(progressBar, BorderLayout.SOUTH);
 
         searchButton.addActionListener(e -> {
-            Thread t = new Thread(() -> {
-                updateTableData();
-            });
+            GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
+            if (calendar == null) {
+                JOptionPane.showMessageDialog(null, "¡Fecha de salida vacía!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
+
+            Thread t = new Thread(() -> updateTableData(origenField.getText(), destField.getText(), zonedDateTime.toLocalDate()));
             t.start();
 
         });
@@ -115,19 +122,23 @@ class FlightSearchPanel extends JPanel {
     /**
      * Carga datos de la búsqueda de vuelos en la tabla
      */
-    private static void updateTableData() {
+    private static void updateTableData(String origen, String destino, LocalDate fecha_salida) {
         SwingUtilities.invokeLater(() -> {
             progressBar.setIndeterminate(true);
             searchButton.setEnabled(false);
         });
-
-        // TODO: DEBUG: Temporal, mientras no existe aún la búsqueda de vuelos
-        //Airport origen = AirportDAO.getAirportDAO().get("LCG");
-        //Airport destino = AirportDAO.getAirportDAO().get("BIO");
-        //Airline airline = AirlineDAO.getAirlineDAO().get("VLG");
-        modeloVuelo.getVuelos().addAll(FlightDAO.getFlightDAO().getAll());
+        Airport airport_origen = AirportDAO.getAirportDAO().get(origen);
+        Airport airport_destino = AirportDAO.getAirportDAO().get(destino);
+        if (airport_origen == null) {
+            JOptionPane.showMessageDialog(null, "¡Aeropuerto de origen inválido!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (airport_destino == null) {
+            JOptionPane.showMessageDialog(null, "¡Aeropuerto de destino inválido!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            flightModel.getFlights().clear();
+            flightModel.getFlights().addAll(FlightDAO.getFlightDAO().search(airport_origen, airport_destino, fecha_salida));
+        }
         SwingUtilities.invokeLater(() -> {
-            modeloVuelo.fireTableDataChanged();
+            flightModel.fireTableDataChanged();
             progressBar.setIndeterminate(false);
             searchButton.setEnabled(true);
 
@@ -144,7 +155,7 @@ class FlightHistoryPanel extends JSplitPane {
     /**
      *
      */
-    JList<Vuelo> lista_vuelos = new JList<>();
+    JList<Flight> lista_vuelos = new JList<>();
     // En vez de un Label lo cambiaré para incluir mejor toda la información del
     // vuelo
     JLabel label = new JLabel();
@@ -152,7 +163,7 @@ class FlightHistoryPanel extends JSplitPane {
     JPanel panel = new JPanel();
 
     public FlightHistoryPanel() {
-        DefaultListModel<Vuelo> modelo = new DefaultListModel<>();
+        DefaultListModel<Flight> modelo = new DefaultListModel<>();
 
         lista_vuelos.setCellRenderer(new VueloListRenderer());
         // Ponemos el modelo para la lista de vuelos
@@ -162,7 +173,7 @@ class FlightHistoryPanel extends JSplitPane {
         // Para Obtener/Seleccionar un vuelo de la lista de vuelos
         lista_vuelos.getSelectionModel().addListSelectionListener(e -> {
             // Cogemos un vuelo
-            Vuelo v = lista_vuelos.getSelectedValue();
+            Flight v = lista_vuelos.getSelectedValue();
             /*
              * Ponemos los datos del Vuelo que queremos que aparezcan a la derecha de la
              * pantalla al seleccionar el vuelo que queremos ver
@@ -182,9 +193,9 @@ class FlightHistoryPanel extends JSplitPane {
         //add(panelDividido);
 
         Thread t = new Thread(() -> {
-            List<Vuelo> vuelos = Vuelo.getVuelos();
+            List<Flight> flights = Flight.getVuelos();
             SwingUtilities.invokeLater(() -> {
-                modelo.addAll(vuelos);
+                modelo.addAll(flights);
                 lista_vuelos.setModel(modelo);
                 lista_vuelos.ensureIndexIsVisible(modelo.getSize());
             });
@@ -200,7 +211,7 @@ class FlightHistoryPanel extends JSplitPane {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             VueloListRenderer c = (VueloListRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            Vuelo v = (Vuelo) value;
+            Flight v = (Flight) value;
             c.setText(v.getCodigo());
             return c;
         }

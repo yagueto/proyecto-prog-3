@@ -7,22 +7,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModeloVuelo extends AbstractTableModel {
+public class FlightModel extends AbstractTableModel {
 
     /**
      *
      */
     private static final long serialVersionUID = 7420003808520688709L;
     private final TipoVentana tipoVentana;
-    private final ArrayList<Vuelo> vuelos;
+    private final ArrayList<Flight> flights;
 
-    public ModeloVuelo(List<Vuelo> vuelos, TipoVentana tipoVentana) {
-        this.vuelos = new ArrayList<>(vuelos);
+    public FlightModel(List<Flight> flights, TipoVentana tipoVentana) {
+        this.flights = new ArrayList<>(flights);
         this.tipoVentana = tipoVentana;
     }
 
-    public List<Vuelo> getVuelos() {
-        return vuelos;
+    public List<Flight> getFlights() {
+        return flights;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ModeloVuelo extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return vuelos.size();
+        return flights.size();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ModeloVuelo extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Vuelo v = vuelos.get(rowIndex);
+        Flight v = flights.get(rowIndex);
         switch (columnIndex) {
             case 0:
                 return v.getCodigo();

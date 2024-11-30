@@ -1,8 +1,8 @@
 package gui;
 
-import domain.ModeloVuelo;
-import domain.ModeloVuelo.TipoVentana;
-import domain.Vuelo;
+import domain.Flight;
+import domain.FlightModel;
+import domain.FlightModel.TipoVentana;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -22,14 +22,14 @@ public class EmployeeWindow extends AbstractWindow {
         panel.setBorder(createBorder("Empleado"));
         this.add(panel, BorderLayout.NORTH);
 
-        ModeloVuelo vuelos = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.EMPLOYEE);
+        FlightModel vuelos = new FlightModel(Flight.getVuelos(), TipoVentana.EMPLOYEE);
         JTable tabla = new JTable(vuelos);
 
         TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 
         tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
-            // Vuelo.getVuelos().get(clickedRow).setPasajeros(Vuelo.getVuelos().get(clickedRow).getPasajeros() - 1);
-            SwingUtilities.invokeLater(() -> new CheckInWindow(this, Vuelo.getVuelos().get(clickedRow)));
+            // Vuelo.getFlights().get(clickedRow).setPasajeros(Vuelo.getFlights().get(clickedRow).getPasajeros() - 1);
+            SwingUtilities.invokeLater(() -> new CheckInWindow(this, Flight.getVuelos().get(clickedRow)));
             setVisible(false);
         }));
         // tableColumn.setCellRenderer(new CellButtonRendererEditor());

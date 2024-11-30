@@ -1,6 +1,6 @@
 package gui;
 
-import domain.Vuelo;
+import domain.Flight;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,7 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class CheckInWindow extends JFrame{
-    public CheckInWindow(JFrame frame, Vuelo vuelo){
+    public CheckInWindow(JFrame frame, Flight flight) {
         this.setSize(640, 480);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -26,9 +26,9 @@ public class CheckInWindow extends JFrame{
         JPanel panelInfor = new JPanel();
         JTextArea infor = new JTextArea();
         infor.setText(
-                "Vuelo: " + vuelo.getCodigo() + " | " +
-                "Origen: " + vuelo.getOrigen() + " | " +
-                "Destino: " + vuelo.getDestino()
+                "Vuelo: " + flight.getCodigo() + " | " +
+                        "Origen: " + flight.getOrigen() + " | " +
+                        "Destino: " + flight.getDestino()
         );
         infor.setEditable(false);
         infor.setOpaque(false);

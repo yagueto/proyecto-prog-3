@@ -1,8 +1,8 @@
 package gui;
 
-import domain.ModeloVuelo;
-import domain.ModeloVuelo.TipoVentana;
-import domain.Vuelo;
+import domain.Flight;
+import domain.FlightModel;
+import domain.FlightModel.TipoVentana;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class AdminWindow extends AbstractWindow {
         JPanel panel = new JPanel();
         panel.setBorder(createBorder("Admin"));
         JButton btnAnadirVuelo = new JButton("Añadir vuelo");
-        ModeloVuelo vuelos = new ModeloVuelo(Vuelo.getVuelos(), TipoVentana.ADMIN);
+        FlightModel vuelos = new FlightModel(Flight.getVuelos(), TipoVentana.ADMIN);
 
         JTable tabla = new JTable(vuelos);
         JScrollPane scrollPane = new JScrollPane(tabla);

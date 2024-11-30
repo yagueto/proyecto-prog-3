@@ -3,7 +3,7 @@ package domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Vuelo {
+public class Flight {
 	private String codigo;
 	private Airport origen;
 	private Airport destino;
@@ -12,10 +12,10 @@ public class Vuelo {
 	private LocalDateTime fechaAterrizaje;
 	private int maxPasajeros;
 	private int precio;
-	private static ArrayList<Vuelo> vuelos;
+	private static ArrayList<Flight> flights;
 
-	public Vuelo(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
-				 LocalDateTime fechaAterrizaje, int maxPasajeros, int precio) {
+	public Flight(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
+				  LocalDateTime fechaAterrizaje, int maxPasajeros, int precio) {
 		this.codigo = codigo;
 		this.origen = origen;
 		this.destino = destino;
@@ -27,17 +27,17 @@ public class Vuelo {
 	}
 
 	@Deprecated
-	public static ArrayList<Vuelo> getVuelos() {
-		if (vuelos == null) {
+	public static ArrayList<Flight> getVuelos() {
+		if (flights == null) {
 			System.out.println("Empieza a cargar vuelos");
-			vuelos = new ArrayList<>();
+			flights = new ArrayList<>();
 			Thread t = new Thread(() -> loadVuelos());
 			t.start();
 			System.out.println("Vuelos cargados");
 		} else {
 			System.out.println("Vuelos ya cargados previamente, devolviendo");
 		}
-		return vuelos;
+		return flights;
 	}
 	
 	// Llenar lista de vuelos desde archivo

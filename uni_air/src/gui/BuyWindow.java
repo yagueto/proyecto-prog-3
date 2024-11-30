@@ -1,6 +1,6 @@
 package gui;
 
-import domain.Vuelo;
+import domain.Flight;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class BuyWindow extends JFrame {
     private final JRadioButton paypalRadio;
     private final JRadioButton creditCardRadio;
 
-    public BuyWindow(Vuelo v) {
+    public BuyWindow(Flight v) {
         super();
         this.setSize(640, 480);
         this.setLocationRelativeTo(null);
@@ -104,7 +104,7 @@ public class BuyWindow extends JFrame {
         this.setVisible(true);
     }
 
-    private static JPanel getDetailsPanel(Vuelo v) {
+    private static JPanel getDetailsPanel(Flight v) {
         JPanel flightDetailsPanel = new JPanel();
         JTextArea flightDetailsField = new JTextArea();
         flightDetailsField.setText(
