@@ -58,9 +58,8 @@ public class DBManager {
     }
 
     public void createDB() {
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader("resources/db/initial_schema.sql"));) {
             Statement statement = conn.createStatement();
-            BufferedReader reader = new BufferedReader(new FileReader("resources/db/initial_schema.sql"));
             StringBuilder query = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {

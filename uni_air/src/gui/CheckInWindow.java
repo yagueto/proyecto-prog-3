@@ -10,6 +10,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class CheckInWindow extends JFrame{
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8110919845978625779L;
+
     public CheckInWindow(JFrame frame, Flight flight) {
         this.setSize(640, 480);
         this.setLocationRelativeTo(null);
