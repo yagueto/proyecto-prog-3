@@ -5,12 +5,15 @@ import io.PropertiesManager;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 
 public class DBManager {
     private static DBManager dbManager;
+    private static Connection con;
     private Connection conn = null;
 
     private DBManager() {
@@ -50,7 +53,7 @@ public class DBManager {
             } else {
                 conn = DriverManager.getConnection(connection_string + path);
             }
-
+ 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.err.println("Error cargando el driver de la BD: " + e.getMessage());
@@ -83,12 +86,43 @@ public class DBManager {
         }
     }
 
-	/*
-	 * OIHAN
-	public static User login(String email, String password) {
-		
+	public static void insertarUsuario(int dni, String name, String surname, String mail, String password) {
+		String sql = "INSERT INTO Usuario VALUES (?, ?, ?, ?, ?)";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, dni);
+			ps.setString(2, name);
+			ps.setString(3, surname);
+			ps.setString(4, mail);
+			ps.setString(5, password);
+			ps.execute();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	*/
+		
+    public static boolean existeUsuario(int dni) {
+		boolean existe = false;
+		String sql = "SELECT * FROM Usuario WHERE id = ?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, dni);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) { 
+				existe = true;
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return existe;
+	}
+
+	 
+	
+	
 
 
 }

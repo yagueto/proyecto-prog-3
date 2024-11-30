@@ -6,6 +6,7 @@ public abstract class User {
 	private String name;
 	private String surname;
 	private String mail;
+	private String password;
 
 	public User(int dni, String name, String surname, String mail) {
 		super();
@@ -47,10 +48,22 @@ public abstract class User {
 		this.mail = mail;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public String toString() {
-		return "User [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + "]";
+		return "User [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
+				+ password + "]";
 	}
+	
+
+	
 	
 	
 }
