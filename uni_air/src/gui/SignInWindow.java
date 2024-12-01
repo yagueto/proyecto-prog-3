@@ -1,6 +1,6 @@
 package gui;
 
-import db.DBManager;
+import db.UserDAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,10 +107,10 @@ public class SignInWindow extends AbstractWindow{
 			String apellido = txtApellido.getText();
 			String mail = txtMail.getText();
             String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
-            if (DBManager.getDBManager().existeUsuario(dni)) {
+            if (UserDAO.getUserDAO().existeUsuario(dni)) {
 				JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
 			}else {
-                DBManager.getDBManager().insertarUsuario(dni, nombre, apellido, mail, contrasenia);
+                UserDAO.getUserDAO().insertarUsuario(dni, nombre, apellido, mail, contrasenia);
 				JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
 				
 				

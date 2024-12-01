@@ -19,8 +19,8 @@ public class FlightDAO implements Dao<Flight> {
     private final PreparedStatement getAllStatement;
     private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
-    //private final PreparedStatement updateStatement;
-    //private final PreparedStatement deleteStatement;
+    private final PreparedStatement updateStatement;
+    private final PreparedStatement deleteStatement;
 
     private FlightDAO() {
         Connection conn = DBManager.getDBManager().conn;
@@ -29,8 +29,8 @@ public class FlightDAO implements Dao<Flight> {
             this.getAllStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT");
             this.saveStatement = conn.prepareStatement("INSERT INTO FLIGHT(ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             this.searchStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, " + "DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ORIGIN_AIRPORT=? AND " + "DEST_AIRPORT=? AND DEPARTURE_TIME LIKE concat(?, '%')");
-            //this.updateStatement = conn.prepareStatement("UPDATE FLIGHT SET NAME=? WHERE ID=?");
-            //this.deleteStatement = conn.prepareStatement("DELETE FROM FLIGHT WHERE ID=?");
+            this.updateStatement = conn.prepareStatement("UPDATE FLIGHT SET DEST_AIRPORT=?, DEPARTURE_TIME=?, PRECIO=? WHERE ID=?");
+            this.deleteStatement = conn.prepareStatement("DELETE FROM FLIGHT WHERE ID=?");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -110,14 +110,30 @@ public class FlightDAO implements Dao<Flight> {
             throw new RuntimeException(e);
         }
     }
-
+    // Este métdodo lo implementaremos para que un admin o employye puede modificar vuelos debido a retrasos, cambios de precio... 
     @Override
     public void update(Flight flight) {
-
+    	try {
+			updateStatement.setString(3, flight.getDestino().getName());
+			updateStatement.setString(5, flight.getFechaDespegue().format(null));
+			updateStatement.setInt(8, flight.getPrecio());
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.err.println("No se ha podido actualizar en la db");
+		}
     }
-
+    
+    // Este métdodo lo implementaremos para que un employee o admin pueda cancelar/borrar vuelos
     @Override
     public void delete(Flight flight) {
+    	try {
+			deleteStatement.setString(1, flight.getCodigo());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println("No se ha podido eliminar de la db");
 
+		}
     }
 }

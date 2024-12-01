@@ -19,20 +19,20 @@ public class UserDAO implements Dao<User> {
 
     private final PreparedStatement getUserByIdStatement;
     private final PreparedStatement getAllUsersStatement;
-    //private final PreparedStatement saveUserStatement;
-    //private final PreparedStatement updateUserStatement;
-    //private final PreparedStatement deleteUserStatement;
+    private final PreparedStatement saveUserStatement;
+    private final PreparedStatement updateUserStatement;
+    private final PreparedStatement deleteUserStatement;
 
     private UserDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
             this.getUserByIdStatement = conn.prepareStatement("SELECT NAME FROM USER WHERE DNI=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE FROM USER");
-//            this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, " +
-//                    "USER_TYPE) VALUES (?, ?, ?, ?, ?, ?)");
-//            this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, BIRTHDATE=?, EMAIL=?, " +
-//                    "SURNAME=?, USER_TYPE=? WHERE DNI=?");
-//            this.deleteUserStatement = conn.prepareStatement("DELETE FROM USER WHERE DNI=?");
+            this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, " +
+                      "USER_TYPE) VALUES (?, ?, ?, ?, ?, ?)");
+            this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, BIRTHDATE=?, EMAIL=?, " +
+                    "SURNAME=?, USER_TYPE=? WHERE DNI=?");
+            this.deleteUserStatement = conn.prepareStatement("DELETE FROM USER WHERE DNI=?");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -137,17 +137,39 @@ public class UserDAO implements Dao<User> {
 	}
     @Override
     public void save(User user) {
-
+    	 try {
+             saveUserStatement.setInt(1, user.getDni());
+             saveUserStatement.setString(2, user.getName());
+             saveUserStatement.setString(3, user.getSurname());
+             saveUserStatement.setString(4, user.getMail());
+             saveUserStatement.setString(5, user.getPassword());
+           
+             saveUserStatement.executeQuery();
+         } catch (SQLException e) {
+             throw new RuntimeException(e);
+         }
     }
-
+    // Actualizar datos de usuario: cambios de mail, contraseña... a implemetar más adelante
     @Override
     public void update(User user) {
-
+    	try {
+			updateUserStatement.setString(2, user.getName());
+			updateUserStatement.setString(3, user.getSurname());
+			updateUserStatement.setString(4, user.getMail());
+			updateUserStatement.setString(5, user.getPassword());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+    	
     }
-
+    // Borrar User, tarea de administrador o usuario se da de baja
     @Override
     public void delete(User user) {
-
+    	try {
+            deleteUserStatement.setInt(1, user.getDni());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

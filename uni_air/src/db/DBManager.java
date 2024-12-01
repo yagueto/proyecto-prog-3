@@ -4,6 +4,10 @@ import io.PropertiesManager;
 
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDateTime;
+
+import domain.Airline;
+import domain.Airport;
 
 
 public class DBManager {
@@ -80,37 +84,6 @@ public class DBManager {
         }
     }
 
-    public void insertarUsuario(int dni, String name, String surname, String mail, String password) {
-		String sql = "INSERT INTO Usuario VALUES (?, ?, ?, ?, ?)";
-		try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, dni);
-			ps.setString(2, name);
-			ps.setString(3, surname);
-			ps.setString(4, mail);
-			ps.setString(5, password);
-			ps.execute();
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-    public boolean existeUsuario(int dni) {
-		boolean existe = false;
-		String sql = "SELECT * FROM Usuario WHERE id = ?";
-		try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, dni);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) { 
-				existe = true;
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return existe;
-	}
+    
+    
 }
