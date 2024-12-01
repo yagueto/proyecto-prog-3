@@ -54,12 +54,12 @@ public class UserDAO implements Dao<User> {
             getUserByIdStatement.setString(1, dni);
             ResultSet rs = getUserByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                UserType userType = null;
+                UserType userType;
                 int user_type = rs.getInt("USER_TYPE");
                 if (user_type <= UserType.values().length) {
                     userType = UserType.values()[user_type];
                 } else {
-                    throw new RuntimeException("Tipo de usuario inválido (" + Integer.toString(user_type) + ").");
+                    throw new RuntimeException("Tipo de usuario inválido (" + user_type + ").");
                 }
                 switch (userType) {
                     case UserType.ADMIN, UserType.EMPLOYEE -> {
@@ -82,20 +82,16 @@ public class UserDAO implements Dao<User> {
         try {
             ResultSet rs = getAllUsersStatement.executeQuery();
             while (rs.next()) {
-                UserType userType = null;
+                UserType userType;
                 int user_type = rs.getInt("USER_TYPE");
                 if (user_type <= UserType.values().length) {
                     userType = UserType.values()[user_type];
                 } else {
-                    throw new RuntimeException("Tipo de usuario inválido (" + Integer.toString(user_type) + ").");
+                    throw new RuntimeException("Tipo de usuario inválido (" + user_type + ").");
                 }
                 switch (userType) {
-                    case UserType.ADMIN, UserType.EMPLOYEE -> {
-                        users.add(new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType));
-                    }
-                    case UserType.CUSTOMER -> {
-                        users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE"))));
-                    }
+                    case UserType.ADMIN, UserType.EMPLOYEE -> users.add(new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType));
+                    case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE"))));
                 }
             }
         } catch (SQLException e) {

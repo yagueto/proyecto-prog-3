@@ -10,10 +10,10 @@ public class SignInWindow extends AbstractWindow{
 
 	private static final long serialVersionUID = 8522535521661703102L;
 	private final JTextField txtNombreUsuario;
-	private JPasswordField  txtContraseniaUsuario;
-	private JTextField txtDni;
-	private JTextField txtApellido;
-	private  JTextField txtMail;
+	private final JPasswordField  txtContraseniaUsuario;
+	private final JTextField txtDni;
+	private final JTextField txtApellido;
+	private final JTextField txtMail;
 
 	public SignInWindow() {
         JPanel pNorte = new JPanel();

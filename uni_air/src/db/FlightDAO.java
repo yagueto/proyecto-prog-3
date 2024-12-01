@@ -78,7 +78,6 @@ public class FlightDAO implements Dao<Flight> {
             searchStatement.setString(1, origin_airport.getIata());
             searchStatement.setString(2, destination_airport.getIata());
             searchStatement.setString(3, departure_date.toString());
-            System.out.println(departure_date.toString());
             getFlightsFromResultSet(flights, searchStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);

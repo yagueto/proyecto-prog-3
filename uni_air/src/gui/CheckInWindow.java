@@ -31,9 +31,9 @@ public class CheckInWindow extends JFrame{
         JPanel panelInfor = new JPanel();
         JTextArea infor = new JTextArea();
         infor.setText(
-                "Vuelo: " + flight.getCodigo() + " | " +
-                        "Origen: " + flight.getOrigen() + " | " +
-                        "Destino: " + flight.getDestino()
+                "Vuelo: " + flight.getCodigo() + "\n" +
+                        "Origen: " + flight.getOrigen().getName() + "\n" +
+                        "Destino: " + flight.getDestino().getName()
         );
         infor.setEditable(false);
         infor.setOpaque(false);
@@ -46,6 +46,11 @@ public class CheckInWindow extends JFrame{
         panel.add(panelCodigo, BorderLayout.SOUTH);
 
         this.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                codigoEmpleado.requestFocus();
+            }
 
             @Override
             public void windowClosing(WindowEvent e) {

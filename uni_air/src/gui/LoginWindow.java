@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class LoginWindow extends AbstractWindow {
     private static final long serialVersionUID = -1392377673421616906L;
@@ -54,7 +55,7 @@ public class LoginWindow extends AbstractWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = txtNombreUsuario.getText();
-                @SuppressWarnings("deprecation") String contrasenia = txtContraseniaUsuario.getText();
+                String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
                 if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");

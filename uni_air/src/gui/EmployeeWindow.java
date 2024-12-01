@@ -1,6 +1,6 @@
 package gui;
 
-import domain.Flight;
+import db.FlightDAO;
 import domain.FlightModel;
 import domain.FlightModel.TipoVentana;
 
@@ -22,14 +22,15 @@ public class EmployeeWindow extends AbstractWindow {
         panel.setBorder(createBorder("Empleado"));
         this.add(panel, BorderLayout.NORTH);
 
-        FlightModel vuelos = new FlightModel(Flight.getVuelos(), TipoVentana.EMPLOYEE);
+        FlightModel vuelos = new FlightModel(FlightDAO.getFlightDAO().getAll(), TipoVentana.EMPLOYEE);
         JTable tabla = new JTable(vuelos);
+        resizeColumnWidth(tabla);
 
         TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 
         tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
             // Vuelo.getFlights().get(clickedRow).setPasajeros(Vuelo.getFlights().get(clickedRow).getPasajeros() - 1);
-            SwingUtilities.invokeLater(() -> new CheckInWindow(this, Flight.getVuelos().get(clickedRow)));
+            SwingUtilities.invokeLater(() -> new CheckInWindow(this, vuelos.getFlights().get(clickedRow)));
             setVisible(false);
         }));
         // tableColumn.setCellRenderer(new CellButtonRendererEditor());
@@ -40,6 +41,5 @@ public class EmployeeWindow extends AbstractWindow {
 
         setVisible(true);
     }
-
 
 }

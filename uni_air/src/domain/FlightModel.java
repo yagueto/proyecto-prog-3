@@ -90,16 +90,16 @@ public class FlightModel extends AbstractTableModel {
             case 0:
                 return v.getCodigo();
             case 1:
-                return v.getOrigen();
+                return v.getOrigen().getName();
             case 2:
-                return v.getDestino();
+                return v.getDestino().getName();
             case 3:
                 return v.getFechaDespegue();
             case 4:
                 return v.getFechaAterrizaje();
             case 5:
                 if (this.tipoVentana.equals(TipoVentana.EMPLOYEE)) {
-                    //return v.getPasajeros();
+                    return "0";
                 } else {
                     return "→";
                 }
