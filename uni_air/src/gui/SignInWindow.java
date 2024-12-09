@@ -1,10 +1,13 @@
 package gui;
 
 import db.UserDAO;
+import domain.Customer;
+
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
+import java.time.LocalDate;
+
 
 public class SignInWindow extends AbstractWindow{
 
@@ -14,14 +17,27 @@ public class SignInWindow extends AbstractWindow{
 	private final JTextField txtDni;
 	private final JTextField txtApellido;
 	private final JTextField txtMail;
+	
+	
+	
 
 	public SignInWindow() {
+		
+		setTitle("Registro de Usuario");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+       
+        
         JPanel pNorte = new JPanel();
         JPanel pSur = new JPanel();
-        JPanel pCentro = new JPanel(new GridLayout(3,0));
-        
+        JPanel pCentro = new JPanel(new GridBagLayout());
         JPanel pOeste = new JPanel();
         JPanel pEste = new JPanel();
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(40, 10, 10, 10); // Margen entre componentes
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
         
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pEste, BorderLayout.EAST);
@@ -35,7 +51,7 @@ public class SignInWindow extends AbstractWindow{
 
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
         JLabel lblNombreUsuario = new JLabel("Introduce tu nombre: ");
-        JLabel lblmail=  new JLabel("Introduce tu MAIL:");
+        JLabel lblMail=  new JLabel("Introduce tu MAIL:");
         JLabel lblContraseniaUsuario = new JLabel("| Introduce tu contraseña: ");
         JLabel lblDni = new JLabel("Introduce tu DNI: ");
         JLabel lblApellido = new JLabel("Introduce tu Apellido: ");
@@ -45,6 +61,7 @@ public class SignInWindow extends AbstractWindow{
         txtDni = new JTextField(10);
         txtApellido = new JTextField(10);
         txtMail = new JTextField(10);
+        
 
 
         pSur.add(btnRegistrarse);
@@ -52,6 +69,39 @@ public class SignInWindow extends AbstractWindow{
 
         pNorte.add(lblTitulo);
 
+        
+        
+     // Primera fila: Nombre
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+        pCentro.add(lblNombreUsuario, gbc);
+        gbc.gridx = 1; gbc.gridy = 1;
+        pCentro.add(txtNombreUsuario, gbc);
+
+        // Segunda fila: Apellido
+        gbc.gridx = 0; gbc.gridy = 2;
+        pCentro.add(lblApellido, gbc);
+        gbc.gridx = 1; gbc.gridy = 2;
+        pCentro.add(txtApellido, gbc);
+
+        // Tercera fila: DNI
+        gbc.gridx = 0; gbc.gridy = 3;
+        pCentro.add(lblDni, gbc);
+        gbc.gridx = 1; gbc.gridy = 3;
+        pCentro.add(txtDni, gbc);
+
+        // Cuarta fila: Mail
+        gbc.gridx = 0; gbc.gridy = 4;
+        pCentro.add(lblMail, gbc);
+        gbc.gridx = 1; gbc.gridy = 4;
+        pCentro.add(txtMail, gbc);
+
+        // Quinta fila: Contraseña
+        gbc.gridx = 0; gbc.gridy = 5;
+        pCentro.add(lblContraseniaUsuario, gbc);
+        gbc.gridx = 1; gbc.gridy = 5;
+        pCentro.add(txtContraseniaUsuario, gbc);
+
+       /* 
         pCentro.add(lblNombreUsuario);
         pCentro.add(txtNombreUsuario);
         pCentro.add(lblApellido);
@@ -63,59 +113,32 @@ public class SignInWindow extends AbstractWindow{
         pCentro.add(lblContraseniaUsuario);
         pCentro.add(txtContraseniaUsuario);
 
-
-        btnVolver.addActionListener(e -> exit());
-
-        /*
-        ActionListener l = new ActionListener() {
-
-        	
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String usuario = txtNombreUsuario.getText();
-                @SuppressWarnings("deprecation") String contrasenia = txtContraseniaUsuario.getText();
-                if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-                    SwingUtilities.invokeLater(UserWindow::new);
-                    dispose();
-                } else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
-                    
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
-                    SwingUtilities.invokeLater(AdminWindow::new);
-                    dispose();
-                } else if (usuario.equals("EMPLEADO3") && contrasenia.equals("EMPLEADO3")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
-                    SwingUtilities.invokeLater(EmployeeWindow::new);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    vaciarCampos();
-                }
-            }
-            
-            public void vaciarCampos() {
-                txtNombreUsuario.setText("");
-                txtContraseniaUsuario.setText("");
-            }
-        };
         */
+        btnVolver.addActionListener(e -> { 
+        	new LoginWindow();
+            dispose();
+        });
+
+       
+        
         btnRegistrarse.addActionListener((e)->{
 			int dni  = Integer.parseInt(txtDni.getText());
 			String nombre = txtNombreUsuario.getText();
 			String apellido = txtApellido.getText();
 			String mail = txtMail.getText();
-            String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+            //String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+            
+            Customer  cs= new Customer(dni, nombre, apellido, mail,LocalDate.of(2024,12,12));
             if (UserDAO.getUserDAO().existeUsuario(dni)) {
 				JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
 			}else {
-                UserDAO.getUserDAO().insertarUsuario(dni, nombre, apellido, mail, contrasenia);
+                UserDAO.getUserDAO().save(cs);
 				JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
 				
 				
 			}
 		});
+        
 
         setVisible(true);
         

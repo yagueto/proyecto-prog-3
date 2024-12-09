@@ -83,7 +83,11 @@ public class LoginWindow extends AbstractWindow {
             }
         };
         btnIniciarSesion.addActionListener(l);
-        btnRegistrarse.addActionListener(e -> SwingUtilities.invokeLater(SignInWindow::new));
+        btnRegistrarse.addActionListener(e ->{
+        	new SignInWindow();
+        	dispose();
+        });
+        
 
         setVisible(true);
     }

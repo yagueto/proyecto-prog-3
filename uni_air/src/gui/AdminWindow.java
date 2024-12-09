@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import db.AirlineDAO;
 import db.AirportDAO;
-import db.DBManager;
+
 import db.FlightDAO;
 
 import java.awt.*;
