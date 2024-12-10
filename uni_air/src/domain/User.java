@@ -8,7 +8,7 @@ public abstract class User {
 	private String mail;
 	private String password;
 
-	public User(int dni, String name, String surname, String mail) {
+	public User(int dni, String name, String surname, String mail, String password) {
 		super();
 		this.dni = dni;
 		this.name = name;

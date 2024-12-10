@@ -8,8 +8,8 @@ public class Customer extends User {
 	private LocalDate birthdate;
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-	public Customer(int id, String name, String surname, String mail, LocalDate birthdate) {
-		super(id, mail, mail, mail);
+	public Customer(int id, String name, String surname, String mail, String password,LocalDate birthdate) {
+		super(id, name, surname, mail,password);
 		this.birthdate = birthdate;
 	}
 

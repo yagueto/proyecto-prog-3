@@ -2,11 +2,12 @@ package gui;
 
 import db.UserDAO;
 import domain.Customer;
-
+import domain.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 
 public class SignInWindow extends AbstractWindow{
@@ -17,6 +18,7 @@ public class SignInWindow extends AbstractWindow{
 	private final JTextField txtDni;
 	private final JTextField txtApellido;
 	private final JTextField txtMail;
+	
 	
 	
 	
@@ -121,23 +123,24 @@ public class SignInWindow extends AbstractWindow{
 
        
         
+        // 
+        
         btnRegistrarse.addActionListener((e)->{
-			int dni  = Integer.parseInt(txtDni.getText());
-			String nombre = txtNombreUsuario.getText();
-			String apellido = txtApellido.getText();
-			String mail = txtMail.getText();
-            //String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+        	//Que guarde el dni, nombre, apellido, mail y contraseña en la base de datos
+        	int dni = Integer.parseInt(txtDni.getText());
+            String nombre = txtNombreUsuario.getText();
+            String apellido = txtApellido.getText();
+            String mail = txtMail.getText();
+            String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
             
-            Customer  cs= new Customer(dni, nombre, apellido, mail,LocalDate.of(2024,12,12));
+			User usu = new Customer(dni, nombre, apellido, mail, contrasenia, LocalDate.now());
             if (UserDAO.getUserDAO().existeUsuario(dni)) {
-				JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
-			}else {
-                UserDAO.getUserDAO().save(cs);
-				JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
-				
-				
-			}
-		});
+                JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                UserDAO.getUserDAO().save(usu);
+                JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         
 
         setVisible(true);

@@ -67,7 +67,8 @@ public class UserDAO implements Dao<User> {
                         return new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType);
                     }
                     case UserType.CUSTOMER -> {
-                        return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE")));
+                        return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE")));
+                    	//return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE")));
                     }
                 }
             }
@@ -92,7 +93,8 @@ public class UserDAO implements Dao<User> {
                 }
                 switch (userType) {
                     case UserType.ADMIN, UserType.EMPLOYEE -> users.add(new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType));
-                    case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE"))));
+                    case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE"))));
+                    //case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getPassword("PASSWORD"),LocalDate.parse(rs.getString("BIRTHDATE"))));
                 }
             }
         } catch (SQLException e) {
@@ -101,26 +103,11 @@ public class UserDAO implements Dao<User> {
         return users;
     }
 
-    public void insertarUsuario(int dni, String name, String surname, String mail, String password) {
-		String sql = "INSERT INTO Usuario VALUES (?, ?, ?, ?, ?)";
-		try {
     
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, dni);
-			ps.setString(2, name);
-			ps.setString(3, surname);
-			ps.setString(4, mail);
-			ps.setString(5, password);
-			ps.execute();
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
     public boolean existeUsuario(int dni) {
 		boolean existe = false;
-		String sql = "SELECT * FROM Usuario WHERE id = ?";
+		String sql = "SELECT COUNT(*) FROM Usuario WHERE id = ?";
 		try {
             PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, dni);
@@ -148,6 +135,19 @@ public class UserDAO implements Dao<User> {
          } catch (SQLException e) {
              throw new RuntimeException(e);
          }
+    }
+    public void save(Customer customer) {
+        String query = "INSERT INTO usuarios (dni, nombre, apellido, mail, contrasenia) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, customer.getDni());
+            stmt.setString(2, customer.getName());
+            stmt.setString(3, customer.getSurname());
+            stmt.setString(4, customer.getMail());
+            stmt.setString(5, customer.getPassword());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     // Actualizar datos de usuario: cambios de mail, contraseña... a implemetar más adelante
     @Override
