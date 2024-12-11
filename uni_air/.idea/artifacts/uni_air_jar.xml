@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="uni_air:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/uni_air_jar</output-path>
+    <root id="archive" name="uni_air.jar">
+      <element id="module-output" name="uni_air" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/sqlite-jdbc-3.47.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/flatlaf-3.5.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jdatepicker-2.0.3.jar" path-in-jar="/" />
+      <element id="library" level="module" name="junit5" module-name="uni_air" />
+      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
+    </root>
+  </artifact>
+</component>

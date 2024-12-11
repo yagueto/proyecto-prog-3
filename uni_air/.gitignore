@@ -1,3 +1,4 @@
 /bin/
 /resources/db/*.db
 /conf/config.properties
+/out/*

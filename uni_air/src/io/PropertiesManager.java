@@ -1,9 +1,7 @@
 package io;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.util.Properties;
 
 public class PropertiesManager {
@@ -34,11 +32,21 @@ public class PropertiesManager {
         properties.setProperty("db_driver", "org.sqlite.JDBC");
         properties.setProperty("db_connectionString", "jdbc:sqlite:");
         properties.setProperty("db_path", "resources/db/data.db");
+        File directory = new File("conf/");
+        if (!directory.exists()) {
+            boolean success = directory.mkdir();
+            if (!success) {
+                JOptionPane.showMessageDialog(null, "ERROR", "No se ha podido crear el fichero de " +
+                        "configuración. La carpeta " + directory.getParent() + " no existe y no se ha podido crear " +
+                        "(¿Faltan permisos?). La aplicación no puede continuar.", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+        }
         try (FileOutputStream salida = new FileOutputStream(propertiesPath)) {
             properties.store(salida, "Configuración por defecto de la app");
             System.out.println("Se ha creado el archivo de configuración.");
         } catch (IOException e) {
-            System.err.println("ERROR: no se ha podido crear un archivo de configuración. El directorio 'conf' " + "puede no existir o no haber suficientes permisos");
+            System.err.println("ERROR: no se ha podido crear un archivo de configuración. El directorio 'conf' puede no existir o no haber suficientes permisos");
         }
         loadConfigFromFile();
     }

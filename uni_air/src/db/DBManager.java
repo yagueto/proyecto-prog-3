@@ -2,12 +2,13 @@ package db;
 
 import io.PropertiesManager;
 
+import javax.swing.*;
 import java.io.*;
-import java.sql.*;
-import java.time.LocalDateTime;
-
-import domain.Airline;
-import domain.Airport;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Objects;
 
 
 public class DBManager {
@@ -16,11 +17,7 @@ public class DBManager {
 
 
     private DBManager() {
-        this.connect(
-                (String) PropertiesManager.getProperty("db_driver"),
-                (String) PropertiesManager.getProperty("db_connectionString"),
-                (String) PropertiesManager.getProperty("db_path")
-        );
+        this.connect((String) PropertiesManager.getProperty("db_driver"), (String) PropertiesManager.getProperty("db_connectionString"), (String) PropertiesManager.getProperty("db_path"));
     }
 
     public static DBManager getDBManager() {
@@ -46,23 +43,28 @@ public class DBManager {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
-            if (!new File(path).exists()) {
+            File f;
+            if (!(f = new File(path)).exists()) {
+                if (!f.getParentFile().mkdirs()) {
+                    System.exit(1);
+                }
                 conn = DriverManager.getConnection(connection_string + path);
                 this.createDB();
             } else {
                 conn = DriverManager.getConnection(connection_string + path);
             }
- 
+
+
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error cargando el driver de la BD: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "No se ha podido cargar el driver JDBC", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         } catch (SQLException e) {
-            System.err.println("Error conectando a la BD" + e.getMessage());
+            System.err.println("Error conectando a la BD: " + e.getMessage());
         }
     }
 
     public void createDB() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("resources/db/initial_schema.sql"));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/db/initial_schema.sql"))))) {
             Statement statement = conn.createStatement();
             StringBuilder query = new StringBuilder();
             String line;
@@ -77,13 +79,13 @@ public class DBManager {
             System.out.println("Tablas creadas");
 
         } catch (FileNotFoundException e) {
-            System.err.println("No se ha encontrado el archivo básico de configuración de BBDD. No se puede crear.");
-            throw new RuntimeException("No existe el archivo básico de configuración de BBDD.");
+            JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuración de la base de datos y ésta no existe. No se puede continuar", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(null, "El archivo de configuración de la base de datos está corrupto.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
     }
 
-    
-    
+
 }
