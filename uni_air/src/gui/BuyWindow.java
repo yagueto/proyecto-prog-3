@@ -1,5 +1,8 @@
 package gui;
 
+import db.BookingDAO;
+import db.UserDAO;
+import domain.Booking;
 import domain.Flight;
 
 import javax.swing.*;
@@ -17,12 +20,10 @@ public class BuyWindow extends JFrame {
     private final JTextField passportField;
     private final JTextField phoneField;
 
-    private final JRadioButton radioDni;
-    private final JRadioButton radioPassport;
     private final JRadioButton paypalRadio;
     private final JRadioButton creditCardRadio;
 
-    public BuyWindow(Flight v) {
+    public BuyWindow(Flight flight) {
         super();
         this.setSize(640, 480);
         this.setLocationRelativeTo(null);
@@ -37,12 +38,13 @@ public class BuyWindow extends JFrame {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Detalles del vuelo
-        JPanel flightDetailsPanel = getDetailsPanel(v);
+        JPanel flightDetailsPanel = getDetailsPanel(flight);
 
         // Nombre completo:
         JPanel userNamePanel = new JPanel();
         JLabel fullNameLabel = new JLabel("Nombre completo:");
         nameField = new JTextField(15);
+        nameField.setText(UserDAO.getLoggedInUser().getName());
         userNamePanel.add(fullNameLabel);
         userNamePanel.add(nameField);
 
@@ -50,19 +52,16 @@ public class BuyWindow extends JFrame {
         JPanel emailPanel = new JPanel();
         JLabel emailLabel = new JLabel("Correo electrónico:");
         emailField = new JTextField(15);
+        emailField.setText(UserDAO.getLoggedInUser().getMail());
         emailPanel.add(emailLabel);
         emailPanel.add(emailField);
 
         // DNI / Pasaporte:
         JPanel passportPanel = new JPanel();
-        radioDni = new JRadioButton("DNI");
-        radioPassport = new JRadioButton("Pasaporte");
-        ButtonGroup passportGroup = new ButtonGroup();
-        passportGroup.add(radioDni);
-        passportGroup.add(radioPassport);
-        passportPanel.add(radioDni);
-        passportPanel.add(radioPassport);
+        JLabel passportLabel = new JLabel("DNI:                           ");
         passportField = new JTextField(15);
+        passportField.setText(Integer.toString(UserDAO.getLoggedInUser().getDni()));
+        passportPanel.add(passportLabel, BorderLayout.WEST);
         passportPanel.add(passportField);
 
         // Número de teléfono
@@ -88,7 +87,7 @@ public class BuyWindow extends JFrame {
         // Botón de confirmación
         JPanel confirmPanel = new JPanel();
         JButton progressBar = new JButton("OK");
-        progressBar.addActionListener(e -> onSubmit());
+        progressBar.addActionListener(e -> onSubmit(flight));
         confirmPanel.add(progressBar);
 
         panel.add(flightDetailsPanel);
@@ -128,7 +127,7 @@ public class BuyWindow extends JFrame {
         phoneField.setBackground(null);
     }
 
-    private void onSubmit() {
+    private void onSubmit(Flight flight) {
         resetFieldFormat();
 
         String error = "";
@@ -159,8 +158,6 @@ public class BuyWindow extends JFrame {
         if (!emailField.getText().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
             error = "Correo electrónico inválido";
             emailField.setBackground(Color.RED);
-        } else if (!radioDni.isSelected() && !radioPassport.isSelected()) {
-            error = "No se ha seleccionado pasaporte o DNI";
         } else if (!paypalRadio.isSelected() && !creditCardRadio.isSelected()) {
             error = "No se ha seleccionado método de pago";
         }
@@ -175,7 +172,8 @@ public class BuyWindow extends JFrame {
             return;
         }
 
-        // TODO: gestionar los datos
+        Booking booking = new Booking(UserDAO.getLoggedInUser(), flight, 0);
+        BookingDAO.getBookingDAO().save(booking);
         dispose();
     }
 }

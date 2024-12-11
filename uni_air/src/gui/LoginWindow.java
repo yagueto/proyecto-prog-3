@@ -1,9 +1,13 @@
 package gui;
 
+import db.UserDAO;
+import domain.Customer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 public class LoginWindow extends AbstractWindow {
     private static final long serialVersionUID = -1392377673421616906L;
@@ -74,7 +78,11 @@ public class LoginWindow extends AbstractWindow {
                 } else {
                     JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
                     vaciarCampos();
+                    return;
                 }
+                // TODO: gestionar usuarios
+                UserDAO.setLoggedInUser(new Customer(123456789, "John", "Doe", "johndoe@example.com", "example",
+                        LocalDate.now()));
             }
 
             public void vaciarCampos() {

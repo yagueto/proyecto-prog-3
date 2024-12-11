@@ -24,7 +24,7 @@ public class BookingDAO implements Dao<Booking> {
         try {
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ID=?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM BOOKING");
-            this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (ID, USER, FLIGHT) VALUES (?, ?, ?)");
+            this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (USER, FLIGHT) VALUES (?, ?)");
             //this.searchStatement = conn.prepareStatement("");
             //this.updateStatement = conn.prepareStatement("UPDATE BOOKING SET ID=?, USER=?, FLIGHT=? WHERE ID=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM BOOKING WHERE ID=?");
@@ -75,10 +75,10 @@ public class BookingDAO implements Dao<Booking> {
     @Override
     public void save(Booking booking) {
         try {
-            saveStatement.setInt(1, booking.getId());
-            saveStatement.setInt(2, booking.getCustomer().getDni());
-            saveStatement.setString(3, booking.getFlight().getCodigo());
-            saveStatement.executeQuery();
+            saveStatement.setInt(1, booking.getCustomer().getDni());
+            saveStatement.setString(2, booking.getFlight().getCodigo());
+            saveStatement.execute();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
