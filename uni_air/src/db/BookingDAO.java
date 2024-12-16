@@ -1,6 +1,7 @@
 package db;
 
 import domain.Booking;
+import domain.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,16 +14,18 @@ public class BookingDAO implements Dao<Booking> {
     private static BookingDAO bookingDAO;
 
     private final PreparedStatement getByIdStatement;
+    private final PreparedStatement getByUserStatement;
     private final PreparedStatement getAllStatement;
     //private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
     //private final PreparedStatement updateStatement;
     private final PreparedStatement deleteStatement;
 
-    private BookingDAO(){
+    private BookingDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ID=?");
+            this.getByUserStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE USER=?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM BOOKING");
             this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (USER, FLIGHT) VALUES (?, ?)");
             //this.searchStatement = conn.prepareStatement("");
@@ -49,7 +52,7 @@ public class BookingDAO implements Dao<Booking> {
             getByIdStatement.setInt(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                return new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getInt("FLIGHT")), rs.getInt("ID"));
+                return new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -96,6 +99,22 @@ public class BookingDAO implements Dao<Booking> {
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("No se ha podido eliminar de la db");
+        }
+    }
+
+    public List<Booking> getUserBookings(User user) {
+        try {
+            getByUserStatement.setInt(1, user.getDni());
+            ResultSet rs = getByUserStatement.executeQuery();
+            ArrayList<Booking> bookings = new ArrayList<>();
+            while (rs.next()) {
+                Booking booking = new Booking(user, FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
+                bookings.add(booking);
+            }
+            return bookings;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Usuario inválido");
         }
     }
 }

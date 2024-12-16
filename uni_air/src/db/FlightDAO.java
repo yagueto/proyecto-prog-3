@@ -28,7 +28,7 @@ public class FlightDAO implements Dao<Flight> {
             this.getByIdStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ID=?");
             this.getAllStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT");
             this.saveStatement = conn.prepareStatement("INSERT INTO FLIGHT(ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            this.searchStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, " + "DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ORIGIN_AIRPORT=? AND " + "DEST_AIRPORT=? AND DEPARTURE_TIME LIKE concat(?, '%')");
+            this.searchStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ORIGIN_AIRPORT=? AND " + "DEST_AIRPORT=? AND DEPARTURE_TIME LIKE concat(?, '%')");
             this.updateStatement = conn.prepareStatement("UPDATE FLIGHT SET DEST_AIRPORT=?, DEPARTURE_TIME=?, PRECIO=? WHERE ID=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM FLIGHT WHERE ID=?");
         } catch (SQLException e) {
@@ -45,11 +45,12 @@ public class FlightDAO implements Dao<Flight> {
 
     @Override
     public Flight get(Object param) {
-        if (!(param instanceof Integer in)) {
+        System.out.println(param);
+        if (!(param instanceof String in)) {
             throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }
         try {
-            getByIdStatement.setInt(1, in);
+            getByIdStatement.setString(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
                 return new Flight(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")), AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS"));
