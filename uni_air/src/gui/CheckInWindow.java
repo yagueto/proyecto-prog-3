@@ -1,10 +1,12 @@
 package gui;
 
+import db.BookingDAO;
+import domain.Booking;
 import domain.Flight;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,11 +17,14 @@ public class CheckInWindow extends JFrame{
      */
     private static final long serialVersionUID = 8110919845978625779L;
 
+    private final ArrayList<Booking> bookings;
+
     public CheckInWindow(JFrame frame, Flight flight) {
         this.setSize(640, 480);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setTitle("Check-In");
+        this.bookings = new ArrayList<Booking>(BookingDAO.getBookingDAO().getBy(flight.getCodigo(), "FLIGHT"));
 
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -33,7 +38,8 @@ public class CheckInWindow extends JFrame{
         infor.setText(
                 "Vuelo: " + flight.getCodigo() + "\n" +
                         "Origen: " + flight.getOrigen().getName() + "\n" +
-                        "Destino: " + flight.getDestino().getName()
+                        "Destino: " + flight.getDestino().getName() + "\n" +
+                        "Pasajeros por pasar: " + bookings.size()
         );
         infor.setEditable(false);
         infor.setOpaque(false);

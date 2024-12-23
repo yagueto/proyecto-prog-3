@@ -110,30 +110,30 @@ public class FlightDAO implements Dao<Flight> {
             throw new RuntimeException(e);
         }
     }
-    // Este métdodo lo implementaremos para que un admin o employye puede modificar vuelos debido a retrasos, cambios de precio... 
+    // Este métdodo lo implementaremos para que un admin o employye puede modificar vuelos debido a retrasos, cambios de precio...
     @Override
     public void update(Flight flight) {
-    	try {
-			updateStatement.setString(3, flight.getDestino().getName());
-			updateStatement.setString(5, flight.getFechaDespegue().format(null));
-			updateStatement.setInt(8, flight.getPrecio());
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.err.println("No se ha podido actualizar en la db");
-		}
+        try {
+            updateStatement.setString(3, flight.getDestino().getName());
+            updateStatement.setString(5, flight.getFechaDespegue().format(null));
+            updateStatement.setInt(8, flight.getPrecio());
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.err.println("No se ha podido actualizar en la db");
+        }
     }
-    
+
     // Este métdodo lo implementaremos para que un employee o admin pueda cancelar/borrar vuelos
     @Override
     public void delete(Flight flight) {
-    	try {
-			deleteStatement.setString(1, flight.getCodigo());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.err.println("No se ha podido eliminar de la db");
+        try {
+            deleteStatement.setString(1, flight.getCodigo());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("No se ha podido eliminar de la db");
 
-		}
+        }
     }
 }
