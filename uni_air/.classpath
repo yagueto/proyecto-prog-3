@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/flatlaf-3.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jdatepicker-2.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.47.1.0.jar"/>
+	<classpathentry kind="lib" path="resources/db/data.db"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

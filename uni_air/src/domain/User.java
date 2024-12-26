@@ -2,13 +2,13 @@ package domain;
 
 public abstract class User {
 
-	private int dni;
+	private String dni;
 	private String name;
 	private String surname;
 	private String mail;
 	private String password;
 
-	public User(int dni, String name, String surname, String mail, String password) {
+	public User(String dni, String name, String surname, String mail, String password) {
 		super();
 		this.dni = dni;
 		this.name = name;
@@ -16,11 +16,11 @@ public abstract class User {
 		this.mail = mail;
 	}
 
-	public int getDni() {
+	public String getDni() {
 		return dni;
 	}
 
-	public void setDni(int dni) {
+	public void setDni(String dni) {
 		this.dni = dni;
 	}
 

@@ -81,8 +81,7 @@ public class LoginWindow extends AbstractWindow {
                     return;
                 }
                 // TODO: gestionar usuarios
-                UserDAO.setLoggedInUser(new Customer(123456789, "John", "Doe", "johndoe@example.com", "example",
-                        LocalDate.now()));
+               
             }
 
             public void vaciarCampos() {
