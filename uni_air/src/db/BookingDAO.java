@@ -12,7 +12,8 @@ import java.util.List;
 public class BookingDAO implements Dao<Booking> {
     private static BookingDAO bookingDAO;
 
-    private final PreparedStatement getByStatement;
+    private final Connection conn;
+    private final PreparedStatement getByIdStatement;
     private final PreparedStatement getAllStatement;
     //private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
@@ -20,9 +21,9 @@ public class BookingDAO implements Dao<Booking> {
     private final PreparedStatement deleteStatement;
 
     private BookingDAO() {
-        Connection conn = DBManager.getDBManager().conn;
+        conn = DBManager.getDBManager().conn;
         try {
-            this.getByStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ?=?");
+            this.getByIdStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ID = ?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM BOOKING");
             this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (USER, FLIGHT) VALUES (?, ?)");
             //this.searchStatement = conn.prepareStatement("");
@@ -46,9 +47,8 @@ public class BookingDAO implements Dao<Booking> {
             throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) ID).");
         }
         try {
-            getByStatement.setString(1, "ID");
-            getByStatement.setInt(2, in);
-            ResultSet rs = getByStatement.executeQuery();
+            getByIdStatement.setInt(1, in);
+            ResultSet rs = getByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
                 return new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
             }
@@ -100,31 +100,27 @@ public class BookingDAO implements Dao<Booking> {
         }
     }
 
-    public List<Booking> getBy(Object param, String type) {
-        List<String> validTypes = List.of("ID", "FLIGHT", "USER");
-        if (validTypes.contains(type)) {
-            try {
-                if (type.equals("FLIGHT")){
-                    String parametro = (String) param;
-                    getByStatement.setString(2, parametro);
-                } else {
-                    Integer parametro = (Integer) param;
-                    getByStatement.setInt(2, parametro);
-                }
-                getByStatement.setString(1, validTypes.get(validTypes.indexOf(type)));
-                ResultSet rs = getByStatement.executeQuery();
-                ArrayList<Booking> bookings = new ArrayList<>();
-                while (rs.next()) {
-                    Booking booking = new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
-                    bookings.add(booking);
-                }
-                return bookings;
-            } catch (SQLException e) {
-                throw new RuntimeException("Usuario inválido");
+    public List<Booking> getBy(Object param, BookingField type) {
+        try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM BOOKING WHERE " + type + " = ?")) {
+            if (type == BookingField.FLIGHT) {
+                statement.setString(1, (String) param);
+            } else if (type == BookingField.ID || type == BookingField.USER) {
+                statement.setInt(1, (Integer) param);
+            } else {
+                throw new IllegalArgumentException("Tipo de búsqueda no soportado: " + type);
             }
+            ResultSet rs = statement.executeQuery();
+            ArrayList<Booking> bookings = new ArrayList<>();
+            while (rs.next()) {
+                Booking booking = new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
+                bookings.add(booking);
+            }
+            return bookings;
+        } catch (SQLException e) {
+            throw new RuntimeException("Usuario inválido");
         }
-        // TODO: revisar esto
-        System.err.println(type + " no es un tipo de búsqueda válida para Booking");
-        return null;
+    }
+    public enum BookingField{
+        ID, USER, FLIGHT
     }
 }

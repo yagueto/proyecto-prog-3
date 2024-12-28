@@ -224,7 +224,7 @@ class FlightHistoryPanel extends JSplitPane {
 
     protected void updateTableData() {
         Thread t = new Thread(() -> {
-            List<Booking> bookings = BookingDAO.getBookingDAO().getBy(UserDAO.getLoggedInUser().getDni(), "USER");
+            List<Booking> bookings = BookingDAO.getBookingDAO().getBy(UserDAO.getLoggedInUser().getDni(), BookingDAO.BookingField.USER);
             ArrayList<Flight> flights = new ArrayList<>();
             for (Booking booking : bookings) {
                 flights.add(booking.getFlight());

@@ -24,7 +24,7 @@ public class CheckInWindow extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setTitle("Check-In");
-        this.bookings = new ArrayList<Booking>(BookingDAO.getBookingDAO().getBy(flight.getCodigo(), "FLIGHT"));
+        this.bookings = new ArrayList<Booking>(BookingDAO.getBookingDAO().getBy(flight.getCodigo(), BookingDAO.BookingField.FLIGHT));
 
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
