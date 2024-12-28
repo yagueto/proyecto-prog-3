@@ -1,8 +1,6 @@
 package main;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-
-import db.DBManager;
 import gui.LoginWindow;
 
 import javax.swing.*;
@@ -10,7 +8,6 @@ import javax.swing.*;
 public class Main {
 
     public static void main(String[] args) {
-    	SwingUtilities.invokeLater(() -> new LoginWindow());
         System.out.println("Lanzando...");
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
@@ -19,9 +16,7 @@ public class Main {
                     "por defecto.");
         }
         //SwingUtilities.invokeLater(() -> new EmployeeWindow());
-       
-        
-		
+        SwingUtilities.invokeLater(() -> new LoginWindow());
     }
 
 }

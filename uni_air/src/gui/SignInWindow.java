@@ -127,7 +127,7 @@ public class SignInWindow extends AbstractWindow{
         
         btnRegistrarse.addActionListener((e)->{
         	//Que guarde el dni, nombre, apellido, mail y contraseña en la base de datos
-        	String dni =txtDni.getText();
+        	int dni = Integer.parseInt(txtDni.getText());
             String nombre = txtNombreUsuario.getText();
             String apellido = txtApellido.getText();
             String mail = txtMail.getText();

@@ -73,7 +73,7 @@ public class UserDAO implements Dao<User> {
                         return new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType);
                     }
                     case CUSTOMER -> {
-                        return new Customer(rs.getString("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE")));
+                        return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE")));
                         //return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE")));
                     }
                 }
@@ -101,7 +101,7 @@ public class UserDAO implements Dao<User> {
                     case ADMIN, EMPLOYEE ->
                             users.add(new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType));
                     case CUSTOMER ->
-                            users.add(new Customer(rs.getString("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE"))));
+                            users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE"))));
                     //case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getPassword("PASSWORD"),LocalDate.parse(rs.getString("BIRTHDATE"))));
                 }
             }
@@ -112,12 +112,12 @@ public class UserDAO implements Dao<User> {
     }
 
 
-    public boolean existeUsuario(String dni) {
+    public boolean existeUsuario(int dni) {
         boolean existe = false;
         String sql = "SELECT COUNT(*) FROM Usuario WHERE id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, dni);
+            ps.setInt(1, dni);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 existe = true;
@@ -133,7 +133,7 @@ public class UserDAO implements Dao<User> {
     @Override
     public void save(User user) {
         try {
-            saveUserStatement.setString(1, user.getDni());
+            saveUserStatement.setInt(1, user.getDni());
             saveUserStatement.setString(2, user.getName());
             saveUserStatement.setString(3, user.getSurname());
             saveUserStatement.setString(4, user.getMail());
@@ -148,7 +148,7 @@ public class UserDAO implements Dao<User> {
     public void save(Customer customer) {
         String query = "INSERT INTO usuarios (dni, nombre, apellido, mail, contrasenia) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, customer.getDni());
+            stmt.setInt(1, customer.getDni());
             stmt.setString(2, customer.getName());
             stmt.setString(3, customer.getSurname());
             stmt.setString(4, customer.getMail());
@@ -177,7 +177,7 @@ public class UserDAO implements Dao<User> {
     @Override
     public void delete(User user) {
         try {
-            deleteUserStatement.setString(1, user.getDni());
+            deleteUserStatement.setInt(1, user.getDni());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
