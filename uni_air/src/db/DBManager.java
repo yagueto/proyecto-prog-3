@@ -4,6 +4,7 @@ import io.PropertiesManager;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -45,8 +46,8 @@ public class DBManager {
             Class.forName(driver);
             File f;
             if (!(f = new File(path)).exists()) {
-                if (!f.getParentFile().mkdirs()) {
-                    System.exit(1);
+                if (!f.getParentFile().exists()) {
+                    Files.createDirectories(f.getParentFile().toPath());
                 }
                 conn = DriverManager.getConnection(connection_string + path);
                 this.createDB();
@@ -60,6 +61,9 @@ public class DBManager {
             System.exit(1);
         } catch (SQLException e) {
             System.err.println("Error conectando a la BD: " + e.getMessage());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "No se ha podido crear la BD", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
     }
 
