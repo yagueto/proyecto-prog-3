@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
     </content>
-    <orderEntry type="jdk" jdkName="20" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="JavaSE-21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="junit5">
