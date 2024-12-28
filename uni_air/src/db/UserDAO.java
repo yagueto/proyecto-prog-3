@@ -54,11 +54,11 @@ public class UserDAO implements Dao<User> {
 
     @Override
     public User get(Object param) {
-        if (!(param instanceof String dni)) {
-            throw new RuntimeException("Parámetro inváido (se esperaba string).");
+        if (!(param instanceof Integer dni)) {
+            throw new RuntimeException("Parámetro inválido (se esperaba int).");
         }
         try {
-            getUserByIdStatement.setString(1, dni);
+            getUserByIdStatement.setInt(1, dni);
             ResultSet rs = getUserByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
                 UserType userType;
