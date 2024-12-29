@@ -45,6 +45,7 @@ public class BuyWindow extends JFrame {
         JLabel fullNameLabel = new JLabel("Nombre completo:");
         nameField = new JTextField(15);
         nameField.setText(UserDAO.getLoggedInUser().getName());
+        nameField.setEditable(false);
         userNamePanel.add(fullNameLabel);
         userNamePanel.add(nameField);
 
@@ -53,6 +54,7 @@ public class BuyWindow extends JFrame {
         JLabel emailLabel = new JLabel("Correo electrónico:");
         emailField = new JTextField(15);
         emailField.setText(UserDAO.getLoggedInUser().getMail());
+        emailField.setEditable(false);
         emailPanel.add(emailLabel);
         emailPanel.add(emailField);
 
@@ -61,6 +63,7 @@ public class BuyWindow extends JFrame {
         JLabel passportLabel = new JLabel("DNI:                           ");
         passportField = new JTextField(15);
         passportField.setText(Integer.toString(UserDAO.getLoggedInUser().getDni()));
+        passportField.setEditable(false);
         passportPanel.add(passportLabel, BorderLayout.WEST);
         passportPanel.add(passportField);
 
@@ -171,7 +174,19 @@ public class BuyWindow extends JFrame {
             );
             return;
         }
-
+        boolean creditCard = creditCardRadio.isSelected();
+        String paymentMethod = creditCard ? "tarjeta de crédito" : "cuenta de PayPal";
+        String payment = JOptionPane.showInputDialog(this, "Introduce tu " + paymentMethod + ".", "Datos de pago", JOptionPane.QUESTION_MESSAGE);
+        if (payment.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El valor de la " + paymentMethod + " no puede estar vacío",
+                    "¡Campos inválidos!",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "¡Compra realizada!", "Compra realizada correctamente", JOptionPane.INFORMATION_MESSAGE);
         Booking booking = new Booking(UserDAO.getLoggedInUser(), flight, 0);
         BookingDAO.getBookingDAO().save(booking);
         dispose();

@@ -17,7 +17,7 @@ public class CellButtonRendererEditor extends AbstractCellEditor implements Tabl
     public CellButtonRendererEditor(Clickable c) {
 
         b = new JButton();
-        b.setText("→");
+        b.setText("COMPRAR →");
         b.addActionListener(e -> {
             System.out.println(rowSelected);
             c.onClick(rowSelected);

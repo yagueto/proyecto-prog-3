@@ -45,7 +45,6 @@ public class FlightDAO implements Dao<Flight> {
 
     @Override
     public Flight get(Object param) {
-        System.out.println(param);
         if (!(param instanceof String in)) {
             throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }

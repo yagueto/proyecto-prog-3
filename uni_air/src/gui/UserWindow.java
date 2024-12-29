@@ -85,12 +85,12 @@ class FlightSearchPanel extends JPanel {
         // JTable para mostrar resultados
         flightModel = new FlightModel(List.of(), TipoVentana.USER);
         JTable tabla = new JTable(flightModel);
-        //TODO resize de la tabla
+
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
         CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(flightModel.getFlights().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
-//		c.setCellRenderer(cellButtonRendererEditor);
+        c.setCellRenderer(cellButtonRendererEditor);
 
         JScrollPane scrollPane = new JScrollPane(tabla);
 

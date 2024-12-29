@@ -116,7 +116,7 @@ public class FlightModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return (this.tipoVentana.equals(TipoVentana.EMPLOYEE) && columnIndex == 6) || (!this.tipoVentana.equals(TipoVentana.EMPLOYEE) && columnIndex == 5);
     }
 
     public enum TipoVentana {
