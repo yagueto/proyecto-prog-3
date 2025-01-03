@@ -21,7 +21,7 @@ public class DBManager {
         this.connect((String) PropertiesManager.getProperty("db_driver"), (String) PropertiesManager.getProperty("db_connectionString"), (String) PropertiesManager.getProperty("db_path"));
     }
 
-    public static DBManager getDBManager() {
+    public synchronized static DBManager getDBManager() {
         if (dbManager == null) {
             dbManager = new DBManager();
         }
@@ -40,7 +40,7 @@ public class DBManager {
         }
     }
 
-    private void connect(String driver, String connection_string, String path) {
+    private synchronized void connect(String driver, String connection_string, String path) {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
