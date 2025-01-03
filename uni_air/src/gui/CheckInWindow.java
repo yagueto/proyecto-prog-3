@@ -49,16 +49,13 @@ public class CheckInWindow extends JFrame{
 
         JPanel panelCodigo = new JPanel();
         JTextField codigoEmpleado  = new JTextField(20);
-        codigoEmpleado.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!codigoEmpleado.getText().isEmpty()){
-                    int dni = Integer.parseInt(codigoEmpleado.getText());
-                    for (Booking booking : bookings){
-                        if (booking.getCustomer().getDni() == dni){
-                            CheckIn nuevo = new CheckIn(booking, "1A");
-                            CheckInDAO.getCheckInDAO().save(nuevo);
-                        }
+        codigoEmpleado.addActionListener(e -> {
+            if(!codigoEmpleado.getText().isEmpty()){
+                int dni = Integer.parseInt(codigoEmpleado.getText());
+                for (Booking booking : bookings){
+                    if (booking.getCustomer().getDni() == dni){
+                        CheckIn nuevo = new CheckIn(booking, "1A");
+                        CheckInDAO.getCheckInDAO().save(nuevo);
                     }
                 }
             }
