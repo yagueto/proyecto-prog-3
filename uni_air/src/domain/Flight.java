@@ -26,6 +26,7 @@ public class Flight {
 		this.fechaAterrizaje = fechaAterrizaje;
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
+		this.occupied = new HashSet<>();
 	}
 
 	@Deprecated
