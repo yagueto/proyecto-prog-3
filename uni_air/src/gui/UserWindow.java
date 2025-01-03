@@ -9,7 +9,7 @@ import domain.Booking;
 import domain.Flight;
 import domain.FlightModel;
 import domain.FlightModel.TipoVentana;
-import gui.misc.HintTextField;
+import gui.misc.AutoCompleteJComboBox;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
@@ -105,8 +105,12 @@ class FlightSearchPanel extends JPanel {
 
         buttonsPanel.setBackground(UIManager.getColor("ProgressBar.foreground"));
 
-        JTextField origenField = new HintTextField(11, "Aeropuerto de origen");
-        JTextField destField = new HintTextField(12, "Aeropuerto de destino");
+        JComboBox<Airport> origenField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
+        JComboBox<Airport> destField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
+
+        new AutoCompleteJComboBox<Airport>(origenField);
+        new AutoCompleteJComboBox<Airport>(destField);
+
         JDatePicker datePicker = new JDatePicker();
 
         searchButton = new JButton("Buscar");
@@ -123,6 +127,7 @@ class FlightSearchPanel extends JPanel {
         filtersPanel.add(progressBar, BorderLayout.SOUTH);
 
         searchButton.addActionListener(e -> {
+            System.out.println(origenField.getModel().getSelectedItem());
             GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
             if (calendar == null) {
                 JOptionPane.showMessageDialog(null, "¡Fecha de salida vacía!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -130,7 +135,7 @@ class FlightSearchPanel extends JPanel {
             }
             ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
 
-            Thread t = new Thread(() -> updateTableData(origenField.getText(), destField.getText(), zonedDateTime.toLocalDate()));
+            Thread t = new Thread(() -> updateTableData((String) origenField.getSelectedItem(), (String) destField.getSelectedItem(), zonedDateTime.toLocalDate()));
             t.start();
 
         });
