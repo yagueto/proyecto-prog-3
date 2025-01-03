@@ -71,8 +71,8 @@ CREATE TABLE IF NOT EXISTS "USER"
     "SURNAME"   TEXT,
     "EMAIL"     TEXT    NOT NULL,
     "BIRTHDATE" TEXT,
+    "PASSWORD" TEXT NOT NULL,
     "USER_TYPE" INTEGER NOT NULL,
-    PRIMARY KEY ("DNI"),
-    CHECK (date("BIRTHDATE", 'unixepoch') < date('now'))
+    PRIMARY KEY ("DNI")
 );
 COMMIT;

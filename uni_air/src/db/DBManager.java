@@ -4,6 +4,7 @@ import io.PropertiesManager;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class DBManager {
         this.connect((String) PropertiesManager.getProperty("db_driver"), (String) PropertiesManager.getProperty("db_connectionString"), (String) PropertiesManager.getProperty("db_path"));
     }
 
-    public static DBManager getDBManager() {
+    public synchronized static DBManager getDBManager() {
         if (dbManager == null) {
             dbManager = new DBManager();
         }
@@ -39,14 +40,14 @@ public class DBManager {
         }
     }
 
-    private void connect(String driver, String connection_string, String path) {
+    private synchronized void connect(String driver, String connection_string, String path) {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
             File f;
             if (!(f = new File(path)).exists()) {
-                if (!f.getParentFile().mkdirs()) {
-                    System.exit(1);
+                if (!f.getParentFile().exists()) {
+                    Files.createDirectories(f.getParentFile().toPath());
                 }
                 conn = DriverManager.getConnection(connection_string + path);
                 this.createDB();
@@ -60,6 +61,9 @@ public class DBManager {
             System.exit(1);
         } catch (SQLException e) {
             System.err.println("Error conectando a la BD: " + e.getMessage());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "No se ha podido crear la BD", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
     }
 

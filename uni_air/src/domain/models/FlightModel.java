@@ -1,6 +1,7 @@
-package domain;
+package domain.models;
 
-import gui.CellButtonRendererEditor;
+import domain.Flight;
+import gui.misc.CellButtonRendererEditor;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
@@ -116,7 +117,7 @@ public class FlightModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return (this.tipoVentana.equals(TipoVentana.EMPLOYEE) && columnIndex == 6) || (!this.tipoVentana.equals(TipoVentana.EMPLOYEE) && columnIndex == 5);
     }
 
     public enum TipoVentana {

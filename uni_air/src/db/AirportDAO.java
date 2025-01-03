@@ -22,7 +22,7 @@ public class AirportDAO implements Dao<Airport> {
         try {
             this.getAirportByIdStatement = conn.prepareStatement("SELECT FULL_NAME, CITY, COUNTRY, LONG, LAT FROM " +
                     "AIRPORT WHERE IATA_CODE=?");
-            this.getAllAirportsStatement = conn.prepareStatement("SELECT IATA_CODE, 'FULL_NAME', CITY, COUNTRY, LONG," +
+            this.getAllAirportsStatement = conn.prepareStatement("SELECT IATA_CODE, FULL_NAME, CITY, COUNTRY, LONG," +
                     " LAT FROM AIRPORT");
             this.saveAirportStatement = conn.prepareStatement("INSERT INTO AIRPORT (IATA_CODE, 'FULL_NAME', CITY, " +
                     "COUNTRY, LONG, LAT) VALUES (?, ?, ?, ?, ?, ?)");
