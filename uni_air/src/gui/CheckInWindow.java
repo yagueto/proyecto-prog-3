@@ -1,15 +1,16 @@
 package gui;
 
 import db.BookingDAO;
+import db.CheckInDAO;
 import domain.Booking;
+import domain.CheckIn;
 import domain.Flight;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class CheckInWindow extends JFrame{
     /**
@@ -24,7 +25,7 @@ public class CheckInWindow extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setTitle("Check-In");
-        this.bookings = new ArrayList<Booking>(BookingDAO.getBookingDAO().getBy(flight.getCodigo(), BookingDAO.BookingField.FLIGHT));
+        this.bookings = new ArrayList<>(BookingDAO.getBookingDAO().getBy(flight.getCodigo(), BookingDAO.BookingField.FLIGHT));
 
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -48,6 +49,20 @@ public class CheckInWindow extends JFrame{
 
         JPanel panelCodigo = new JPanel();
         JTextField codigoEmpleado  = new JTextField(20);
+        codigoEmpleado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!codigoEmpleado.getText().isEmpty()){
+                    int dni = Integer.parseInt(codigoEmpleado.getText());
+                    for (Booking booking : bookings){
+                        if (booking.getCustomer().getDni() == dni){
+                            CheckIn nuevo = new CheckIn(booking, "1A");
+                            CheckInDAO.getCheckInDAO().save(nuevo);
+                        }
+                    }
+                }
+            }
+        });
         panelCodigo.add(codigoEmpleado);
         panel.add(panelCodigo, BorderLayout.SOUTH);
 

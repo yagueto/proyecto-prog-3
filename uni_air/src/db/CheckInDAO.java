@@ -22,12 +22,12 @@ public class CheckInDAO implements Dao<CheckIn> {
     private CheckInDAO(){
         Connection conn = DBManager.getDBManager().conn;
         try {
-            this.getByIdStatement = conn.prepareStatement("SELECT * FROM CHECK_IN WHERE ID=?");
+            this.getByIdStatement = conn.prepareStatement("SELECT * FROM CHECK_IN WHERE BOOKING=?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM CHECK_IN");
-            this.saveStatement = conn.prepareStatement("INSERT INTO CHECK_IN (ID, SEAT, BOOKING) VALUES (?, ?, ?)");
+            this.saveStatement = conn.prepareStatement("INSERT INTO CHECK_IN (BOOKING, SEAT) VALUES (?, ?)");
             //this.searchStatement = conn.prepareStatement("");
-            this.updateStatement = conn.prepareStatement("UPDATE CHECK_IN SET ID=?, SEAT=?, BOOKING=? WHERE ID=?");
-            this.deleteStatement = conn.prepareStatement("DELETE FROM CHECK_IN WHERE ID=?");
+            this.updateStatement = conn.prepareStatement("UPDATE CHECK_IN SET BOOKING=?, SEAT=? WHERE BOOKING=?");
+            this.deleteStatement = conn.prepareStatement("DELETE FROM CHECK_IN WHERE BOOKING=?");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -43,13 +43,13 @@ public class CheckInDAO implements Dao<CheckIn> {
     @Override
     public CheckIn get(Object param) {
         if (!(param instanceof Integer in)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) ID).");
+            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (Int) BOOKING).");
         }
         try {
             getByIdStatement.setInt(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
             if (rs.isBeforeFirst()) {
-                return new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"), rs.getInt("ID"));
+                return new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -63,7 +63,7 @@ public class CheckInDAO implements Dao<CheckIn> {
         try {
             ResultSet rs = getAllStatement.executeQuery();
             while (rs.next()){
-                CheckIn checkIn = new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"), rs.getInt("ID"));
+                CheckIn checkIn = new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"));
                 checkIns.add(checkIn);
             }
         } catch (SQLException e) {
@@ -75,9 +75,8 @@ public class CheckInDAO implements Dao<CheckIn> {
     @Override
     public void save(CheckIn checkIn) {
         try {
-            saveStatement.setInt(1, checkIn.getId());
+            saveStatement.setInt(1, checkIn.getBooking().getId());
             saveStatement.setString(2, checkIn.getSeat());
-            saveStatement.setInt(3, checkIn.getBooking().getId());
             saveStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -89,9 +88,8 @@ public class CheckInDAO implements Dao<CheckIn> {
     @Override
     public void update(CheckIn checkIn) {
         try {
-            updateStatement.setInt(1, checkIn.getId());
             updateStatement.setString(2, checkIn.getSeat());
-            updateStatement.setInt(3, checkIn.getBooking().getId());
+            updateStatement.setInt(1, checkIn.getBooking().getId());
         } catch (SQLException e){
             e.printStackTrace();
 
@@ -103,7 +101,7 @@ public class CheckInDAO implements Dao<CheckIn> {
     @Override
     public void delete(CheckIn checkIn) {
         try {
-            deleteStatement.setInt(1, checkIn.getId());
+            deleteStatement.setInt(1, checkIn.getBooking().getId());
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("No se ha podido eliminar de la db");
