@@ -41,8 +41,6 @@ public abstract class AbstractWindow extends JFrame {
         this.setTitle("Uni-Air");
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon.png")));
         this.setIconImage(icon.getImage());
-
-        // TODO: podría ser interesante añadir un icono a la ventana
     }
 
     /*

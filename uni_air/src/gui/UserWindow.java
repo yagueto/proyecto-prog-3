@@ -7,9 +7,10 @@ import db.UserDAO;
 import domain.Airport;
 import domain.Booking;
 import domain.Flight;
-import domain.FlightModel;
-import domain.FlightModel.TipoVentana;
+import domain.models.FlightModel;
+import domain.models.FlightModel.TipoVentana;
 import gui.misc.AutoCompleteJComboBox;
+import gui.misc.CellButtonRendererEditor;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
@@ -88,7 +89,7 @@ class FlightSearchPanel extends JPanel {
 
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
-        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(flightModel.getFlights().get(row)));
+        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor("COMPRAR →", (int row) -> new BuyWindow(flightModel.getFlights().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
         c.setCellRenderer(cellButtonRendererEditor);
 

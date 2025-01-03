@@ -1,4 +1,4 @@
-package gui;
+package gui.misc;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -14,12 +14,11 @@ public class CellButtonRendererEditor extends AbstractCellEditor implements Tabl
     private final JButton b;
     private int rowSelected;
 
-    public CellButtonRendererEditor(Clickable c) {
+    public CellButtonRendererEditor(String text, Clickable c) {
 
         b = new JButton();
-        b.setText("COMPRAR →");
+        b.setText(text);
         b.addActionListener(e -> {
-            System.out.println(rowSelected);
             c.onClick(rowSelected);
             fireEditingStopped();
         });
