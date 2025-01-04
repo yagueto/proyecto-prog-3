@@ -136,7 +136,7 @@ class FlightSearchPanel extends JPanel {
             }
             ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
 
-            Thread t = new Thread(() -> updateTableData((String) origenField.getSelectedItem(), (String) destField.getSelectedItem(), zonedDateTime.toLocalDate()));
+            Thread t = new Thread(() -> updateTableData((Airport) origenField.getSelectedItem(), (Airport) destField.getSelectedItem(), zonedDateTime.toLocalDate()));
             t.start();
 
         });
@@ -148,13 +148,11 @@ class FlightSearchPanel extends JPanel {
     /**
      * Carga datos de la búsqueda de vuelos en la tabla
      */
-    protected static void updateTableData(String origen, String destino, LocalDate fecha_salida) {
+    protected static void updateTableData(Airport airport_origen, Airport airport_destino, LocalDate fecha_salida) {
         SwingUtilities.invokeLater(() -> {
             progressBar.setIndeterminate(true);
             searchButton.setEnabled(false);
         });
-        Airport airport_origen = AirportDAO.getAirportDAO().get(origen);
-        Airport airport_destino = AirportDAO.getAirportDAO().get(destino);
         if (airport_origen == null) {
             JOptionPane.showMessageDialog(null, "¡Aeropuerto de origen inválido!", "Error", JOptionPane.ERROR_MESSAGE);
         } else if (airport_destino == null) {
