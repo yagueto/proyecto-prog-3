@@ -27,7 +27,7 @@ public class UserDAO implements Dao<User> {
     private UserDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
-            this.getUserByIdStatement = conn.prepareStatement("SELECT NAME FROM USER WHERE DNI=?");
+            this.getUserByIdStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE DNI=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD FROM USER");
             this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE) VALUES (?, ?, ?, ?, ?, ?)");
             this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, EMAIL=?, SURNAME=? WHERE DNI=?");
@@ -114,7 +114,7 @@ public class UserDAO implements Dao<User> {
 
     public boolean existeUsuario(int dni) {
         boolean existe = false;
-        String sql = "SELECT COUNT(*) FROM Usuario WHERE id = ?";
+        String sql = "SELECT COUNT(*) FROM USER WHERE DNI = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, dni);
@@ -146,7 +146,7 @@ public class UserDAO implements Dao<User> {
     }
 
     public void save(Customer customer) {
-        String query = "INSERT INTO usuarios (dni, nombre, apellido, mail, contrasenia) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, customer.getDni());
             stmt.setString(2, customer.getName());

@@ -74,7 +74,7 @@ public class AirlineDAO implements Dao<Airline> {
         try {
             saveAirlineStatement.setString(1, airline.getIata());
             saveAirlineStatement.setString(2, airline.getName());
-            saveAirlineStatement.executeQuery();
+            saveAirlineStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

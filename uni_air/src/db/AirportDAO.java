@@ -83,7 +83,7 @@ public class AirportDAO implements Dao<Airport> {
         try {
             saveAirportStatement.setString(1, airport.getIata());
             saveAirportStatement.setString(2, airport.getName());
-            saveAirportStatement.executeQuery();
+            saveAirportStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

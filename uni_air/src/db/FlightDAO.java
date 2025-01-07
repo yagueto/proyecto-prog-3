@@ -104,7 +104,7 @@ public class FlightDAO implements Dao<Flight> {
             //saveStatement.setInt(7, vuelo.getPasajeros());
             saveStatement.setInt(7, flight.getMaxPasajeros());
             saveStatement.setInt(8, flight.getPrecio());
-            saveStatement.executeQuery();
+            saveStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

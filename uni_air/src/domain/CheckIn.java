@@ -47,7 +47,7 @@ public class CheckIn {
     }
 
     private static String selectSeat(HashSet<String> occupiedSeats, int maxPassengers) {
-        return seatFinder(maxPassengers / 6, 6, occupiedSeats, 0, 'A');
+        return seatFinder(maxPassengers / 6, 6, occupiedSeats, 1, 'A');
     }
     private static String seatFinder(int totalRows, int totalColumns, HashSet<String> occupiedSeats, int currentRow, char currentColumn){
         String currentSeat = currentRow + String.valueOf(currentColumn);

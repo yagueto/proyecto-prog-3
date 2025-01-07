@@ -77,7 +77,7 @@ public class CheckInDAO implements Dao<CheckIn> {
         try {
             saveStatement.setInt(1, checkIn.getBooking().getId());
             saveStatement.setString(2, checkIn.getSeat());
-            saveStatement.executeQuery();
+            saveStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

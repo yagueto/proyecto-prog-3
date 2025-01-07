@@ -49,19 +49,21 @@ public class CheckInWindow extends JFrame{
 
         JPanel panelCodigo = new JPanel();
         JTextField codigoEmpleado  = new JTextField(20);
-        codigoEmpleado.addActionListener(e -> {
-            if(!codigoEmpleado.getText().isEmpty()){
-                int dni = Integer.parseInt(codigoEmpleado.getText());
-                for (Booking booking : bookings){
-                    if (booking.getCustomer().getDni() == dni){
-                        CheckIn nuevo = new CheckIn(booking, "1A");
-                        CheckInDAO.getCheckInDAO().save(nuevo);
-                    }
-                }
-            }
-        });
         panelCodigo.add(codigoEmpleado);
         panel.add(panelCodigo, BorderLayout.SOUTH);
+
+        JLabel mensaje = new JLabel();
+        mensaje.setForeground(Color.BLACK);
+        JPanel panelmensaje = new JPanel();
+        panelmensaje.add(mensaje);
+        panel.add(panelmensaje);
+
+        JLabel asiento = new JLabel();
+        asiento.setForeground(Color.BLACK);
+        JPanel panelAsiento = new JPanel();
+        panelAsiento.add(asiento);
+        panel.add(panelAsiento);
+
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -76,6 +78,37 @@ public class CheckInWindow extends JFrame{
                     frame.setVisible(true);
                 }
                 dispose();
+            }
+        });
+
+        codigoEmpleado.addActionListener(e -> {
+            try{
+                if(!codigoEmpleado.getText().isEmpty()){
+                    int dni = Integer.parseInt(codigoEmpleado.getText());
+                    boolean dniCorrecto = false;
+                    for (Booking booking : bookings){
+                        System.out.println(booking.getCustomer().getDni());
+                        if (booking.getCustomer().getDni() == dni){
+                            CheckIn nuevo = new CheckIn(booking);
+                            CheckInDAO.getCheckInDAO().save(nuevo);
+                            asiento.setText("Su asiento es el " + nuevo.getSeat());
+
+                            codigoEmpleado.setBackground(Color.GREEN);
+                            mensaje.setText("Check-In creado correctamente");
+                            mensaje.setForeground(Color.GREEN);
+                            dniCorrecto = true;
+                            break;
+                        }
+                    }
+                    if (!dniCorrecto){
+                        codigoEmpleado.setBackground(Color.RED);
+                        mensaje.setText("DNI no encontrado");
+                        mensaje.setForeground(Color.RED);
+                    }
+                }
+            } catch (NumberFormatException ex){
+                codigoEmpleado.setBackground(Color.RED);
+                mensaje.setText("Formato incorrecto");
             }
         });
 

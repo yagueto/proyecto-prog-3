@@ -78,7 +78,7 @@ public class BookingDAO implements Dao<Booking> {
         try {
             saveStatement.setInt(1, booking.getCustomer().getDni());
             saveStatement.setString(2, booking.getFlight().getCodigo());
-            saveStatement.execute();
+            saveStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
