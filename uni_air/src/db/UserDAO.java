@@ -33,7 +33,7 @@ public class UserDAO implements Dao<User> {
             this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, EMAIL=?, SURNAME=? WHERE DNI=?");
             this.deleteUserStatement = conn.prepareStatement("DELETE FROM USER WHERE DNI=?");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 

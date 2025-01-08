@@ -2,6 +2,7 @@ package db;
 
 import domain.CheckIn;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +20,7 @@ public class CheckInDAO implements Dao<CheckIn> {
     private final PreparedStatement updateStatement;
     private final PreparedStatement deleteStatement;
 
-    private CheckInDAO(){
+    private CheckInDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM CHECK_IN WHERE BOOKING=?");
@@ -29,7 +30,7 @@ public class CheckInDAO implements Dao<CheckIn> {
             this.updateStatement = conn.prepareStatement("UPDATE CHECK_IN SET BOOKING=?, SEAT=? WHERE BOOKING=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM CHECK_IN WHERE BOOKING=?");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -43,16 +44,16 @@ public class CheckInDAO implements Dao<CheckIn> {
     @Override
     public CheckIn get(Object param) {
         if (!(param instanceof Integer in)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (Int) BOOKING).");
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (Int) BOOKING).");
         }
         try {
             getByIdStatement.setInt(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
+            if (rs.isBeforeFirst() && rs.next()) {
                 return new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return null;
     }
@@ -62,12 +63,12 @@ public class CheckInDAO implements Dao<CheckIn> {
         ArrayList<CheckIn> checkIns = new ArrayList<>();
         try {
             ResultSet rs = getAllStatement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 CheckIn checkIn = new CheckIn(BookingDAO.getBookingDAO().get(rs.getInt("BOOKING")), rs.getString("SEAT"));
                 checkIns.add(checkIn);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return checkIns;
     }
@@ -79,22 +80,19 @@ public class CheckInDAO implements Dao<CheckIn> {
             saveStatement.setString(2, checkIn.getSeat());
             saveStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
 
 
-    // método pendiente de implementación
+    // metodo pendiente de implementación
     @Override
     public void update(CheckIn checkIn) {
         try {
             updateStatement.setString(2, checkIn.getSeat());
             updateStatement.setInt(1, checkIn.getBooking().getId());
-        } catch (SQLException e){
-            e.printStackTrace();
-
-            System.out.println("No se ha podido actualizar en la base de datos");
-
+        } catch (SQLException e) {
+            throw new DBException(e);
         }
     }
 
@@ -102,9 +100,9 @@ public class CheckInDAO implements Dao<CheckIn> {
     public void delete(CheckIn checkIn) {
         try {
             deleteStatement.setInt(1, checkIn.getBooking().getId());
+            deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("No se ha podido eliminar de la db");
+            throw new DBException(e);
         }
     }
 }

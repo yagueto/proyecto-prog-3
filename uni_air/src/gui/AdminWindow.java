@@ -107,6 +107,9 @@ class UserManagementWindow extends JFrame {
 
     private void modifyUser(User user) {
         String opcion = (String) JOptionPane.showInputDialog(null, "Selecciona una opción", "Modificando usuario", JOptionPane.QUESTION_MESSAGE, null, modifyOptions, "");
+        if (opcion == null) {
+            return;
+        }
         switch (opcion) {
             case "Eliminar":
                 UserDAO.getUserDAO().delete(user);

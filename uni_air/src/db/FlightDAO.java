@@ -3,6 +3,7 @@ package db;
 import domain.Airport;
 import domain.Flight;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class FlightDAO implements Dao<Flight> {
             this.updateStatement = conn.prepareStatement("UPDATE FLIGHT SET DEST_AIRPORT=?, DEPARTURE_TIME=?, PRECIO=? WHERE ID=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM FLIGHT WHERE ID=?");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -46,7 +47,7 @@ public class FlightDAO implements Dao<Flight> {
     @Override
     public Flight get(Object param) {
         if (!(param instanceof String in)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }
         try {
             getByIdStatement.setString(1, in);
@@ -55,7 +56,7 @@ public class FlightDAO implements Dao<Flight> {
                 return new Flight(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")), AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return null;
     }
@@ -66,7 +67,7 @@ public class FlightDAO implements Dao<Flight> {
         try {
             getFlightsFromResultSet(flights, getAllStatement);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return flights;
     }
@@ -79,7 +80,7 @@ public class FlightDAO implements Dao<Flight> {
             searchStatement.setString(3, departure_date.toString());
             getFlightsFromResultSet(flights, searchStatement);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return flights;
     }
@@ -105,7 +106,7 @@ public class FlightDAO implements Dao<Flight> {
             saveStatement.setInt(8, flight.getPrecio());
             saveStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
     // Este métdodo lo implementaremos para que un admin o employye puede modificar vuelos debido a retrasos, cambios de precio...
@@ -117,9 +118,7 @@ public class FlightDAO implements Dao<Flight> {
             updateStatement.setInt(8, flight.getPrecio());
 
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.err.println("No se ha podido actualizar en la db");
+            throw new DBException(e);
         }
     }
 
@@ -128,10 +127,9 @@ public class FlightDAO implements Dao<Flight> {
     public void delete(Flight flight) {
         try {
             deleteStatement.setString(1, flight.getCodigo());
+            deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("No se ha podido eliminar de la db");
-
+            throw new DBException(e);
         }
     }
 }

@@ -2,6 +2,7 @@ package db;
 
 import domain.Booking;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +31,7 @@ public class BookingDAO implements Dao<Booking> {
             //this.updateStatement = conn.prepareStatement("UPDATE BOOKING SET ID=?, USER=?, FLIGHT=? WHERE ID=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM BOOKING WHERE ID=?");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -44,16 +45,16 @@ public class BookingDAO implements Dao<Booking> {
     @Override
     public Booking get(Object param) {
         if (!(param instanceof Integer in)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) ID).");
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String) ID).");
         }
         try {
             getByIdStatement.setInt(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
+            if (rs.isBeforeFirst() && rs.next()) {
                 return new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return null;
     }
@@ -68,7 +69,7 @@ public class BookingDAO implements Dao<Booking> {
                 bookings.add(booking);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return bookings;
     }
@@ -79,24 +80,22 @@ public class BookingDAO implements Dao<Booking> {
             saveStatement.setInt(1, booking.getCustomer().getDni());
             saveStatement.setString(2, booking.getFlight().getCodigo());
             saveStatement.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
 
     @Override
     public void update(Booking booking) {
-
     }
 
     @Override
     public void delete(Booking booking) {
         try {
             deleteStatement.setInt(1, booking.getId());
+            deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("No se ha podido eliminar de la db");
+            throw new DBException(e);
         }
     }
 

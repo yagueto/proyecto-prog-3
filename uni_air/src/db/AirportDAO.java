@@ -2,6 +2,7 @@ package db;
 
 import domain.Airport;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,20 +16,15 @@ public class AirportDAO implements Dao<Airport> {
     private final PreparedStatement getAirportByIdStatement;
     private final PreparedStatement getAllAirportsStatement;
     private final PreparedStatement saveAirportStatement;
-    private final PreparedStatement deleteAirportStatement;
 
     private AirportDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
-            this.getAirportByIdStatement = conn.prepareStatement("SELECT FULL_NAME, CITY, COUNTRY, LONG, LAT FROM " +
-                    "AIRPORT WHERE IATA_CODE=?");
-            this.getAllAirportsStatement = conn.prepareStatement("SELECT IATA_CODE, FULL_NAME, CITY, COUNTRY, LONG," +
-                    " LAT FROM AIRPORT");
-            this.saveAirportStatement = conn.prepareStatement("INSERT INTO AIRPORT (IATA_CODE, 'FULL_NAME', CITY, " +
-                    "COUNTRY, LONG, LAT) VALUES (?, ?, ?, ?, ?, ?)");
-            this.deleteAirportStatement = conn.prepareStatement("DELETE FROM AIRPORT WHERE IATA_CODE=?");
+            this.getAirportByIdStatement = conn.prepareStatement("SELECT FULL_NAME, CITY, COUNTRY, LONG, LAT FROM " + "AIRPORT WHERE IATA_CODE=?");
+            this.getAllAirportsStatement = conn.prepareStatement("SELECT IATA_CODE, FULL_NAME, CITY, COUNTRY, LONG," + " LAT FROM AIRPORT");
+            this.saveAirportStatement = conn.prepareStatement("INSERT INTO AIRPORT (IATA_CODE, 'FULL_NAME', CITY, " + "COUNTRY, LONG, LAT) VALUES (?, ?, ?, ?, ?, ?)");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -42,17 +38,17 @@ public class AirportDAO implements Dao<Airport> {
     @Override
     public Airport get(Object param) {
         if (!(param instanceof String iata)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }
         try {
             getAirportByIdStatement.setString(1, iata);
             ResultSet rs = getAirportByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
-                return new Airport(iata, rs.getString("FULL_NAME"), rs.getString("CITY"), rs.getString("COUNTRY"),
-                        rs.getDouble("LONG"), rs.getDouble("LAT"));
+
+            if (rs.isBeforeFirst() && rs.next()) {
+                return new Airport(iata, rs.getString("FULL_NAME"), rs.getString("CITY"), rs.getString("COUNTRY"), rs.getDouble("LONG"), rs.getDouble("LAT"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBException(e); // Should never happen
         }
         return null;
     }
@@ -63,17 +59,10 @@ public class AirportDAO implements Dao<Airport> {
         try {
             ResultSet rs = getAllAirportsStatement.executeQuery();
             while (rs.next()) {
-                airports.add(new Airport(
-                        rs.getString("IATA_CODE"),
-                        rs.getString("FULL_NAME"),
-                        rs.getString("CITY"),
-                        rs.getString("COUNTRY"),
-                        rs.getDouble("LONG"),
-                        rs.getDouble("LAT")
-                ));
+                airports.add(new Airport(rs.getString("IATA_CODE"), rs.getString("FULL_NAME"), rs.getString("CITY"), rs.getString("COUNTRY"), rs.getDouble("LONG"), rs.getDouble("LAT")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e); // Should never happen
         }
         return airports;
     }
@@ -85,7 +74,7 @@ public class AirportDAO implements Dao<Airport> {
             saveAirportStatement.setString(2, airport.getName());
             saveAirportStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e); // Should never happen
         }
     }
 
@@ -96,10 +85,6 @@ public class AirportDAO implements Dao<Airport> {
 
     @Override
     public void delete(Airport airport) {
-        try {
-            deleteAirportStatement.setString(1, airport.getIata());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        throw new UnsupportedOperationException("No se pueden eliminar aeropuertos");
     }
 }
