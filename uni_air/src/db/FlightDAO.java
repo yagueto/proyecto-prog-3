@@ -81,7 +81,6 @@ public class FlightDAO implements Dao<Flight> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(flights);
         return flights;
     }
 
