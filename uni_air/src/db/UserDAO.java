@@ -5,10 +5,8 @@ import domain.Employee;
 import domain.User;
 import domain.UserType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.security.InvalidParameterException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +27,11 @@ public class UserDAO implements Dao<User> {
         try {
             this.getUserByIdStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE DNI=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD FROM USER");
-            this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE) VALUES (?, ?, ?, ?, ?, ?)");
-            this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, EMAIL=?, SURNAME=? WHERE DNI=?");
+            this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, SURNAME=?, EMAIL=?, BIRTHDATE=?, USER_TYPE=?, PASSWORD=? WHERE DNI=?");
             this.deleteUserStatement = conn.prepareStatement("DELETE FROM USER WHERE DNI=?");
         } catch (SQLException e) {
-            throw new RuntimeException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -52,34 +50,38 @@ public class UserDAO implements Dao<User> {
         currentUser = user;
     }
 
+    private static User handleUserType(UserType userType, ResultSet rs) throws SQLException, InvalidParameterException {
+        switch (userType) {
+            case ADMIN, EMPLOYEE -> {
+                return new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType);
+            }
+            case CUSTOMER -> {
+                return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE")));
+            }
+            default -> throw new InvalidParameterException("Tipo de usuario en la BBDD inválido: " + userType);
+        }
+    }
+
     @Override
     public User get(Object param) {
         if (!(param instanceof Integer dni)) {
-            throw new RuntimeException("Parámetro inválido (se esperaba int).");
+            throw new InvalidParameterException("Parámetro inválido (se esperaba int).");
         }
         try {
             getUserByIdStatement.setInt(1, dni);
             ResultSet rs = getUserByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
+            if (rs.isBeforeFirst() && rs.next()) {
                 UserType userType;
-                int user_type = rs.getInt("USER_TYPE");
-                if (user_type <= UserType.values().length) {
-                    userType = UserType.values()[user_type];
+                int user_code = rs.getInt("USER_TYPE");
+                if (user_code <= UserType.values().length) {
+                    userType = UserType.values()[user_code];
                 } else {
-                    throw new RuntimeException("Tipo de usuario inválido (" + user_type + ").");
+                    throw new DBException("Tipo de usuario inválido encontrado en la base de datos: " + user_code);
                 }
-                switch (userType) {
-                    case ADMIN, EMPLOYEE -> {
-                        return new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType);
-                    }
-                    case CUSTOMER -> {
-                        return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE")));
-                        //return new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), LocalDate.parse(rs.getString("BIRTHDATE")));
-                    }
-                }
+                return handleUserType(userType, rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | InvalidParameterException e) {
+            throw new DBException(e);
         }
         return null;
     }
@@ -97,20 +99,13 @@ public class UserDAO implements Dao<User> {
                 } else {
                     throw new RuntimeException("Tipo de usuario inválido (" + user_type + ").");
                 }
-                switch (userType) {
-                    case ADMIN, EMPLOYEE ->
-                            users.add(new Employee(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), userType));
-                    case CUSTOMER ->
-                            users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getString("PASSWORD"), LocalDate.parse(rs.getString("BIRTHDATE"))));
-                    //case UserType.CUSTOMER -> users.add(new Customer(rs.getInt("DNI"), rs.getString("NAME"), rs.getString("SURNAME"), rs.getString("EMAIL"), rs.getPassword("PASSWORD"),LocalDate.parse(rs.getString("BIRTHDATE"))));
-                }
+                users.add(handleUserType(userType, rs));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidParameterException e) {
             throw new RuntimeException(e);
         }
         return users;
     }
-
 
     public boolean existeUsuario(int dni) {
         boolean existe = false;
@@ -132,46 +127,73 @@ public class UserDAO implements Dao<User> {
 
     @Override
     public void save(User user) {
+        int user_type_code;
+        if (user instanceof Customer) {
+            user_type_code = UserType.CUSTOMER.ordinal();
+        } else {
+            user_type_code = ((Employee) user).getType().ordinal();
+        }
+
         try {
             saveUserStatement.setInt(1, user.getDni());
             saveUserStatement.setString(2, user.getName());
             saveUserStatement.setString(3, user.getSurname());
             saveUserStatement.setString(4, user.getMail());
-            saveUserStatement.setString(5, user.getPassword());
+            if (user instanceof Customer) {
+                saveUserStatement.setString(5, ((Customer) user).getBirthdate().toString()); // birthdate
+            } else {
+                saveUserStatement.setNull(5, Types.VARCHAR);
+            }
+            saveUserStatement.setInt(6, user_type_code);
+            saveUserStatement.setString(7, user.getPassword());
 
-            saveUserStatement.executeQuery();
+            saveUserStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
 
-    public void save(Customer customer) {
-        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, customer.getDni());
-            stmt.setString(2, customer.getName());
-            stmt.setString(3, customer.getSurname());
-            stmt.setString(4, customer.getMail());
-            stmt.setString(5, customer.getPassword());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void save(Customer customer) {
+//        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
+//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setInt(1, customer.getDni());
+//            stmt.setString(2, customer.getName());
+//            stmt.setString(3, customer.getSurname());
+//            stmt.setString(4, customer.getMail());
+//            stmt.setString(5, customer.getPassword());
+//            stmt.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new DBException(e);
+//        }
+//    }
 
     // Actualizar datos de usuario: cambios de mail, contraseña... a implemetar más adelante
     @Override
     public void update(User user) {
+        int user_type_code;
+        if (user instanceof Customer) {
+            user_type_code = UserType.CUSTOMER.ordinal();
+        } else {
+            user_type_code = ((Employee) user).getType().ordinal();
+        }
+
         try {
             updateUserStatement.setString(1, user.getName());
-            updateUserStatement.setString(2, user.getMail());
-            updateUserStatement.setString(3, user.getSurname());
-            updateUserStatement.setInt(4, user.getDni());
-            // updateUserStatement.setString(4, ); // TODO: update user type
+            updateUserStatement.setString(2, user.getSurname());
+            updateUserStatement.setString(3, user.getMail());
+            if (user instanceof Customer) {
+                updateUserStatement.setString(4, ((Customer) user).getBirthdate().toString()); // birthdate
+            } else {
+                updateUserStatement.setNull(4, Types.VARCHAR);
+            }
+            updateUserStatement.setInt(5, user_type_code);
+            updateUserStatement.setString(6, user.getPassword());
+            updateUserStatement.setInt(7, user.getDni());
 
-            updateUserStatement.executeUpdate();
+            int r = updateUserStatement.executeUpdate();
+            System.out.println(r);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
 
     }
@@ -183,7 +205,7 @@ public class UserDAO implements Dao<User> {
             deleteUserStatement.setInt(1, user.getDni());
             deleteUserStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
 

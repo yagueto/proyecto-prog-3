@@ -52,7 +52,7 @@ public class FlightDAO implements Dao<Flight> {
         try {
             getByIdStatement.setString(1, in);
             ResultSet rs = getByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
+            if (rs.isBeforeFirst() && rs.next()) {
                 return new Flight(rs.getString("ID"), AirportDAO.getAirportDAO().get(rs.getString("ORIGIN_AIRPORT")), AirportDAO.getAirportDAO().get(rs.getString("DEST_AIRPORT")), AirlineDAO.getAirlineDAO().get(rs.getString("AIRLINE_CODE")), LocalDateTime.parse(rs.getString("DEPARTURE_TIME")), LocalDateTime.parse(rs.getString("ARRIVAL_TIME")), rs.getInt("PRECIO"), rs.getInt("MAX_PASAJEROS"));
             }
         } catch (SQLException e) {

@@ -1,6 +1,5 @@
 package domain.models;
 
-import domain.Employee;
 import domain.User;
 
 import javax.swing.table.AbstractTableModel;
@@ -36,7 +35,7 @@ public class UserModel extends AbstractTableModel {
             case 1 -> user.getName();
             case 2 -> user.getSurname();
             case 3 -> user.getMail();
-            case 4 -> user instanceof Employee;
+            case 4 -> User.getType(user);
             case 5 -> null;
             default -> throw new IllegalArgumentException("Número de columna inválido");
         };
@@ -49,7 +48,7 @@ public class UserModel extends AbstractTableModel {
             case 1 -> "Nombre";
             case 2 -> "Apellido";
             case 3 -> "Email";
-            case 4 -> "¿Empleado?";
+            case 4 -> "Tipo de usuario";
             case 5 -> "Gestionar";
             default -> throw new IllegalArgumentException("Número de columna inválido");
         };

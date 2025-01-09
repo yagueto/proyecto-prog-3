@@ -12,6 +12,7 @@ import gui.misc.CellButtonRendererEditor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AdminWindow extends AbstractWindow {
@@ -81,7 +82,7 @@ public class AdminWindow extends AbstractWindow {
 
 class UserManagementWindow extends JFrame {
     private final String[] modifyOptions = {"Eliminar", "Cambiar tipo usuario", "Cambiar correo", "Cambiar contraseña"};
-    private UserModel userModel;
+    private final UserModel userModel;
 
     public UserManagementWindow() {
         this.setSize(640, 480);
@@ -92,13 +93,28 @@ class UserManagementWindow extends JFrame {
         userModel = new UserModel(UserDAO.getUserDAO().getAll());
 
         JTable userTable = new JTable(userModel);
+
         CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor("Gestionar", (i) -> {
             modifyUser(((UserModel) (userTable.getModel())).getUsers().get(i));
             userModel.getUsers().clear();
             userModel.getUsers().addAll(UserDAO.getUserDAO().getAll());
         });
+        userTable.getColumnModel().getColumn(4).setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
+            Color color = Color.WHITE;
+            switch (((UserType) value)) {
+                case CUSTOMER -> color = Color.GREEN;
+                case EMPLOYEE -> color = Color.YELLOW;
+                case ADMIN -> color = Color.RED;
+            }
+            JLabel label = new JLabel(((UserType) value).name());
+            label.setBackground(color);
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setOpaque(true);
+            return label;
+        });
         userTable.getColumnModel().getColumn(5).setCellEditor(cellButtonRendererEditor);
         userTable.getColumnModel().getColumn(5).setCellRenderer(cellButtonRendererEditor);
+
         JScrollPane scrollPane = new JScrollPane(userTable);
 
         this.add(scrollPane);
@@ -115,8 +131,19 @@ class UserManagementWindow extends JFrame {
                 UserDAO.getUserDAO().delete(user);
                 break;
             case "Cambiar tipo usuario":
-                UserType tipoUsuario = (UserType) JOptionPane.showInputDialog(null, "Nuevo tipo de usuario:", "Modificando usuario", JOptionPane.QUESTION_MESSAGE, null, UserType.values(), "");
-                // TODO: cambiar el tipo de usuario
+                UserType new_type = (UserType) JOptionPane.showInputDialog(null, "Nuevo tipo de usuario:", "Modificando usuario", JOptionPane.QUESTION_MESSAGE, null, UserType.values(), "");
+                switch (new_type) {
+                    case ADMIN, EMPLOYEE -> {
+                        Employee admin = new Employee(user);
+                        admin.setType(new_type);
+                        UserDAO.getUserDAO().update(admin);
+                    }
+                    case CUSTOMER -> {
+                        Customer customer = new Customer(user);
+                        customer.setBirthdate(LocalDate.now());
+                        UserDAO.getUserDAO().update(customer);
+                    }
+                }
                 break;
             case "Cambiar correo":
                 String email = (String) JOptionPane.showInputDialog(null, "Correo electrónico:", "Modificando usuario", JOptionPane.QUESTION_MESSAGE);
