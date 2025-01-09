@@ -1,3 +1,9 @@
+/*
+    FUENTE-EXTERNA
+    URL: https://web.archive.org/web/20190412091617/tech.chitgoks.com/2009/11/06/autocomplete-jcombobox/
+    ADAPTADO: modificado para corregir errores y añadir tipado al combobox.
+ */
+
 package gui.misc;
 
 import javax.swing.*;
