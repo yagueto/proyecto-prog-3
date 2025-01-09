@@ -153,6 +153,7 @@ public class UserDAO implements Dao<User> {
             stmt.setString(3, customer.getSurname());
             stmt.setString(4, customer.getMail());
             stmt.setString(5, customer.getPassword());
+            stmt.setString(6, customer.getBirthdate().toString());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

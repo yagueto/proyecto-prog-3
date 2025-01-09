@@ -18,6 +18,7 @@ public class SignInWindow extends AbstractWindow{
 	private final JTextField txtDni;
 	private final JTextField txtApellido;
 	private final JTextField txtMail;
+	private final  JTextField txtBirthDate;
 	
 	
 	
@@ -57,12 +58,14 @@ public class SignInWindow extends AbstractWindow{
         JLabel lblContraseniaUsuario = new JLabel("| Introduce tu contraseña: ");
         JLabel lblDni = new JLabel("Introduce tu DNI: ");
         JLabel lblApellido = new JLabel("Introduce tu Apellido: ");
+        JLabel lblbirthDate = new JLabel("Introduce tu fecha de nacimiento: ");
 
         txtNombreUsuario = new JTextField(10);
         txtContraseniaUsuario = new JPasswordField(10);
         txtDni = new JTextField(10);
         txtApellido = new JTextField(10);
         txtMail = new JTextField(10);
+        txtBirthDate = new JTextField(10);
         
 
 
@@ -97,11 +100,17 @@ public class SignInWindow extends AbstractWindow{
         gbc.gridx = 1; gbc.gridy = 4;
         pCentro.add(txtMail, gbc);
 
-        // Quinta fila: Contraseña
+        
         gbc.gridx = 0; gbc.gridy = 5;
         pCentro.add(lblContraseniaUsuario, gbc);
         gbc.gridx = 1; gbc.gridy = 5;
         pCentro.add(txtContraseniaUsuario, gbc);
+        
+       
+        gbc.gridx = 0; gbc.gridy = 6;
+        pCentro.add(lblbirthDate, gbc);
+        gbc.gridx = 1; gbc.gridy = 6;
+        pCentro.add(txtBirthDate, gbc);
 
        /* 
         pCentro.add(lblNombreUsuario);
