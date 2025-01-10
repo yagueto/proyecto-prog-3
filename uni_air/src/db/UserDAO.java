@@ -107,23 +107,7 @@ public class UserDAO implements Dao<User> {
         return users;
     }
 
-    public boolean existeUsuario(int dni) {
-        boolean existe = false;
-        String sql = "SELECT COUNT(*) FROM USER WHERE DNI = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, dni);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                existe = true;
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return existe;
-    }
+   
 
     @Override
     public void save(User user) {

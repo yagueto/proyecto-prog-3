@@ -143,7 +143,7 @@ public class SignInWindow extends AbstractWindow{
             String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
             
 			User usu = new Customer(dni, nombre, apellido, mail, contrasenia, LocalDate.now());
-            if (UserDAO.getUserDAO().existeUsuario(dni)) {
+            if (UserDAO.getUserDAO().get(dni)!=null) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else {
                 UserDAO.getUserDAO().save(usu);
