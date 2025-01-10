@@ -9,9 +9,9 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="lib"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="lib/flatlaf-3.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jdatepicker-2.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.47.1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
