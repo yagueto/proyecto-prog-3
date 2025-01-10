@@ -5,9 +5,13 @@ import domain.Customer;
 import domain.User;
 
 import javax.swing.*;
+
+import org.jdatepicker.JDatePicker;
+
 import java.awt.*;
-import java.time.LocalDate;
+
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 
 
 public class SignInWindow extends AbstractWindow{
@@ -18,7 +22,7 @@ public class SignInWindow extends AbstractWindow{
 	private final JTextField txtDni;
 	private final JTextField txtApellido;
 	private final JTextField txtMail;
-	private final  JTextField txtBirthDate;
+	
 	
 	
 	
@@ -59,13 +63,16 @@ public class SignInWindow extends AbstractWindow{
         JLabel lblDni = new JLabel("Introduce tu DNI: ");
         JLabel lblApellido = new JLabel("Introduce tu Apellido: ");
         JLabel lblbirthDate = new JLabel("Introduce tu fecha de nacimiento: ");
+        
+        JDatePicker datePicker= new  JDatePicker();
+        
 
         txtNombreUsuario = new JTextField(10);
         txtContraseniaUsuario = new JPasswordField(10);
         txtDni = new JTextField(10);
         txtApellido = new JTextField(10);
         txtMail = new JTextField(10);
-        txtBirthDate = new JTextField(10);
+       
         
 
 
@@ -110,21 +117,10 @@ public class SignInWindow extends AbstractWindow{
         gbc.gridx = 0; gbc.gridy = 6;
         pCentro.add(lblbirthDate, gbc);
         gbc.gridx = 1; gbc.gridy = 6;
-        pCentro.add(txtBirthDate, gbc);
+        pCentro.add(datePicker, gbc);
 
-       /* 
-        pCentro.add(lblNombreUsuario);
-        pCentro.add(txtNombreUsuario);
-        pCentro.add(lblApellido);
-        pCentro.add(txtApellido);
-        pCentro.add(lblDni);
-        pCentro.add(txtDni);
-        pCentro.add(lblmail);
-        pCentro.add(txtMail);
-        pCentro.add(lblContraseniaUsuario);
-        pCentro.add(txtContraseniaUsuario);
-
-        */
+        
+        
         btnVolver.addActionListener(e -> { 
         	new LoginWindow();
             dispose();
@@ -141,15 +137,21 @@ public class SignInWindow extends AbstractWindow{
             String apellido = txtApellido.getText();
             String mail = txtMail.getText();
             String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+            GregorianCalendar fechaNa= (GregorianCalendar) datePicker.getModel().getValue();
             
-			User usu = new Customer(dni, nombre, apellido, mail, contrasenia, LocalDate.now());
+			User usu = new Customer(dni, nombre, apellido, mail, contrasenia,fechaNa.toZonedDateTime().toLocalDate() );
             if (UserDAO.getUserDAO().get(dni)!=null) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else {
                 UserDAO.getUserDAO().save(usu);
+                new LoginWindow();
+            	dispose();
+                
                 JOptionPane.showMessageDialog(null, "Registro correcto", "Registro", JOptionPane.INFORMATION_MESSAGE);
+                
             }
         });
+        
         
 
         setVisible(true);
