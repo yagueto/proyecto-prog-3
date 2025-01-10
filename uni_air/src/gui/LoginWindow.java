@@ -1,5 +1,6 @@
 package gui;
 
+import db.DBException;
 import db.UserDAO;
 import domain.Customer;
 
@@ -12,7 +13,8 @@ import java.time.LocalDate;
 public class LoginWindow extends AbstractWindow {
     private static final long serialVersionUID = -1392377673421616906L;
 
-    private final JTextField txtNombreUsuario;
+    private final JTextField txtMail;
+    private final JPasswordField txtPassword;
 
     public LoginWindow() {
         JPanel pNorte = new JPanel();
@@ -33,11 +35,11 @@ public class LoginWindow extends AbstractWindow {
         getRootPane().setDefaultButton(btnIniciarSesion);
 
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
-        JLabel lblNombreUsuario = new JLabel("Introduce tu nombre: ");
-        JLabel lblContraseniaUsuario = new JLabel("Introduce tu contraseña: ");
+        JLabel lblMail = new JLabel("Introduce tu mail: ");
+        JLabel lblPassword = new JLabel("Introduce tu contraseña: ");
 
-        txtNombreUsuario = new JTextField(10);
-        JPasswordField txtContraseniaUsuario = new JPasswordField(10);
+        txtMail = new JTextField(10);
+        txtPassword = new JPasswordField(10);
 
         pSur.add(btnIniciarSesion);
         pSur.add(btnCerrarSesion);
@@ -45,10 +47,10 @@ public class LoginWindow extends AbstractWindow {
 
         pNorte.add(lblTitulo);
 
-        pCentro.add(lblNombreUsuario);
-        pCentro.add(txtNombreUsuario);
-        pCentro.add(lblContraseniaUsuario);
-        pCentro.add(txtContraseniaUsuario);
+        pCentro.add(lblMail);
+        pCentro.add(txtMail);
+        pCentro.add(lblPassword);
+        pCentro.add(txtPassword);
 
 
         btnCerrarSesion.addActionListener(e -> exit());
@@ -57,20 +59,39 @@ public class LoginWindow extends AbstractWindow {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = txtNombreUsuario.getText();
-                String contrasenia = new String(txtContraseniaUsuario.getPassword());
-                ;
-                if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
+                String usuario = txtMail.getText();
+                String password = new String(txtPassword.getPassword());
+                //comprueba si el usuario y la contraseña estan en la base de datos
+                if (usuario.isEmpty() || password.isEmpty()) {
+                	JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+               } 
+            	  try {
+            		  if (UserDAO.validarUsuario(usuario, password)==true) {
+            	            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+            	            SwingUtilities.invokeLater(UserWindow::new);
+            	            dispose();
+            	            
+            	        } else if(UserDAO.validarUsuario(usuario, password)==false ){
+            	            JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            	            vaciarCampos();
+            	        }
+				} catch (DBException | HeadlessException  ex) {
+					JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+			    }
+				}
+					
+				/*else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
                     SwingUtilities.invokeLater(UserWindow::new);
                     dispose();
-                } else if (usuario.equals("ADMIN2") && contrasenia.equals("ADMIN2")) {
+                } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
                     
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
                     SwingUtilities.invokeLater(AdminWindow::new);
                     dispose();
-                } else if (usuario.equals("EMPLEADO3") && contrasenia.equals("EMPLEADO3")) {
+                } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
                     SwingUtilities.invokeLater(EmployeeWindow::new);
@@ -79,15 +100,13 @@ public class LoginWindow extends AbstractWindow {
                     JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
                     vaciarCampos();
                     return;
-                }
+                }*/
                 // TODO: gestionar usuarios
-                UserDAO.setLoggedInUser(new Customer(123456789, "John", "Doe", "johndoe@example.com", "example",
-                        LocalDate.now()));
-            }
-
+               
+			
             public void vaciarCampos() {
-                txtNombreUsuario.setText("");
-                txtContraseniaUsuario.setText("");
+                txtMail.setText("");
+                txtPassword.setText("");
             }
         };
         btnIniciarSesion.addActionListener(l);
