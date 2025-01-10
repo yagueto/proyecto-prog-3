@@ -2,6 +2,7 @@ package db;
 
 import domain.Airline;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class AirlineDAO implements Dao<Airline> {
             this.updateAirlineStatement = conn.prepareStatement("UPDATE AIRLINE SET NAME=? WHERE IATA_CODE=?");
             this.deleteAirlineStatement = conn.prepareStatement("DELETE FROM AIRLINE WHERE IATA_CODE=?");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
@@ -41,16 +42,16 @@ public class AirlineDAO implements Dao<Airline> {
     @Override
     public Airline get(Object param) {
         if (!(param instanceof String in)) {
-            throw new RuntimeException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String) IATA).");
         }
         try {
             getAirlineByIdStatement.setString(1, in);
             ResultSet rs = getAirlineByIdStatement.executeQuery();
-            if (rs.isBeforeFirst()) {
+            if (rs.isBeforeFirst() && rs.next()) {
                 return new Airline(in, rs.getString("NAME"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBException("Error inesperado consultando la BBDD, posible error en la BBDD", e); // Should never happen
         }
         return null;
     }
@@ -64,7 +65,7 @@ public class AirlineDAO implements Dao<Airline> {
                 airlines.add(new Airline(rs.getString("IATA_CODE"), rs.getString("NAME")));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
         return airlines;
     }
@@ -74,28 +75,19 @@ public class AirlineDAO implements Dao<Airline> {
         try {
             saveAirlineStatement.setString(1, airline.getIata());
             saveAirlineStatement.setString(2, airline.getName());
-            saveAirlineStatement.executeQuery();
+            saveAirlineStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DBException(e);
         }
     }
 
     @Override
     public void update(Airline airline) {
-        try {
-            updateAirlineStatement.setString(1, airline.getIata());
-            updateAirlineStatement.setString(2, airline.getName());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        throw new UnsupportedOperationException("No se pueden actualizar los datos de una aerolínea");
     }
 
     @Override
     public void delete(Airline airline) {
-        try {
-            deleteAirlineStatement.setString(1, airline.getIata());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        throw new UnsupportedOperationException("No se pueden eliminar los datos de una aerolínea");
     }
 }

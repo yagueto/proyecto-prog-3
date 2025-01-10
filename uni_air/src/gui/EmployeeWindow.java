@@ -1,8 +1,9 @@
 package gui;
 
 import db.FlightDAO;
-import domain.FlightModel;
-import domain.FlightModel.TipoVentana;
+import domain.models.FlightModel;
+import domain.models.FlightModel.TipoVentana;
+import gui.misc.CellButtonRendererEditor;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -28,7 +29,7 @@ public class EmployeeWindow extends AbstractWindow {
 
         TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 
-        tableColumn.setCellEditor(new CellButtonRendererEditor((int clickedRow) -> {
+        tableColumn.setCellEditor(new CellButtonRendererEditor("COMPRAR →", (int clickedRow) -> {
             // Vuelo.getFlights().get(clickedRow).setPasajeros(Vuelo.getFlights().get(clickedRow).getPasajeros() - 1);
             SwingUtilities.invokeLater(() -> new CheckInWindow(this, vuelos.getFlights().get(clickedRow)));
             setVisible(false);

@@ -1,6 +1,7 @@
-package domain;
+package domain.models;
 
-import gui.CellButtonRendererEditor;
+import domain.Flight;
+import gui.misc.CellButtonRendererEditor;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;

@@ -7,9 +7,10 @@ import db.UserDAO;
 import domain.Airport;
 import domain.Booking;
 import domain.Flight;
-import domain.FlightModel;
-import domain.FlightModel.TipoVentana;
-import gui.misc.HintTextField;
+import domain.models.FlightModel;
+import domain.models.FlightModel.TipoVentana;
+import gui.misc.AutoCompleteJComboBox;
+import gui.misc.CellButtonRendererEditor;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
@@ -88,7 +89,7 @@ class FlightSearchPanel extends JPanel {
 
 
         TableColumn c = tabla.getColumnModel().getColumn(5);
-        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor((int row) -> new BuyWindow(flightModel.getFlights().get(row)));
+        CellButtonRendererEditor cellButtonRendererEditor = new CellButtonRendererEditor("COMPRAR →", (int row) -> new BuyWindow(flightModel.getFlights().get(row)));
         c.setCellEditor(cellButtonRendererEditor);
         c.setCellRenderer(cellButtonRendererEditor);
 
@@ -105,8 +106,12 @@ class FlightSearchPanel extends JPanel {
 
         buttonsPanel.setBackground(UIManager.getColor("ProgressBar.foreground"));
 
-        JTextField origenField = new HintTextField(11, "Aeropuerto de origen");
-        JTextField destField = new HintTextField(12, "Aeropuerto de destino");
+        JComboBox<Airport> origenField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
+        JComboBox<Airport> destField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
+
+        new AutoCompleteJComboBox<Airport>(origenField);
+        new AutoCompleteJComboBox<Airport>(destField);
+
         JDatePicker datePicker = new JDatePicker();
 
         searchButton = new JButton("Buscar");
@@ -123,6 +128,7 @@ class FlightSearchPanel extends JPanel {
         filtersPanel.add(progressBar, BorderLayout.SOUTH);
 
         searchButton.addActionListener(e -> {
+            System.out.println(origenField.getModel().getSelectedItem());
             GregorianCalendar calendar = (GregorianCalendar) datePicker.getModel().getValue();
             if (calendar == null) {
                 JOptionPane.showMessageDialog(null, "¡Fecha de salida vacía!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -130,7 +136,7 @@ class FlightSearchPanel extends JPanel {
             }
             ZonedDateTime zonedDateTime = calendar.toZonedDateTime();
 
-            Thread t = new Thread(() -> updateTableData(origenField.getText(), destField.getText(), zonedDateTime.toLocalDate()));
+            Thread t = new Thread(() -> updateTableData((Airport) origenField.getSelectedItem(), (Airport) destField.getSelectedItem(), zonedDateTime.toLocalDate()));
             t.start();
 
         });
@@ -142,13 +148,11 @@ class FlightSearchPanel extends JPanel {
     /**
      * Carga datos de la búsqueda de vuelos en la tabla
      */
-    protected static void updateTableData(String origen, String destino, LocalDate fecha_salida) {
+    protected static void updateTableData(Airport airport_origen, Airport airport_destino, LocalDate fecha_salida) {
         SwingUtilities.invokeLater(() -> {
             progressBar.setIndeterminate(true);
             searchButton.setEnabled(false);
         });
-        Airport airport_origen = AirportDAO.getAirportDAO().get(origen);
-        Airport airport_destino = AirportDAO.getAirportDAO().get(destino);
         if (airport_origen == null) {
             JOptionPane.showMessageDialog(null, "¡Aeropuerto de origen inválido!", "Error", JOptionPane.ERROR_MESSAGE);
         } else if (airport_destino == null) {

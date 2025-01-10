@@ -9,6 +9,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 /*
  * Clase de utilidades para la configuración de las ventanas.
@@ -38,8 +39,8 @@ public abstract class AbstractWindow extends JFrame {
         });
 
         this.setTitle("Uni-Air");
-
-        // TODO: podría ser interesante añadir un icono a la ventana
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/db/images/icon.png")));
+        this.setIconImage(icon.getImage());
     }
 
     /*

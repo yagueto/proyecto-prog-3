@@ -163,6 +163,8 @@ public class BuyWindow extends JFrame {
             emailField.setBackground(Color.RED);
         } else if (!paypalRadio.isSelected() && !creditCardRadio.isSelected()) {
             error = "No se ha seleccionado método de pago";
+        } else if (!phoneField.getText().matches("^([0-9]*)$")) {
+            error = "Número de teléfono inválido";
         }
 
         if (!error.isEmpty()) {
@@ -177,10 +179,10 @@ public class BuyWindow extends JFrame {
         boolean creditCard = creditCardRadio.isSelected();
         String paymentMethod = creditCard ? "tarjeta de crédito" : "cuenta de PayPal";
         String payment = JOptionPane.showInputDialog(this, "Introduce tu " + paymentMethod + ".", "Datos de pago", JOptionPane.QUESTION_MESSAGE);
-        if (payment.isEmpty()) {
+        if (payment.isEmpty() || !payment.matches("^([0-9]*)$")) {
             JOptionPane.showMessageDialog(
                     this,
-                    "El valor de la " + paymentMethod + " no puede estar vacío",
+                    "El valor de la " + paymentMethod + " está vacío o es inválido.",
                     "¡Campos inválidos!",
                     JOptionPane.ERROR_MESSAGE
             );

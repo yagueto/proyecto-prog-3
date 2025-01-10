@@ -8,6 +8,11 @@ public class Employee extends User {
         this.type = type;
     }
 
+    public Employee(User user) {
+        super(user);
+        this.type = UserType.EMPLOYEE;
+    }
+
     public UserType getType() {
         return type;
     }

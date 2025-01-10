@@ -13,6 +13,10 @@ public class Customer extends User {
 		this.birthdate = birthdate;
 	}
 
+	public Customer(User user) {
+		super(user);
+	}
+
 	public LocalDate getBirthdate() {
 		return birthdate;
 	}

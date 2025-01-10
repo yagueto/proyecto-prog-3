@@ -2,63 +2,80 @@ package domain;
 
 public abstract class User {
 
-	private int dni;
-	private String name;
-	private String surname;
-	private String mail;
-	private String password;
+    private int dni;
+    private String name;
+    private String surname;
+    private String mail;
+    private String password;
 
-	public User(int dni, String name, String surname, String mail, String password) {
-		super();
-		this.dni = dni;
-		this.name = name;
-		this.surname = surname;
-		this.mail = mail;
-	}
+    public User(int dni, String name, String surname, String mail, String password) {
+        super();
+        this.dni = dni;
+        this.name = name;
+        this.surname = surname;
+        this.mail = mail;
+        this.password = password;
+    }
 
-	public int getDni() {
-		return dni;
-	}
+    public User(User user) {
+        this.dni = user.getDni();
+        this.name = user.name;
+        this.surname = user.surname;
+        this.mail = user.mail;
+        this.password = user.password;
+    }
 
-	public void setDni(int dni) {
-		this.dni = dni;
-	}
+    public static UserType getType(User user) {
+        if (user instanceof Customer) {
+            return UserType.CUSTOMER;
+        } else {
+            return ((Employee) user).getType();
+        }
+    }
 
-	public String getName() {
-		return name;
-	}
+    public int getDni() {
+        return dni;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setDni(int dni) {
+        this.dni = dni;
+    }
 
-	public String getSurname() {
-		return surname;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getMail() {
-		return mail;
-	}
+    public String getSurname() {
+        return surname;
+    }
 
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getMail() {
+        return mail;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
 
-	@Override
-	public String toString() {
-		return "User [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
-				+ password + "]";
-	}
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User [dni=" + dni + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
+                + password + "]";
+    }
 }

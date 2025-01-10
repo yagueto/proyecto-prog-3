@@ -2,6 +2,7 @@ package domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Flight {
 	private String codigo;
@@ -13,6 +14,7 @@ public class Flight {
 	private int maxPasajeros;
 	private int precio;
 	private static ArrayList<Flight> flights;
+	private HashSet<String> occupied;
 
 	public Flight(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
 				  LocalDateTime fechaAterrizaje, int maxPasajeros, int precio) {
@@ -24,6 +26,7 @@ public class Flight {
 		this.fechaAterrizaje = fechaAterrizaje;
 		this.maxPasajeros = maxPasajeros;
 		this.precio = precio;
+		this.occupied = new HashSet<>();
 	}
 
 	@Deprecated
@@ -136,6 +139,10 @@ public class Flight {
 
 	public void setAirline(Airline airline) {
 		this.airline = airline;
+	}
+
+	public HashSet<String> getOccupied() {
+		return occupied;
 	}
 
 	@Override
