@@ -1,8 +1,15 @@
 package domain;
 
+import db.AirlineDAO;
+import db.AirportDAO;
+import db.FlightDAO;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Flight {
 	private String codigo;
@@ -28,53 +35,44 @@ public class Flight {
 		this.precio = precio;
 		this.occupied = new HashSet<>();
 	}
-
-	@Deprecated
-	public static ArrayList<Flight> getVuelos() {
-		if (flights == null) {
-			System.out.println("Empieza a cargar vuelos");
-			flights = new ArrayList<>();
-			Thread t = new Thread(() -> loadVuelos());
-			t.start();
-			System.out.println("Vuelos cargados");
-		} else {
-			System.out.println("Vuelos ya cargados previamente, devolviendo");
-		}
-		return flights;
-	}
 	
 	// Llenar lista de vuelos desde archivo
-	@Deprecated
-	private static void loadVuelos() {
-		throw new RuntimeException("Ya no se usa esta función");
-//		try {
-//			Scanner sc = new Scanner(new File("resources/flights_part1.csv"));
-//			sc.nextLine();
-//
-//			while(sc.hasNext()){
-//				String linea = sc.nextLine();
-//				String[] campos = linea.split(",");
-//
-//				int year = Integer.parseInt(campos[0]);
-//				int month = Integer.parseInt(campos[1]);
-//				int day = Integer.parseInt(campos[2]);
-//				// campos[3] es el día de la semana, pero al tener la fecha no es un dato relevante
-//				String airline = campos[4];
-//				int flightNumber = Integer.parseInt(campos[5]);
-//				String tailNumber = campos[6];
-//				String origin = campos[7];
-//				String destination = campos[8];
-//				int departure = Integer.parseInt(campos[9]);
-//				int arrival = Integer.parseInt(campos[10]);
-//				int price = Integer.parseInt(campos[11]);
-//				LocalDateTime dep = LocalDateTime.of(year, month, day, departure / 100, departure % 100);
-//
-//				vuelos.add(new Vuelo(flightNumber, origin, destination, dep, dep.plusHours(arrival / 100).plusMinutes(departure % 100), 120, 150, price));
-//			}
-//			sc.close();
-//		} catch (FileNotFoundException e) {
-//			System.err.println("Error al cargar los datos");
-//		}
+	public static void loadFlights() {
+		Thread t = new Thread(() ->{
+			try {
+				Scanner sc = new Scanner(new File("resources/flights_part1.csv"));
+				sc.nextLine();
+
+				while(sc.hasNext()){
+					String linea = sc.nextLine();
+					String[] campos = linea.split(",");
+
+					String airline = campos[4];
+					String flightNumber = Integer.parseInt(campos[5]) + airline;
+
+					if(FlightDAO.getFlightDAO().get(flightNumber) == null){
+						int year = Integer.parseInt(campos[0]);
+						int month = Integer.parseInt(campos[1]);
+						int day = Integer.parseInt(campos[2]);
+						Airline air = AirlineDAO.getAirlineDAO().get(airline);
+						String origin = campos[7];
+						Airport orig = AirportDAO.getAirportDAO().get(origin);
+						String destination = campos[8];
+						Airport dest = AirportDAO.getAirportDAO().get(destination);
+						int departure = Integer.parseInt(campos[9]);
+						int arrival = Integer.parseInt(campos[10]);
+						int price = Integer.parseInt(campos[11]);
+						LocalDateTime dep = LocalDateTime.of(year, month, day, departure / 100, departure % 100);
+
+						FlightDAO.getFlightDAO().save(new Flight(flightNumber, orig, dest, air, dep.plusHours(arrival / 100).plusMinutes(departure % 100), dep.plusHours(arrival / 100).plusMinutes(departure % 100), 150, price));
+					}
+				}
+				sc.close();
+			} catch (FileNotFoundException e) {
+				System.err.println("Error al cargar los datos");
+			}
+		});
+		t.start();
 	}
 
 	public String getCodigo() {
