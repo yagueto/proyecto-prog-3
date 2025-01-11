@@ -16,10 +16,6 @@ public class AirlineDAO implements Dao<Airline> {
     private final PreparedStatement getAirlineByIdStatement;
     private final PreparedStatement getAllAirlinesStatement;
     private final PreparedStatement saveAirlineStatement;
-    private final PreparedStatement updateAirlineStatement;
-    private final PreparedStatement deleteAirlineStatement;
-    
-    
 
     private AirlineDAO() {
         Connection conn = DBManager.getDBManager().conn;
@@ -27,8 +23,6 @@ public class AirlineDAO implements Dao<Airline> {
             this.getAirlineByIdStatement = conn.prepareStatement("SELECT NAME FROM AIRLINE WHERE IATA_CODE=?");
             this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE ORDER BY IATA_CODE");
             this.saveAirlineStatement = conn.prepareStatement("INSERT INTO AIRLINE (IATA_CODE, NAME) VALUES (?, ?)");
-            this.updateAirlineStatement = conn.prepareStatement("UPDATE AIRLINE SET NAME=? WHERE IATA_CODE=?");
-            this.deleteAirlineStatement = conn.prepareStatement("DELETE FROM AIRLINE WHERE IATA_CODE=?");
         } catch (SQLException e) {
             throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
