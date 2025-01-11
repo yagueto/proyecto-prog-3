@@ -22,6 +22,7 @@ public class Main {
         }
         //SwingUtilities.invokeLater(() -> new EmployeeWindow());
         SwingUtilities.invokeLater(() -> new LoginWindow());
+    
     }
 
 }

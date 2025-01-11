@@ -104,8 +104,14 @@ public class BookingDAO implements Dao<Booking> {
             if (type == BookingField.FLIGHT) {
                 statement.setString(1, (String) param);
             } else if (type == BookingField.ID || type == BookingField.USER) {
-                statement.setInt(1, (Integer) param);
-            } else {
+            	try {
+            	    int intParam = Integer.parseInt((String) param); // Convierte el String a Integer
+            	    statement.setInt(1, intParam); // Usa el Integer convertido
+            	} catch (NumberFormatException e) {
+            	    System.err.println("El valor del parámetro no es un número válido: " + param);
+            	    throw e; // Relanza la excepción o maneja el error
+            	}
+            	} else {
                 throw new IllegalArgumentException("Tipo de búsqueda no soportado: " + type);
             }
             ResultSet rs = statement.executeQuery();
