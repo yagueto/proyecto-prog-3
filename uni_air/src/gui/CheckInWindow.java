@@ -87,12 +87,11 @@ public class CheckInWindow extends JFrame{
                     int dni = Integer.parseInt(codigoEmpleado.getText());
                     boolean dniCorrecto = false;
                     for (Booking booking : bookings){
-                        System.out.println(booking.getCustomer().getDni());
                         if (booking.getCustomer().getDni() == dni){
                             CheckIn nuevo = new CheckIn(booking);
                             CheckInDAO.getCheckInDAO().save(nuevo);
-                            asiento.setText("Su asiento es el " + nuevo.getSeat());
 
+                            asiento.setText("Su asiento es el " + nuevo.getSeat());
                             codigoEmpleado.setBackground(Color.GREEN);
                             mensaje.setText("Check-In creado correctamente");
                             mensaje.setForeground(Color.GREEN);

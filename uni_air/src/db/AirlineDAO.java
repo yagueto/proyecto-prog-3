@@ -16,10 +16,13 @@ public class AirlineDAO implements Dao<Airline> {
     private final PreparedStatement getAirlineByIdStatement;
     private final PreparedStatement getAllAirlinesStatement;
     private final PreparedStatement saveAirlineStatement;
-    private final PreparedStatement updateAirlineStatement;
+
+    //private final PreparedStatement updateAirlineStatement;
     private final PreparedStatement deleteAirlineStatement;
+    private final PreparedStatement deleteAllAirlinesStatement;
     
     
+
 
     private AirlineDAO() {
         Connection conn = DBManager.getDBManager().conn;
@@ -27,8 +30,11 @@ public class AirlineDAO implements Dao<Airline> {
             this.getAirlineByIdStatement = conn.prepareStatement("SELECT NAME FROM AIRLINE WHERE IATA_CODE=?");
             this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE ORDER BY IATA_CODE");
             this.saveAirlineStatement = conn.prepareStatement("INSERT INTO AIRLINE (IATA_CODE, NAME) VALUES (?, ?)");
-            this.updateAirlineStatement = conn.prepareStatement("UPDATE AIRLINE SET NAME=? WHERE IATA_CODE=?");
+
+            //this.updateAirlineStatement = conn.prepareStatement("UPDATE AIRLINE SET NAME=? WHERE IATA_CODE=?");
             this.deleteAirlineStatement = conn.prepareStatement("DELETE FROM AIRLINE WHERE IATA_CODE=?");
+            this.deleteAllAirlinesStatement = conn.prepareStatement("DELETE FROM AIRLINE");
+
         } catch (SQLException e) {
             throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
@@ -84,7 +90,7 @@ public class AirlineDAO implements Dao<Airline> {
             int rowsAffected = saveAirlineStatement.executeUpdate();
             System.out.println("Filas afectadas: " + rowsAffected);
             
-            saveAirlineStatement.executeUpdate();
+            //saveAirlineStatement.executeUpdate();
             
         } catch (SQLException e) {
         	System.err.println("Error al guardar la aerolínea: " + e.getMessage());
@@ -99,6 +105,27 @@ public class AirlineDAO implements Dao<Airline> {
 
     @Override
     public void delete(Airline airline) {
-        throw new UnsupportedOperationException("No se pueden eliminar los datos de una aerolínea");
+    	try {
+    		if(airline.getIata() == null) {
+    			System.out.println("No existe una aerolínea con ese IATA_CODE");
+    		}else {
+    			deleteAirlineStatement.setString(1, airline.getIata());
+    			int rowsDeleted = deleteAirlineStatement.executeUpdate(); // Ejecutar el delete
+                if (rowsDeleted == 0) {
+                    System.out.println("No se encontró ninguna aerolínea con el IATA_CODE proporcionado.");
+                }
+    		}
+		} catch (SQLException e) {
+			throw new DBException(e); // Should never happen
+		}
     }
+
+    
+    public void deleteAll() throws SQLException {	
+		deleteAllAirlinesStatement.executeUpdate();		
+    }
+    
+
+
 }
+

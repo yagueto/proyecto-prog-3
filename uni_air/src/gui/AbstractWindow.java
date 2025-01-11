@@ -7,8 +7,7 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.Objects;
 
 /*
@@ -36,11 +35,24 @@ public abstract class AbstractWindow extends JFrame {
                 super.windowClosing(e);
                 exit();
             }
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                requestFocus();
+            }
         });
 
         this.setTitle("Uni-Air");
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/icon.png")));
         this.setIconImage(icon.getImage());
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_L && e.isControlDown()){
+                    logout();
+                }
+            }
+        });
     }
 
     /*
@@ -74,5 +86,10 @@ public abstract class AbstractWindow extends JFrame {
                 width=300;
             columnModel.getColumn(column).setPreferredWidth(width);
         }
+    }
+
+    private void logout(){
+        this.dispose();
+        SwingUtilities.invokeLater(() -> new LoginWindow());
     }
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,91 +15,63 @@ import org.junit.Test;
 
 
 import db.AirlineDAO;
+import db.AirportDAO;
 import db.DBManager;
 import domain.Airline;
+import domain.Airport;
 
 public class AirlineDAOTest { 
-	// DOS ERRORES VISTOS EN LA BD TRAS DEPURACIÓN:
-	// DESPUES DE HACER EL TEST SALTA EL throws new SQLException(e); EN EL MÉTODO SAVE DE AIRLINEDAO
-	// CON LOS DATOS METIDOS, DE NO CREAR OTRA TABLA AIRLINE (funcionalidad de los tests) RESTRICCIONES COMO UNIQUE Y LA PK DAN ERROR AL INSERTAR EL NOMBRE Y IATA
 	
 	AirlineDAO airlineDAO = AirlineDAO.getAirlineDAO();
 	
-	@Before
-	public void setupDatabase() {
-	    try (Connection con = DBManager.getDBManager().conn) {
-	        con.createStatement().execute(
-	            "CREATE TABLE IF NOT EXISTS AIRLINE (" +
-	            "IATA_CODE VARCHAR(20) PRIMARY KEY, " +
-	            "NAME VARCHAR(40))"
-	        );
-	    } catch (SQLException e) {
-	        fail("Error al configurar la base de datos: " + e.getMessage());
+	// HAY UN ERROR EN LA CREACIÓN DE LOS STATEMENTS ES AIRLINEDAO (no lo he podido resolver todavia)
+	// (da el error en ambos tests porque aplican la misma funcion save() en la que probablemente esté el error de SQL)
+	
+	@Test
+	public void testSaveAirline() {
+		try {
+			
+	        Airline airline = new Airline("COD", "AIRLINE");
+
+	        airlineDAO.delete(airline);
+
+	        airlineDAO.save(airline);
+
+	        Airline retrievedAirline = airlineDAO.get("COD");
+	        assertNotNull("La aerolinea debería estar en la base de datos.", retrievedAirline);
+	        assertEquals("COD", retrievedAirline.getIata());
+	        assertEquals("AIRLINE", retrievedAirline.getName());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        fail("Inserción de datos fallida: " + e.getMessage());
 	    }
 	}
 	
-    @Test
-    public void testSaveSuccessfullInsertion() throws SQLException{	
-    	try {	
-            // Crear una aerolínea de prueba
-            Airline airline = new Airline("AMS", "Airline1");
-
-            // Guardar la aerolínea con el método save()
-            airlineDAO.save(airline);
-
-            // Verificar que la aerolínea se insertó correctamente
-            Airline retrievedAirline = airlineDAO.get("AMS");
-            assertNotNull("La aerolínea debería estar en la base de datos.", retrievedAirline);
-            assertEquals("AMS", retrievedAirline.getIata());
-            assertEquals("Amsterdam Airport Schiphol", retrievedAirline.getName());
-		} catch (Exception e) {
-			fail("Inserción de datos fallida");
-		}
-    	
-    }
-    
-    @Test
-    public void testSaveAndRetrieveAll() throws SQLException{
-    	try {
-    		// Insertar varias aerolíneas
-            airlineDAO.save(new Airline("AMS", "Airline1"));
-            airlineDAO.save(new Airline("JFK", "Airline2"));
-            airlineDAO.save(new Airline("LHR", "Airline3"));
-
-            // Recuperar todas las aerolíneas
-            List<Airline> airlines = airlineDAO.getAll();
-            
-            // Verificar que se recuperaron correctamente
-            assertEquals(3, airlines.size());
-            assertEquals(airlines.get(0).getName(), "Airline1");
-            assertEquals(airlines.get(0).getIata(), "AMS");
-            assertEquals(airlines.get(1).getName(), "Airline2");
-            assertEquals(airlines.get(1).getIata(), "JFK");
-            assertEquals(airlines.get(2).getName(), "Airline3");
-            assertEquals(airlines.get(2).getIata(), "LHR");
-            
+	@Test
+	public void testGetAirline() {
+		try {
+			airlineDAO.deleteAll();
+			
+			Airline airline = new Airline("ABC", "AIRLINE");
+			
+			airlineDAO.save(airline);
+			
+			List<Airline> airlines = airlineDAO.getAll();
+			
+			Airline retrievedAirline = airlines.get(0);
+			
+			assertEquals(retrievedAirline.getIata(), "ABC");
+			assertEquals(retrievedAirline.getName(), "AIRLINE");
+	        
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Recuperación de datos fallida");
 			e.getMessage();
-		}   	
-       
-    }
-    @After
-    public void cleanup() {
-        try {
-            Connection conn = DBManager.getDBManager().conn;
-            if (conn != null) conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+		}
+	}
 
-	
 }
-
-
-
 
 
 
