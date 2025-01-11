@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class DBManager {
     private static DBManager dbManager;
-    protected Connection conn = null;
+    public Connection conn = null;
 
 
     private DBManager() {
@@ -40,7 +40,7 @@ public class DBManager {
         }
     }
 
-    private synchronized void connect(String driver, String connection_string, String path) {
+    public synchronized void connect(String driver, String connection_string, String path) {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
