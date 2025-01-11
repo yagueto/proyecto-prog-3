@@ -23,12 +23,14 @@ public class UserDAO implements Dao<User> {
     private final PreparedStatement updateUserStatement;
     private final PreparedStatement deleteUserStatement;
     private final PreparedStatement getUserByMailStatement;
+    private final PreparedStatement clearTableStatement;
     
     protected Connection conn = null;
 
     private UserDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
+        	this.clearTableStatement = conn.prepareStatement("DELETE FROM USER");
             this.getUserByIdStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE DNI=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD FROM USER");
             this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -256,6 +258,14 @@ public class UserDAO implements Dao<User> {
         } catch (SQLException e) {
             throw new DBException(e);
         }
+    }
+    
+    public void clearTable() {
+    	try {
+			clearTableStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
     }
 
 }

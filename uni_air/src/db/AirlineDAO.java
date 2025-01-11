@@ -121,8 +121,12 @@ public class AirlineDAO implements Dao<Airline> {
     }
 
     
-    public void deleteAll() throws SQLException {	
-		deleteAllAirlinesStatement.executeUpdate();		
+    public void deleteAll(){	
+		try {
+			deleteAllAirlinesStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
     }
     
 

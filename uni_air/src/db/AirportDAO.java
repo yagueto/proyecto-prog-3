@@ -108,7 +108,11 @@ public class AirportDAO implements Dao<Airport> {
 			throw new DBException(e); // Should never happen
 		}
     }
-    public void deleteAll() throws SQLException {	
-		deleteAllAirportsStatement.executeUpdate();		
+    public void deleteAll() {	
+		try {
+			deleteAllAirportsStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
     }
 }
