@@ -6,6 +6,8 @@ import domain.User;
 import domain.UserType;
 
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -125,12 +127,15 @@ public class UserDAO implements Dao<User> {
 	}
    
 	
-	public static boolean validarUsuario(String mail, String password) throws DBException {
+	public static boolean comprobarPassword(String mail, String password) throws DBException {
 		UserDAO userDAO = UserDAO.getUserDAO();
+		// recibe  password  y  tengo que hashearla
+		
 		try {
 	        // Asignar el correo al marcador de posición en la consulta preparada
 	        userDAO.getUserByMailStatement.setString(1, mail);
 
+	        String hashedInputpassword= hashPassword(password);
 	        // Ejecutar la consulta
 	        try (ResultSet rs = userDAO.getUserByMailStatement.executeQuery()) {
 	            // Verificar si el correo existe
@@ -139,7 +144,7 @@ public class UserDAO implements Dao<User> {
 	                String bdPassword= rs.getString("PASSWORD");
 	                
 	                // Comparar la contraseña proporcionada con la almacenada
-	                if (bdPassword.equals(password)) {
+	                if (bdPassword.equals(hashedInputpassword)) {
                         return true; // La contraseña es correcta
                     } else {
                         return false; // La contraseña no es correcta
@@ -150,7 +155,7 @@ public class UserDAO implements Dao<User> {
 	                return false; // El correo no existe
 	            }
 	        }
-	    } catch (SQLException e) {
+	    } catch (SQLException | NoSuchAlgorithmException e) {
 	        // Manejar cualquier excepción SQL
 	        throw new DBException("Error al validar el usuario", e);
 	    }
@@ -227,6 +232,20 @@ public class UserDAO implements Dao<User> {
         }
 
     }
+
+	public static String hashPassword(String password) throws NoSuchAlgorithmException {
+		
+		 MessageDigest algoritmo = MessageDigest.getInstance("SHA-256");
+	        byte[] hash = algoritmo.digest(password.getBytes());
+	        StringBuilder hexString = new StringBuilder();
+	        for (byte b : hash) {
+	            String hexa = Integer.toHexString(0xff & b);
+	            if (hexa.length() == 1) hexString.append('0');
+	            hexString.append(hexa);
+	        }
+	        return hexString.toString();
+	    }
+	
 
     // Borrar User, tarea de administrador o usuario se da de baja
     @Override

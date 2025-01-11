@@ -9,7 +9,7 @@ import javax.swing.*;
 import org.jdatepicker.JDatePicker;
 
 import java.awt.*;
-
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 
@@ -18,7 +18,7 @@ public class SignInWindow extends AbstractWindow{
 
 	private static final long serialVersionUID = 8522535521661703102L;
 	private final JTextField txtNombreUsuario;
-	private final JPasswordField  txtContraseniaUsuario;
+	private final JPasswordField  txtpasswordUsuario;
 	private final JTextField txtDni;
 	private final JTextField txtApellido;
 	private final JTextField txtMail;
@@ -59,7 +59,7 @@ public class SignInWindow extends AbstractWindow{
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
         JLabel lblNombreUsuario = new JLabel("Introduce tu nombre: ");
         JLabel lblMail=  new JLabel("Introduce tu MAIL:");
-        JLabel lblContraseniaUsuario = new JLabel("| Introduce tu contraseña: ");
+        JLabel lblpasswordUsuario = new JLabel("| Introduce tu contraseña: ");
         JLabel lblDni = new JLabel("Introduce tu DNI: ");
         JLabel lblApellido = new JLabel("Introduce tu Apellido: ");
         JLabel lblbirthDate = new JLabel("Introduce tu fecha de nacimiento: ");
@@ -68,7 +68,7 @@ public class SignInWindow extends AbstractWindow{
         
 
         txtNombreUsuario = new JTextField(10);
-        txtContraseniaUsuario = new JPasswordField(10);
+        txtpasswordUsuario = new JPasswordField(10);
         txtDni = new JTextField(10);
         txtApellido = new JTextField(10);
         txtMail = new JTextField(10);
@@ -109,9 +109,9 @@ public class SignInWindow extends AbstractWindow{
 
         
         gbc.gridx = 0; gbc.gridy = 5;
-        pCentro.add(lblContraseniaUsuario, gbc);
+        pCentro.add(lblpasswordUsuario, gbc);
         gbc.gridx = 1; gbc.gridy = 5;
-        pCentro.add(txtContraseniaUsuario, gbc);
+        pCentro.add(txtpasswordUsuario, gbc);
         
        
         gbc.gridx = 0; gbc.gridy = 6;
@@ -128,18 +128,34 @@ public class SignInWindow extends AbstractWindow{
 
        
         
-        // 
-        
+       
         btnRegistrarse.addActionListener((e)->{
         	//Que guarde el dni, nombre, apellido, mail y contraseña en la base de datos
         	int dni = Integer.parseInt(txtDni.getText());
             String nombre = txtNombreUsuario.getText();
             String apellido = txtApellido.getText();
             String mail = txtMail.getText();
-            String contrasenia = txtContraseniaUsuario.getPassword().toString();
+            //char[] passwordChars = txtpasswordUsuario.getPassword();
+            String password= new String(txtpasswordUsuario.getPassword());
+            String hashPassword = "";
+			try {
+				hashPassword = UserDAO.hashPassword(password);
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+           // String password = txtpasswordUsuario.getPassword().toString();
+           /* try {
+				String hashPassword= UserDAO.hashPassword(password);
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            String hashPassword = hashPassword.toString();*/
+            
             GregorianCalendar fechaNa= (GregorianCalendar) datePicker.getModel().getValue();
             
-			User usu = new Customer(dni, nombre, apellido, mail, contrasenia,fechaNa.toZonedDateTime().toLocalDate() );
+			User usu = new Customer(dni, nombre, apellido, mail, hashPassword ,fechaNa.toZonedDateTime().toLocalDate() );
             if (UserDAO.getUserDAO().get(dni)!=null) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -152,7 +168,21 @@ public class SignInWindow extends AbstractWindow{
             }
         });
         
+       
         
+        
+        
+        /*public static String hashPassword(String password) throws NoSuchAlgorithmException {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        }*/
 
         setVisible(true);
         

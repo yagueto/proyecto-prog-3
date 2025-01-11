@@ -52,6 +52,7 @@ public class LoginWindow extends AbstractWindow {
         pCentro.add(lblPassword);
         pCentro.add(txtPassword);
 
+        
 
         btnCerrarSesion.addActionListener(e -> exit());
 
@@ -80,14 +81,15 @@ public class LoginWindow extends AbstractWindow {
                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
                    SwingUtilities.invokeLater(EmployeeWindow::new);
                    dispose();
-               }
-            	  try {
-            		  if (UserDAO.validarUsuario(usuario, password)==true) {
+               } else{
+            	   try {
+               
+            		  if (UserDAO.comprobarPassword(usuario, password)==true) {
             	            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
             	            SwingUtilities.invokeLater(UserWindow::new);
             	            dispose();
             	            
-            	        } else if(UserDAO.validarUsuario(usuario, password)==false ){
+            	        } else if(UserDAO.comprobarPassword(usuario, password)==false ){
             	            JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
             	            vaciarPassword();
             	        }
@@ -95,6 +97,7 @@ public class LoginWindow extends AbstractWindow {
 					JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			    }
 				}
+            }
 					
 				
                 // TODO: gestionar usuarios
