@@ -2,13 +2,12 @@ package gui;
 
 import db.DBException;
 import db.UserDAO;
-import domain.Customer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
+
 
 public class LoginWindow extends AbstractWindow {
     private static final long serialVersionUID = -1392377673421616906L;
