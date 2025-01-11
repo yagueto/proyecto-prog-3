@@ -70,9 +70,7 @@ public class AdminWindow extends AbstractWindow {
         });
 
         btnGestionUsuarios.addActionListener(e -> new UserManagementWindow());
-        SwingUtilities.invokeLater(() -> {
-            vuelos.fireTableDataChanged();
-        });
+        SwingUtilities.invokeLater(() -> vuelos.fireTableDataChanged());
 
         setVisible(true);
 
@@ -146,7 +144,7 @@ class UserManagementWindow extends JFrame {
                 }
                 break;
             case "Cambiar correo":
-                String email = (String) JOptionPane.showInputDialog(null, "Correo electrónico:", "Modificando usuario", JOptionPane.QUESTION_MESSAGE);
+                String email = JOptionPane.showInputDialog(null, "Correo electrónico:", "Modificando usuario", JOptionPane.QUESTION_MESSAGE);
                 user.setMail(email);
                 UserDAO.getUserDAO().update(user);
                 break;

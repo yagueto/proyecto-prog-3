@@ -96,9 +96,9 @@ public class FlightDAO implements Dao<Flight> {
     public void save(Flight flight) {
         try {
             saveStatement.setString(1, flight.getCodigo());
-            saveStatement.setString(2, flight.getOrigen().getName());
-            saveStatement.setString(3, flight.getDestino().getName());
-            saveStatement.setString(4, flight.getAirline().getName());
+            saveStatement.setString(2, flight.getOrigen().getIata());
+            saveStatement.setString(3, flight.getDestino().getIata());
+            saveStatement.setString(4, flight.getAirline().getIata());
             saveStatement.setString(5, flight.getFechaDespegue().toString());
             saveStatement.setString(6, flight.getFechaAterrizaje().toString());
             //saveStatement.setInt(7, vuelo.getPasajeros());
