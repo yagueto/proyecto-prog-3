@@ -136,7 +136,7 @@ public class SignInWindow extends AbstractWindow{
             String nombre = txtNombreUsuario.getText();
             String apellido = txtApellido.getText();
             String mail = txtMail.getText();
-            String contrasenia = Arrays.toString(txtContraseniaUsuario.getPassword());
+            String contrasenia = txtContraseniaUsuario.getPassword().toString();
             GregorianCalendar fechaNa= (GregorianCalendar) datePicker.getModel().getValue();
             
 			User usu = new Customer(dni, nombre, apellido, mail, contrasenia,fechaNa.toZonedDateTime().toLocalDate() );

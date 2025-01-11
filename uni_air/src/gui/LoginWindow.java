@@ -65,7 +65,22 @@ public class LoginWindow extends AbstractWindow {
                 if (usuario.isEmpty() || password.isEmpty()) {
                 	JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
                     JOptionPane.ERROR_MESSAGE);
-               } 
+               } else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
+
+                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+                   SwingUtilities.invokeLater(UserWindow::new);
+                   dispose();
+               } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
+                   
+                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
+                   SwingUtilities.invokeLater(AdminWindow::new);
+                   dispose();
+               } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
+
+                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
+                   SwingUtilities.invokeLater(EmployeeWindow::new);
+                   dispose();
+               }
             	  try {
             		  if (UserDAO.validarUsuario(usuario, password)==true) {
             	            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
@@ -74,38 +89,19 @@ public class LoginWindow extends AbstractWindow {
             	            
             	        } else if(UserDAO.validarUsuario(usuario, password)==false ){
             	            JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            	            vaciarCampos();
+            	            vaciarPassword();
             	        }
 				} catch (DBException | HeadlessException  ex) {
 					JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			    }
 				}
 					
-				/*else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-                    SwingUtilities.invokeLater(UserWindow::new);
-                    dispose();
-                } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
-                    
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
-                    SwingUtilities.invokeLater(AdminWindow::new);
-                    dispose();
-                } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
-                    SwingUtilities.invokeLater(EmployeeWindow::new);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    vaciarCampos();
-                    return;
-                }*/
+				
                 // TODO: gestionar usuarios
                
 			
-            public void vaciarCampos() {
-                txtMail.setText("");
+            public void vaciarPassword() {
+                
                 txtPassword.setText("");
             }
         };
