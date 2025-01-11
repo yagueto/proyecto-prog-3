@@ -7,7 +7,6 @@ import db.FlightDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -20,7 +19,6 @@ public class Flight {
 	private LocalDateTime fechaAterrizaje;
 	private int maxPasajeros;
 	private int precio;
-	private static ArrayList<Flight> flights;
 	private HashSet<String> occupied;
 
 	public Flight(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
@@ -40,7 +38,7 @@ public class Flight {
 	public static void loadFlights() {
 		Thread t = new Thread(() ->{
 			try {
-				Scanner sc = new Scanner(new File("resources/flights_part1.csv"));
+				Scanner sc = new Scanner(new File("resources/1000_flights.csv"));
 				sc.nextLine();
 
 				while(sc.hasNext()){
@@ -48,7 +46,7 @@ public class Flight {
 					String[] campos = linea.split(",");
 
 					String airline = campos[4];
-					String flightNumber = Integer.parseInt(campos[5]) + airline;
+					String flightNumber = airline + Integer.parseInt(campos[5]);
 
 					if(FlightDAO.getFlightDAO().get(flightNumber) == null){
 						int year = Integer.parseInt(campos[0]);

@@ -4,7 +4,6 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import domain.Airline;
 import domain.Airport;
 import domain.Flight;
-import gui.EmployeeWindow;
 import gui.LoginWindow;
 
 import javax.swing.*;
@@ -23,22 +22,19 @@ public class Main {
         a.start();
         Thread b = new Thread(() -> Airport.loadAirports());
         b.start();
+        Thread c = new Thread(() -> Flight.loadFlights());
         try {
             a.join();
             b.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Thread c = new Thread(() -> Flight.loadFlights());
         c.start();
-
         try{
             c.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-
-        //SwingUtilities.invokeLater(() -> new EmployeeWindow());
         SwingUtilities.invokeLater(() -> new LoginWindow());
     }
 

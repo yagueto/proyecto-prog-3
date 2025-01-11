@@ -1,12 +1,9 @@
 package domain;
 
-import db.AirlineDAO;
 import db.AirportDAO;
-import db.FlightDAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Airport {
@@ -49,17 +46,7 @@ public class Airport {
 
                 String iata = campos[0];
                 if(AirportDAO.getAirportDAO().get(iata) == null){
-                    String name = campos[1];
-                    String city = campos[2];
-                    String country = campos[4];
-                    Airport nuevo;
-                    if (campos.length <= 5){
-                        nuevo = new Airport(iata, name, city, country);
-                    } else {
-                        double longitude = Double.parseDouble(campos[5]);
-                        double latitude = Double.parseDouble(campos[6]);
-                        nuevo = new Airport(iata, name, city, country, longitude, latitude);
-                    }
+                    Airport nuevo = getAirport(campos, iata);
                     AirportDAO.getAirportDAO().save(nuevo);
                 }
             }
@@ -67,6 +54,21 @@ public class Airport {
         } catch (FileNotFoundException e) {
             System.err.println("Error al cargar los datos");
         }
+    }
+
+    private static Airport getAirport(String[] campos, String iata) {
+        String name = campos[1];
+        String city = campos[2];
+        String country = campos[4];
+        Airport nuevo;
+        if (campos.length <= 5){
+            nuevo = new Airport(iata, name, city, country);
+        } else {
+            double longitude = Double.parseDouble(campos[5]);
+            double latitude = Double.parseDouble(campos[6]);
+            nuevo = new Airport(iata, name, city, country, longitude, latitude);
+        }
+        return nuevo;
     }
 
     public String getIata() {

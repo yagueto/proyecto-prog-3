@@ -59,7 +59,7 @@ public class LoginWindow extends AbstractWindow {
             public void actionPerformed(ActionEvent e) {
                 String usuario = txtNombreUsuario.getText();
                 String contrasenia = new String(txtContraseniaUsuario.getPassword());
-                ;
+
                 if (usuario.equals("USUARIO1") && contrasenia.equals("USUARIO1")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");

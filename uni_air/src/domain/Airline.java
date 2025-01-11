@@ -1,11 +1,9 @@
 package domain;
 
 import db.AirlineDAO;
-import db.FlightDAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Airline {
