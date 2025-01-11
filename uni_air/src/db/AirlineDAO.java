@@ -21,14 +21,14 @@ public class AirlineDAO implements Dao<Airline> {
         Connection conn = DBManager.getDBManager().conn;
         try {
             this.getAirlineByIdStatement = conn.prepareStatement("SELECT NAME FROM AIRLINE WHERE IATA_CODE=?");
-            this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE");
+            this.getAllAirlinesStatement = conn.prepareStatement("SELECT IATA_CODE, NAME FROM AIRLINE ORDER BY IATA_CODE");
             this.saveAirlineStatement = conn.prepareStatement("INSERT INTO AIRLINE (IATA_CODE, NAME) VALUES (?, ?)");
         } catch (SQLException e) {
             throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
     }
 
-    public static AirlineDAO getAirlineDAO() {
+	public static AirlineDAO getAirlineDAO() {
         if (airlineDAO == null) {
             airlineDAO = new AirlineDAO();
         }
@@ -51,6 +51,7 @@ public class AirlineDAO implements Dao<Airline> {
         }
         return null;
     }
+    
 
     @Override
     public List<Airline> getAll() {
@@ -69,11 +70,19 @@ public class AirlineDAO implements Dao<Airline> {
     @Override
     public void save(Airline airline) {
         try {
+        	System.out.println("Insertando aerolínea: IATA = " + airline.getIata() + ", NAME = " + airline.getName());
+        	
             saveAirlineStatement.setString(1, airline.getIata());
             saveAirlineStatement.setString(2, airline.getName());
+            
+            int rowsAffected = saveAirlineStatement.executeUpdate();
+            System.out.println("Filas afectadas: " + rowsAffected);
+            
             saveAirlineStatement.executeUpdate();
+            
         } catch (SQLException e) {
-            throw new DBException(e);
+        	System.err.println("Error al guardar la aerolínea: " + e.getMessage());
+            throw new DBException(e); 	
         }
     }
 
