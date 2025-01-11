@@ -27,7 +27,7 @@ public class FlightDAO implements Dao<Flight> {
     private FlightDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
-        	this.clearTableStatement = conn.prepareStatement("DELETE FROM FLIGHT");
+            this.clearTableStatement = conn.prepareStatement("DELETE FROM FLIGHT");
             this.getByIdStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT WHERE ID=?");
             this.getAllStatement = conn.prepareStatement("SELECT ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO FROM FLIGHT");
             this.saveStatement = conn.prepareStatement("INSERT INTO FLIGHT(ID, ORIGIN_AIRPORT, DEST_AIRPORT, AIRLINE_CODE, DEPARTURE_TIME, ARRIVAL_TIME, MAX_PASAJEROS, PRECIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -111,6 +111,7 @@ public class FlightDAO implements Dao<Flight> {
             throw new DBException(e);
         }
     }
+
     // Este métdodo lo implementaremos para que un admin o employye puede modificar vuelos debido a retrasos, cambios de precio...
     @Override
     public void update(Flight flight) {
@@ -134,12 +135,12 @@ public class FlightDAO implements Dao<Flight> {
             throw new DBException(e);
         }
     }
-    
+
     public void clearTable() {
-    	try {
-			clearTableStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DBException(e);
-		}
+        try {
+            clearTableStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
     }
 }

@@ -40,12 +40,12 @@ public class Airport {
             Scanner sc = new Scanner(new File("resources/airports.csv"));
             sc.nextLine();
 
-            while(sc.hasNext()){
+            while (sc.hasNext()) {
                 String linea = sc.nextLine();
                 String[] campos = linea.split(",");
 
                 String iata = campos[0];
-                if(AirportDAO.getAirportDAO().get(iata) == null){
+                if (AirportDAO.getAirportDAO().get(iata) == null) {
                     Airport nuevo = getAirport(campos, iata);
                     AirportDAO.getAirportDAO().save(nuevo);
                 }
@@ -61,7 +61,7 @@ public class Airport {
         String city = campos[2];
         String country = campos[4];
         Airport nuevo;
-        if (campos.length <= 5){
+        if (campos.length <= 5) {
             nuevo = new Airport(iata, name, city, country);
         } else {
             double longitude = Double.parseDouble(campos[5]);

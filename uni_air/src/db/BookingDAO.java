@@ -25,7 +25,7 @@ public class BookingDAO implements Dao<Booking> {
     private BookingDAO() {
         conn = DBManager.getDBManager().conn;
         try {
-        	this.clearTableStatement = conn.prepareStatement("DELETE FROM BOOKING");
+            this.clearTableStatement = conn.prepareStatement("DELETE FROM BOOKING");
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ID = ?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM BOOKING");
             this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (USER, FLIGHT) VALUES (?, ?)");
@@ -66,7 +66,7 @@ public class BookingDAO implements Dao<Booking> {
         ArrayList<Booking> bookings = new ArrayList<>();
         try {
             ResultSet rs = getAllStatement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 Booking booking = new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getInt("FLIGHT")), rs.getInt("ID"));
                 bookings.add(booking);
             }
@@ -79,12 +79,12 @@ public class BookingDAO implements Dao<Booking> {
     @Override
     public void save(Booking booking) {
         try {
-        	System.out.println("Intentando guardar booking: " + booking);
+            System.out.println("Intentando guardar booking: " + booking);
             saveStatement.setInt(1, booking.getCustomer().getDni());
             saveStatement.setString(2, booking.getFlight().getCodigo());
             saveStatement.executeUpdate();
         } catch (SQLException e) {
-        	System.err.println("Error al guardar booking: " + e.getMessage());
+            System.err.println("Error al guardar booking: " + e.getMessage());
             throw new DBException(e);
         }
     }
@@ -123,18 +123,18 @@ public class BookingDAO implements Dao<Booking> {
             throw new RuntimeException("Usuario inválido");
         }
     }
-    public enum BookingField{
+
+    public void clearTable() {
+        try {
+            clearTableStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+
+    public enum BookingField {
         ID, USER, FLIGHT
     }
-    
-    public void clearTable() {
-    	try {
-			clearTableStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DBException(e);
-		}
-    }
-    
-    
-    
+
+
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.*;
-	
+
 // TANTO LA INSERCION COMO LA OBTENCION DE VUELOS DE LA DB NO FUNCIONAN CORRECTAMENTE
 // INDICAN QUE LA TABLA AIRLINE NO ESTÁ CREADA CUANDO DEBERIA DE ESTARLO YA QUE 
 // LA FUNCION SAVE() OBTIENE DEL DBMANAGER DICHA CONNEXION Y CREACION
@@ -26,10 +26,10 @@ public class FlightDAOTest {
     private Airport origin;
     private Airport destination;
     private Airline airline;
-    
+
     @Before
     public void setUp() {
-    	
+
         flightDAO.clearTable();
         airportDAO.deleteAll();
         airlineDAO.deleteAll();
@@ -37,7 +37,7 @@ public class FlightDAOTest {
         origin = new Airport("JFK", "John F. Kennedy International Airport", "New York", "USA", 73.7781, 40.6413);
         destination = new Airport("LAX", "Los Angeles International Airport", "Los Angeles", "USA", 118.4085, 33.9416);
         airline = new Airline("AA", "AMERICAN AIRLINES");
-    
+
         airportDAO.save(origin);
         airportDAO.save(destination);
         airlineDAO.save(airline);
@@ -46,8 +46,8 @@ public class FlightDAOTest {
     @Test
     public void testSaveFlight() {
         try {
-        	Flight flight = new Flight("IB4321", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 10, 0),  
-                    LocalDateTime.of(2023, 11, 20, 14, 0), 150, 300     
+            Flight flight = new Flight("IB4321", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 10, 0),
+                    LocalDateTime.of(2023, 11, 20, 14, 0), 150, 300
             );
 
             flightDAO.save(flight);
@@ -70,8 +70,8 @@ public class FlightDAOTest {
     @Test
     public void testGetFlight() {
         try {
-        	Flight flight = new Flight("IB4321", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 10, 0),  
-                    LocalDateTime.of(2023, 11, 20, 14, 0), 150, 300  
+            Flight flight = new Flight("IB4321", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 10, 0),
+                    LocalDateTime.of(2023, 11, 20, 14, 0), 150, 300
             );
             flightDAO.save(flight);
 

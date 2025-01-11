@@ -22,8 +22,8 @@ public class AirportDAO implements Dao<Airport> {
     private AirportDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
-        	this.deleteAllAirportsStatement = conn.prepareStatement("DELETE FROM AIRPORT");
-        	this.deleteAirportStatement = conn.prepareStatement("DELETE FROM AIRPORT WHERE IATA_CODE=?");
+            this.deleteAllAirportsStatement = conn.prepareStatement("DELETE FROM AIRPORT");
+            this.deleteAirportStatement = conn.prepareStatement("DELETE FROM AIRPORT WHERE IATA_CODE=?");
             this.getAirportByIdStatement = conn.prepareStatement("SELECT FULL_NAME, CITY, COUNTRY, LONG, LAT FROM " + "AIRPORT WHERE IATA_CODE=?");
             this.getAllAirportsStatement = conn.prepareStatement("SELECT IATA_CODE, FULL_NAME, CITY, COUNTRY, LONG," + " LAT FROM AIRPORT");
             this.saveAirportStatement = conn.prepareStatement("INSERT INTO AIRPORT (IATA_CODE, FULL_NAME, CITY, " + "COUNTRY, LONG, LAT) VALUES (?, ?, ?, ?, ?, ?)");
@@ -94,25 +94,26 @@ public class AirportDAO implements Dao<Airport> {
     @Override
     public void delete(Airport airport) {
         //throw new UnsupportedOperationException("No se pueden eliminar aeropuertos");
-    	try {
-    		if(airport.getIata() == null) {
-    			System.out.println("No existe un aeropuerto con ese IATA_CODE");
-    		}else {
-    			deleteAirportStatement.setString(1, airport.getIata());
-    			int rowsDeleted = deleteAirportStatement.executeUpdate(); // Ejecutar el delete
+        try {
+            if (airport.getIata() == null) {
+                System.out.println("No existe un aeropuerto con ese IATA_CODE");
+            } else {
+                deleteAirportStatement.setString(1, airport.getIata());
+                int rowsDeleted = deleteAirportStatement.executeUpdate(); // Ejecutar el delete
                 if (rowsDeleted == 0) {
                     System.out.println("No se encontró ningún aeropuerto con el código IATA proporcionado.");
                 }
-    		}
-		} catch (SQLException e) {
-			throw new DBException(e); // Should never happen
-		}
+            }
+        } catch (SQLException e) {
+            throw new DBException(e); // Should never happen
+        }
     }
-    public void deleteAll() {	
-		try {
-			deleteAllAirportsStatement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
+
+    public void deleteAll() {
+        try {
+            deleteAllAirportsStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
