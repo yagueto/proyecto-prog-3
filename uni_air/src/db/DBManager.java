@@ -40,7 +40,7 @@ public class DBManager {
         }
     }
 
-    public synchronized void connect(String driver, String connection_string, String path) {
+    private synchronized void connect(String driver, String connection_string, String path) {
         System.out.println("Abriendo conexión a BBDD");
         try {
             Class.forName(driver);
