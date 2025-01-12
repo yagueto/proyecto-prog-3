@@ -109,6 +109,12 @@ class FlightSearchPanel extends JPanel {
         JComboBox<Airport> origenField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
         JComboBox<Airport> destField = new JComboBox<>(new DefaultComboBoxModel<>(AirportDAO.getAirportDAO().getAll().toArray(new Airport[0])));
 
+        // Set size of the JComboBoxes to prevent them from getting too big (due to long airport names)
+        // HACK: Uses a fake airport to use as a prototype to get the size from
+        Airport prototypeAirport = new Airport("", "---------JCOMBOBOX TEST SIZE---------", "", "", 0, 0);
+        origenField.setPrototypeDisplayValue(prototypeAirport);
+        destField.setPrototypeDisplayValue(prototypeAirport);
+
         new AutoCompleteJComboBox<Airport>(origenField);
         new AutoCompleteJComboBox<Airport>(destField);
 

@@ -33,22 +33,22 @@ public class Flight {
 		this.precio = precio;
 		this.occupied = new HashSet<>();
 	}
-	
+
 	// Llenar lista de vuelos desde archivo
 	public static void loadFlights() {
-		Thread t = new Thread(() ->{
+		Thread t = new Thread(() -> {
 			try {
 				Scanner sc = new Scanner(new File("resources/1000_flights.csv"));
 				sc.nextLine();
 
-				while(sc.hasNext()){
+				while (sc.hasNext()) {
 					String linea = sc.nextLine();
 					String[] campos = linea.split(",");
 
 					String airline = campos[4];
 					String flightNumber = airline + Integer.parseInt(campos[5]);
 
-					if(FlightDAO.getFlightDAO().get(flightNumber) == null){
+					if (FlightDAO.getFlightDAO().get(flightNumber) == null) {
 						int year = Integer.parseInt(campos[0]);
 						int month = Integer.parseInt(campos[1]);
 						int day = Integer.parseInt(campos[2]);

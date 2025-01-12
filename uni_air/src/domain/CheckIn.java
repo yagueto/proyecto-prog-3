@@ -15,11 +15,31 @@ public class CheckIn {
         Id = booking.getId();
     }
 
-    public CheckIn(Booking booking, String seat){
+    public CheckIn(Booking booking, String seat) {
         this.booking = booking;
         this.seat = seat;
         booking.getFlight().getOccupied().add(seat);
         Id = booking.getId();
+    }
+
+    private static String selectSeat(HashSet<String> occupiedSeats, int maxPassengers) {
+        return seatFinder(maxPassengers / 6, 6, occupiedSeats, 1, 'A');
+    }
+
+    private static String seatFinder(int totalRows, int totalColumns, HashSet<String> occupiedSeats, int currentRow, char currentColumn) {
+        String currentSeat = currentRow + String.valueOf(currentColumn);
+        if (currentRow > totalRows) {
+            return "No hay asientos disponibles.";
+        }
+        if (!occupiedSeats.contains(currentSeat)) {
+            return currentSeat;
+        }
+        currentColumn++;
+        if (currentColumn > 'A' + totalColumns - 1) {
+            currentColumn = 'A';
+            currentRow++;
+        }
+        return seatFinder(totalRows, totalColumns, occupiedSeats, currentRow, currentColumn);
     }
 
     public Booking getBooking() {
@@ -44,24 +64,5 @@ public class CheckIn {
 
     public void setId(int id) {
         Id = id;
-    }
-
-    private static String selectSeat(HashSet<String> occupiedSeats, int maxPassengers) {
-        return seatFinder(maxPassengers / 6, 6, occupiedSeats, 1, 'A');
-    }
-    private static String seatFinder(int totalRows, int totalColumns, HashSet<String> occupiedSeats, int currentRow, char currentColumn){
-        String currentSeat = currentRow + String.valueOf(currentColumn);
-        if (currentRow > totalRows) {
-            return "No hay asientos disponibles.";
-        }
-        if (!occupiedSeats.contains(currentSeat)) {
-            return currentSeat;
-        }
-        currentColumn++;
-        if (currentColumn > 'A' + totalColumns - 1) {
-            currentColumn = 'A';
-            currentRow++;
-        }
-        return seatFinder(totalRows, totalColumns, occupiedSeats, currentRow, currentColumn);
     }
 }

@@ -6,8 +6,8 @@ import domain.User;
 import domain.UserType;
 
 import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,12 +23,14 @@ public class UserDAO implements Dao<User> {
     private final PreparedStatement updateUserStatement;
     private final PreparedStatement deleteUserStatement;
     private final PreparedStatement getUserByMailStatement;
-    
+    private final PreparedStatement clearTableStatement;
+
     protected Connection conn = null;
 
     private UserDAO() {
         Connection conn = DBManager.getDBManager().conn;
         try {
+            this.clearTableStatement = conn.prepareStatement("DELETE FROM USER");
             this.getUserByIdStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE DNI=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD FROM USER");
             this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -68,6 +70,53 @@ public class UserDAO implements Dao<User> {
         }
     }
 
+    public static boolean comprobarPassword(String mail, String password) throws DBException {
+        UserDAO userDAO = UserDAO.getUserDAO();
+        // recibe  password  y  tengo que hashearla
+
+        try {
+            // Asignar el correo al marcador de posición en la consulta preparada
+            userDAO.getUserByMailStatement.setString(1, mail);
+
+            String hashedInputpassword = hashPassword(password);
+            // Ejecutar la consulta
+            try (ResultSet rs = userDAO.getUserByMailStatement.executeQuery()) {
+                // Verificar si el correo existe
+                if (rs.next()) {
+                    // Recuperar la contraseña almacenada
+                    String bdPassword = rs.getString("PASSWORD");
+
+                    // Comparar la contraseña proporcionada con la almacenada
+                    if (bdPassword.equals(hashedInputpassword)) {
+                        return true; // La contraseña es correcta
+                    } else {
+                        return false; // La contraseña no es correcta
+                    }
+
+
+                } else {
+                    return false; // El correo no existe
+                }
+            }
+        } catch (SQLException | NoSuchAlgorithmException e) {
+            // Manejar cualquier excepción SQL
+            throw new DBException("Error al validar el usuario", e);
+        }
+    }
+
+    public static String hashPassword(String password) throws NoSuchAlgorithmException {
+
+        MessageDigest algoritmo = MessageDigest.getInstance("SHA-256");
+        byte[] hash = algoritmo.digest(password.getBytes());
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hexa = Integer.toHexString(0xff & b);
+            if (hexa.length() == 1) hexString.append('0');
+            hexString.append(hexa);
+        }
+        return hexString.toString();
+    }
+
     @Override
     public User get(Object param) {
         if (!(param instanceof Integer dni)) {
@@ -91,8 +140,6 @@ public class UserDAO implements Dao<User> {
         }
         return null;
     }
-    
-    
 
     @Override
     public List<User> getAll() {
@@ -114,6 +161,7 @@ public class UserDAO implements Dao<User> {
         }
         return users;
     }
+<<<<<<< HEAD
     
     
     //comprobar si mail esta en la base de datos
@@ -193,8 +241,35 @@ public class UserDAO implements Dao<User> {
 	        throw new DBException("Error al validar el usuario", e);
 	    }
 	}
+=======
+
+    //comprobar si mail esta en la base de datos
+    public boolean checkMail(String mail) {
+        try {
+            getUserByMailStatement.setString(1, mail);
+            ResultSet rs = getUserByMailStatement.executeQuery();
+            return rs.isBeforeFirst();
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+//    public void save(Customer customer) {
+//        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
+//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setInt(1, customer.getDni());
+//            stmt.setString(2, customer.getName());
+//            stmt.setString(3, customer.getSurname());
+//            stmt.setString(4, customer.getMail());
+//            stmt.setString(5, customer.getPassword());
+//            stmt.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new DBException(e);
+//        }
+//    }
+
+>>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
     @Override
-    
+
     public void save(User user) {
         int user_type_code;
         if (user instanceof Customer) {
@@ -221,19 +296,6 @@ public class UserDAO implements Dao<User> {
             throw new DBException(e);
         }
     }
-//    public void save(Customer customer) {
-//        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
-//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setInt(1, customer.getDni());
-//            stmt.setString(2, customer.getName());
-//            stmt.setString(3, customer.getSurname());
-//            stmt.setString(4, customer.getMail());
-//            stmt.setString(5, customer.getPassword());
-//            stmt.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new DBException(e);
-//        }
-//    }
 
     // Actualizar datos de usuario: cambios de mail, contraseña... a implemetar más adelante
     @Override
@@ -266,26 +328,20 @@ public class UserDAO implements Dao<User> {
 
     }
 
-	public static String hashPassword(String password) throws NoSuchAlgorithmException {
-		
-		 MessageDigest algoritmo = MessageDigest.getInstance("SHA-256");
-	        byte[] hash = algoritmo.digest(password.getBytes());
-	        StringBuilder hexString = new StringBuilder();
-	        for (byte b : hash) {
-	            String hexa = Integer.toHexString(0xff & b);
-	            if (hexa.length() == 1) hexString.append('0');
-	            hexString.append(hexa);
-	        }
-	        return hexString.toString();
-	    }
-	
-
     // Borrar User, tarea de administrador o usuario se da de baja
     @Override
     public void delete(User user) {
         try {
             deleteUserStatement.setInt(1, user.getDni());
             deleteUserStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+
+    public void clearTable() {
+        try {
+            clearTableStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e);
         }

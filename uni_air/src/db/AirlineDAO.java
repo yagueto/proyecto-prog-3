@@ -20,8 +20,6 @@ public class AirlineDAO implements Dao<Airline> {
     //private final PreparedStatement updateAirlineStatement;
     private final PreparedStatement deleteAirlineStatement;
     private final PreparedStatement deleteAllAirlinesStatement;
-    
-    
 
 
     private AirlineDAO() {
@@ -40,7 +38,7 @@ public class AirlineDAO implements Dao<Airline> {
         }
     }
 
-	public static AirlineDAO getAirlineDAO() {
+    public static AirlineDAO getAirlineDAO() {
         if (airlineDAO == null) {
             airlineDAO = new AirlineDAO();
         }
@@ -63,7 +61,7 @@ public class AirlineDAO implements Dao<Airline> {
         }
         return null;
     }
-    
+
 
     @Override
     public List<Airline> getAll() {
@@ -82,19 +80,19 @@ public class AirlineDAO implements Dao<Airline> {
     @Override
     public void save(Airline airline) {
         try {
-        	System.out.println("Insertando aerolínea: IATA = " + airline.getIata() + ", NAME = " + airline.getName());
-        	
+            System.out.println("Insertando aerolínea: IATA = " + airline.getIata() + ", NAME = " + airline.getName());
+
             saveAirlineStatement.setString(1, airline.getIata());
             saveAirlineStatement.setString(2, airline.getName());
-            
+
             int rowsAffected = saveAirlineStatement.executeUpdate();
             System.out.println("Filas afectadas: " + rowsAffected);
-            
+
             //saveAirlineStatement.executeUpdate();
-            
+
         } catch (SQLException e) {
-        	System.err.println("Error al guardar la aerolínea: " + e.getMessage());
-            throw new DBException(e); 	
+            System.err.println("Error al guardar la aerolínea: " + e.getMessage());
+            throw new DBException(e);
         }
     }
 
@@ -105,26 +103,29 @@ public class AirlineDAO implements Dao<Airline> {
 
     @Override
     public void delete(Airline airline) {
-    	try {
-    		if(airline.getIata() == null) {
-    			System.out.println("No existe una aerolínea con ese IATA_CODE");
-    		}else {
-    			deleteAirlineStatement.setString(1, airline.getIata());
-    			int rowsDeleted = deleteAirlineStatement.executeUpdate(); // Ejecutar el delete
+        try {
+            if (airline.getIata() == null) {
+                System.out.println("No existe una aerolínea con ese IATA_CODE");
+            } else {
+                deleteAirlineStatement.setString(1, airline.getIata());
+                int rowsDeleted = deleteAirlineStatement.executeUpdate(); // Ejecutar el delete
                 if (rowsDeleted == 0) {
                     System.out.println("No se encontró ninguna aerolínea con el IATA_CODE proporcionado.");
                 }
-    		}
-		} catch (SQLException e) {
-			throw new DBException(e); // Should never happen
-		}
+            }
+        } catch (SQLException e) {
+            throw new DBException(e); // Should never happen
+        }
     }
 
-    
-    public void deleteAll() throws SQLException {	
-		deleteAllAirlinesStatement.executeUpdate();		
+
+    public void deleteAll() {
+        try {
+            deleteAllAirlinesStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-    
 
 
 }

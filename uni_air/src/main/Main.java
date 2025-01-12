@@ -30,9 +30,9 @@ public class Main {
             e.printStackTrace();
         }
         c.start();
-        try{
+        try {
             c.join();
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> new LoginWindow());

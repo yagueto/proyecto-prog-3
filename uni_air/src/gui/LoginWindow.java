@@ -30,7 +30,7 @@ public class LoginWindow extends AbstractWindow {
 
         JButton btnIniciarSesion = new JButton("INICIAR SESIÓN");
         JButton btnCerrarSesion = new JButton("CERRAR SESIÓN");
-        JButton btnRegistrarse= new JButton("REGISTRARSE");
+        JButton btnRegistrarse = new JButton("REGISTRARSE");
         getRootPane().setDefaultButton(btnIniciarSesion);
 
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
@@ -51,7 +51,6 @@ public class LoginWindow extends AbstractWindow {
         pCentro.add(lblPassword);
         pCentro.add(txtPassword);
 
-        
 
         btnCerrarSesion.addActionListener(e -> exit());
 
@@ -63,20 +62,16 @@ public class LoginWindow extends AbstractWindow {
                 String password = new String(txtPassword.getPassword());
                 //comprueba si el usuario y la contraseña estan en la base de datos
                 if (usuario.isEmpty() || password.isEmpty()) {
-                	JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-               } else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
+                    JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
 
-                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-                   SwingUtilities.invokeLater(UserWindow::new);
-                   dispose();
-               } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
-                   
-                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
-                   SwingUtilities.invokeLater(AdminWindow::new);
-                   dispose();
-               } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
+                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+                    SwingUtilities.invokeLater(UserWindow::new);
+                    dispose();
+                } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
 
+<<<<<<< HEAD
                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
                    SwingUtilities.invokeLater(EmployeeWindow::new);
                    dispose();
@@ -99,23 +94,46 @@ public class LoginWindow extends AbstractWindow {
 					JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
 			    }
 				}
+=======
+                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
+                    SwingUtilities.invokeLater(AdminWindow::new);
+                    dispose();
+                } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
+
+                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
+                    SwingUtilities.invokeLater(EmployeeWindow::new);
+                    dispose();
+                } else {
+                    try {
+
+                        if (UserDAO.comprobarPassword(usuario, password) == true) {
+                            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+                            SwingUtilities.invokeLater(UserWindow::new);
+                            dispose();
+
+                        } else if (UserDAO.comprobarPassword(usuario, password) == false) {
+                            JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                            vaciarPassword();
+                        }
+                    } catch (DBException | HeadlessException ex) {
+                        JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+>>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
             }
-					
-				
-                // TODO: gestionar usuarios
-               
-			
+
+
             public void vaciarPassword() {
-                
+
                 txtPassword.setText("");
             }
         };
         btnIniciarSesion.addActionListener(l);
-        btnRegistrarse.addActionListener(e ->{
-        	new SignInWindow();
-        	dispose();
+        btnRegistrarse.addActionListener(e -> {
+            new SignInWindow();
+            dispose();
         });
-        
+
 
         setVisible(true);
     }

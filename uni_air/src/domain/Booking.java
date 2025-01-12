@@ -2,8 +2,8 @@ package domain;
 
 public class Booking {
     private final User customer;
-    private Flight flight;
     private final int id;
+    private Flight flight;
 
     public Booking(User customer, Flight flight, int id) {
         this.customer = customer;

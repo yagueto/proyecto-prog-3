@@ -5,14 +5,16 @@ import db.CheckInDAO;
 import domain.Booking;
 import domain.CheckIn;
 import domain.Flight;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import java.awt.event.*;
-import java.util.ArrayList;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
-public class CheckInWindow extends JFrame{
+public class CheckInWindow extends JFrame {
     /**
      *
      */
@@ -48,7 +50,7 @@ public class CheckInWindow extends JFrame{
         panel.add(panelInfor);
 
         JPanel panelCodigo = new JPanel();
-        JTextField codigoEmpleado  = new JTextField(20);
+        JTextField codigoEmpleado = new JTextField(20);
         panelCodigo.add(codigoEmpleado);
         panel.add(panelCodigo, BorderLayout.SOUTH);
 
@@ -74,7 +76,7 @@ public class CheckInWindow extends JFrame{
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if (frame != null){
+                if (frame != null) {
                     frame.setVisible(true);
                 }
                 dispose();
@@ -82,12 +84,12 @@ public class CheckInWindow extends JFrame{
         });
 
         codigoEmpleado.addActionListener(e -> {
-            try{
-                if(!codigoEmpleado.getText().isEmpty()){
+            try {
+                if (!codigoEmpleado.getText().isEmpty()) {
                     int dni = Integer.parseInt(codigoEmpleado.getText());
                     boolean dniCorrecto = false;
-                    for (Booking booking : bookings){
-                        if (booking.getCustomer().getDni() == dni){
+                    for (Booking booking : bookings) {
+                        if (booking.getCustomer().getDni() == dni) {
                             CheckIn nuevo = new CheckIn(booking);
                             CheckInDAO.getCheckInDAO().save(nuevo);
 
@@ -99,13 +101,13 @@ public class CheckInWindow extends JFrame{
                             break;
                         }
                     }
-                    if (!dniCorrecto){
+                    if (!dniCorrecto) {
                         codigoEmpleado.setBackground(Color.RED);
                         mensaje.setText("DNI no encontrado");
                         mensaje.setForeground(Color.RED);
                     }
                 }
-            } catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 codigoEmpleado.setBackground(Color.RED);
                 mensaje.setText("Formato incorrecto");
             }
