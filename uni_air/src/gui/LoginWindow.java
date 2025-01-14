@@ -71,30 +71,6 @@ public class LoginWindow extends AbstractWindow {
                     dispose();
                 } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
 
-<<<<<<< HEAD
-                   JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
-                   SwingUtilities.invokeLater(EmployeeWindow::new);
-                   dispose();
-               } else{
-            	   try {
-               
-            		  if (UserDAO.comprobarPassword(usuario, password)==true) {
-            	            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-            	            
-            	            
-            	            
-            	            SwingUtilities.invokeLater(UserWindow::new);
-            	            dispose();
-            	            
-            	        } else if(UserDAO.comprobarPassword(usuario, password)==false ){
-            	            JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            	            vaciarPassword();
-            	        }
-				} catch (DBException | HeadlessException  ex) {
-					JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-			    }
-				}
-=======
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
                     SwingUtilities.invokeLater(AdminWindow::new);
                     dispose();
@@ -119,7 +95,6 @@ public class LoginWindow extends AbstractWindow {
                         JOptionPane.showMessageDialog(null, "Error al validar el usuario: " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                 }
->>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
             }
 
 

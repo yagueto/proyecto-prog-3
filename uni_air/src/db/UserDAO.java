@@ -36,7 +36,7 @@ public class UserDAO implements Dao<User> {
             this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
             this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, SURNAME=?, EMAIL=?, BIRTHDATE=?, USER_TYPE=?, PASSWORD=? WHERE DNI=?");
             this.deleteUserStatement = conn.prepareStatement("DELETE FROM USER WHERE DNI=?");
-            this.getUserByMailStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE EMAIL=?");
+            this.getUserByMailStatement = conn.prepareStatement("SELECT PASSWORD FROM USER WHERE EMAIL=?");
         } catch (SQLException e) {
             throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
         }
@@ -54,7 +54,6 @@ public class UserDAO implements Dao<User> {
     }
 
     public static void setLoggedInUser(User user) {
-    	
         currentUser = user;
     }
 
@@ -161,87 +160,6 @@ public class UserDAO implements Dao<User> {
         }
         return users;
     }
-<<<<<<< HEAD
-    
-    
-    //comprobar si mail esta en la base de datos
-	public boolean checkMail(String mail) {
-		try {
-			getUserByMailStatement.setString(1, mail);
-			ResultSet rs = getUserByMailStatement.executeQuery();
-			return rs.isBeforeFirst();
-		} catch (SQLException e) {
-			throw new DBException(e);
-		}
-	}
-   
-	
-	
-	//hacer que recibiendo un mail cee unusuario con sus datos de la base de datos
-	public User getUserByMail(String mail) {
-		try {
-			getUserByMailStatement.setString(1, mail);
-			ResultSet rs = getUserByMailStatement.executeQuery();
-			if (rs.isBeforeFirst() && rs.next()) {
-				UserType userType;
-				int user_code = rs.getInt("USER_TYPE");
-				if (user_code <= UserType.values().length) {
-					userType = UserType.values()[user_code];
-				} else {
-					throw new DBException("Tipo de usuario inválido encontrado en la base de datos: " + user_code);
-				}
-				return handleUserType(userType, rs);
-			}
-		} catch (SQLException | InvalidParameterException e) {
-			throw new DBException(e);
-		}
-		return null;
-	}
-	
-	
-	public static boolean comprobarPassword(String mail, String password) throws DBException {
-		UserDAO userDAO = UserDAO.getUserDAO();
-		// recibe  password  y  tengo que hashearla
-		
-		try {
-	        // Asignar el correo al marcador de posición en la consulta preparada
-	        userDAO.getUserByMailStatement.setString(1, mail);
-	        /*userDAO.getUserByMailStatement.setString(2, mail);
-	        userDAO.getUserByMailStatement.setString(3, mail);
-	        userDAO.getUserByMailStatement.setString(4, mail);
-	        userDAO.getUserByMailStatement.setString(5, mail);
-	        userDAO.getUserByMailStatement.setString(6, mail);
-	        userDAO.getUserByMailStatement.setString(7, mail);
-*/
-	        String hashedInputpassword= hashPassword(password);
-	        // Ejecutar la consulta
-	        try (ResultSet rs = userDAO.getUserByMailStatement.executeQuery()) {
-	            // Verificar si el correo existe
-	            if (rs.next()) {
-	                // Recuperar la contraseña almacenada
-	                String bdPassword= rs.getString("PASSWORD");
-	                
-	                // Comparar la contraseña proporcionada con la almacenada
-	                if (bdPassword.equals(hashedInputpassword)) {
-	                	 User user = userDAO.getUserByMail(mail);
-	                     UserDAO.setLoggedInUser(user);
-	                     
-	                	return true; // La contraseña es correcta
-                    } else {
-                        return false; // La contraseña no es correcta
-                    }
-						
-					
-	            } else {
-	                return false; // El correo no existe
-	            }
-	        }
-	    } catch (SQLException | NoSuchAlgorithmException e) {
-	        // Manejar cualquier excepción SQL
-	        throw new DBException("Error al validar el usuario", e);
-	    }
-	}
-=======
 
     //comprobar si mail esta en la base de datos
     public boolean checkMail(String mail) {
@@ -267,7 +185,6 @@ public class UserDAO implements Dao<User> {
 //        }
 //    }
 
->>>>>>> branch 'main' of https://github.com/yagueto/proyecto-prog-3
     @Override
 
     public void save(User user) {
