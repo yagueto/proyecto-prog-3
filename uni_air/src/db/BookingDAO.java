@@ -16,9 +16,7 @@ public class BookingDAO implements Dao<Booking> {
     private final Connection conn;
     private final PreparedStatement getByIdStatement;
     private final PreparedStatement getAllStatement;
-    //private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
-    //private final PreparedStatement updateStatement;
     private final PreparedStatement deleteStatement;
     private final PreparedStatement clearTableStatement;
 
@@ -29,8 +27,6 @@ public class BookingDAO implements Dao<Booking> {
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM BOOKING WHERE ID = ?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM BOOKING");
             this.saveStatement = conn.prepareStatement("INSERT INTO BOOKING (USER, FLIGHT) VALUES (?, ?)");
-            //this.searchStatement = conn.prepareStatement("");
-            //this.updateStatement = conn.prepareStatement("UPDATE BOOKING SET ID=?, USER=?, FLIGHT=? WHERE ID=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM BOOKING WHERE ID=?");
         } catch (SQLException e) {
             throw new DBException("Error inesperado creando statements, posible error en la base de datos", e); // Should never happen
@@ -91,6 +87,7 @@ public class BookingDAO implements Dao<Booking> {
 
     @Override
     public void update(Booking booking) {
+        throw new UnsupportedOperationException("No se pueden actualizar los datos de una reserva");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package db;
 
+import io.LoadCSV;
 import io.PropertiesManager;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.sql.Statement;
 import java.util.Objects;
 
 
-public class DBManager {
+public class DBManager implements LoadCSV {
     private static DBManager dbManager;
     public Connection conn = null;
 
@@ -82,14 +83,16 @@ public class DBManager {
 
             System.out.println("Tablas creadas");
 
+            loadCSV();
+
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuración de la base de datos y ésta no existe. No se puede continuar", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         } catch (SQLException | IOException e) {
             JOptionPane.showMessageDialog(null, "El archivo de configuración de la base de datos está corrupto.", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
-
-
 }
