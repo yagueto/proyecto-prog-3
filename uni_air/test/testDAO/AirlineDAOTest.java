@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class AirlineDAOTest {
 
-    AirlineDAO airlineDAO = AirlineDAO.getAirlineDAO();
+    final AirlineDAO airlineDAO = AirlineDAO.getAirlineDAO();
 
     // HAY UN ERROR EN LA CREACIÓN DE LOS STATEMENTS ES AIRLINEDAO (no lo he podido resolver todavia)
     // (da el error en ambos tests porque aplican la misma funcion save() en la que probablemente esté el error de SQL)
@@ -30,7 +30,6 @@ public class AirlineDAOTest {
             assertEquals("COD", retrievedAirline.getIata());
             assertEquals("AIRLINE", retrievedAirline.getName());
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Inserción de datos fallida: " + e.getMessage());
         }
     }
@@ -48,14 +47,13 @@ public class AirlineDAOTest {
 
             Airline retrievedAirline = airlines.get(0);
 
-            assertEquals(retrievedAirline.getIata(), "ABC");
-            assertEquals(retrievedAirline.getName(), "AIRLINE");
+            assertEquals("ABC", retrievedAirline.getIata());
+            assertEquals("AIRLINE", retrievedAirline.getName());
 
 
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Recuperación de datos fallida");
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 

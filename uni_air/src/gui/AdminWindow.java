@@ -67,8 +67,7 @@ public class AdminWindow extends AbstractWindow {
 
             } catch (Exception e2) {
 
-                e2.printStackTrace();
-                System.err.println("Error al añadir el vuelo");
+                System.err.println("Error al añadir el vuelo" + e2.getMessage());
 
             }
 
@@ -95,8 +94,10 @@ public class AdminWindow extends AbstractWindow {
 }
 
 class CheckInAdmin extends JFrame {
-    private Flight flight;
-    private ArrayList<CheckIn> checkIns;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4866695574839088383L;
 
     public CheckInAdmin(String flightCode, Frame frame) {
         this.setSize(640, 480);
@@ -104,8 +105,8 @@ class CheckInAdmin extends JFrame {
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setTitle("Check-In");
 
-        this.flight = FlightDAO.getFlightDAO().get(flightCode);
-        this.checkIns = new ArrayList<>(CheckInDAO.getCheckInDAO().getBy(flightCode));
+        Flight flight = FlightDAO.getFlightDAO().get(flightCode);
+        ArrayList<CheckIn> checkIns = new ArrayList<>(CheckInDAO.getCheckInDAO().getBy(flightCode));
 
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -117,9 +118,9 @@ class CheckInAdmin extends JFrame {
         JPanel panelInfor = new JPanel();
         JTextArea infor = new JTextArea();
         infor.setText(
-                "Vuelo: " + this.flight.getCodigo() + "\n" +
-                        "Origen: " + this.flight.getOrigen().getName() + "\n" +
-                        "Destino: " + this.flight.getDestino().getName() + "\n" +
+                "Vuelo: " + flight.getCodigo() + "\n" +
+                        "Origen: " + flight.getOrigen().getName() + "\n" +
+                        "Destino: " + flight.getDestino().getName() + "\n" +
                         "Pasajeros por pasar: " + checkIns.size()
         );
         infor.setEditable(false);

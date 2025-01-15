@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class AirportDAOTest {
 
-    AirportDAO airportDAO = AirportDAO.getAirportDAO();
+    final AirportDAO airportDAO = AirportDAO.getAirportDAO();
 
     // AMBOS TESTS CORREN SIN FALLAR
     // COMPROBADA LA INSERCIÓN Y DEVOLUCION/SELECCION DE DATOS DE LA DB
@@ -30,7 +30,6 @@ public class AirportDAOTest {
             assertEquals("ABC", retrievedAirport.getIata());
             assertEquals("AIRPORT", retrievedAirport.getName());
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Inserción de datos fallida: " + e.getMessage());
         }
     }
@@ -48,18 +47,17 @@ public class AirportDAOTest {
 
             Airport retrievedAirport = airports.get(0);
 
-            assertEquals(retrievedAirport.getIata(), "DFG");
-            assertEquals(retrievedAirport.getName(), "PALOMA");
-            assertEquals(retrievedAirport.getCity(), "BILBAO");
-            assertEquals(retrievedAirport.getCountry(), "ESPANA");
+            assertEquals("DFG", retrievedAirport.getIata());
+            assertEquals("PALOMA", retrievedAirport.getName());
+            assertEquals("BILBAO", retrievedAirport.getCity());
+            assertEquals("ESPANA", retrievedAirport.getCountry());
             assertEquals(40.0, retrievedAirport.getLongitude(), 0.001);
             assertEquals(20.0, retrievedAirport.getLatitude(), 0.001);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Recuperación de datos fallida");
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 

@@ -63,7 +63,6 @@ public class FlightDAOTest {
             assertEquals("La aerolínea debería coincidir.", flight.getAirline().getIata(), retrievedFlight.getAirline().getIata());
         } catch (Exception e) {
             fail("Falló al guardar o recuperar el vuelo: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -87,7 +86,6 @@ public class FlightDAOTest {
             assertEquals("La aerolínea debería coincidir.", flight.getAirline().getIata(), retrievedFlight.getAirline().getIata());
         } catch (Exception e) {
             fail("Falló al recuperar el vuelo: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
