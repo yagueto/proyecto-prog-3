@@ -14,7 +14,6 @@ import gui.misc.CellButtonRendererEditor;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -231,7 +230,7 @@ class FlightHistoryPanel extends JSplitPane {
 
     protected void updateTableData() {
         Thread t = new Thread(() -> {
-            List<Booking> bookings = BookingDAO.getBookingDAO().getBy(UserDAO.getLoggedInUser().getMail(), BookingDAO.BookingField.USER);
+            List<Booking> bookings = BookingDAO.getBookingDAO().getBy(UserDAO.getLoggedInUser().getDni(), BookingDAO.BookingField.USER);
             ArrayList<Flight> flights = new ArrayList<>();
             for (Booking booking : bookings) {
                 flights.add(booking.getFlight());

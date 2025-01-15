@@ -79,7 +79,11 @@ public class AdminWindow extends AbstractWindow {
 }
 
 class UserManagementWindow extends JFrame {
-    private final String[] modifyOptions = {"Eliminar", "Cambiar tipo usuario", "Cambiar correo", "Cambiar contraseña"};
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8180160994775476891L;
+	private final String[] modifyOptions = {"Eliminar", "Cambiar tipo usuario", "Cambiar correo", "Cambiar contraseña"};
     private final UserModel userModel;
 
     public UserManagementWindow() {

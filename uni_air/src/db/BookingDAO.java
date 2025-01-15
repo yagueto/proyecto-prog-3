@@ -106,7 +106,7 @@ public class BookingDAO implements Dao<Booking> {
                 statement.setString(1, (String) param);
             } else if (type == BookingField.ID || type == BookingField.USER) {
             	try {
-            	    int intParam = Integer.parseInt((String) param); // Convierte el String a Integer
+            	    int intParam = (int) param; // Convierte el String a Integer
             	    statement.setInt(1, intParam); // Usa el Integer convertido
             	} catch (NumberFormatException e) {
             	    System.err.println("El valor del parámetro no es un número válido: " + param);
