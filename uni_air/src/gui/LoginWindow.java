@@ -3,6 +3,7 @@ package gui;
 import db.DBException;
 import db.UserDAO;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -58,23 +59,25 @@ public class LoginWindow extends AbstractWindow {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = txtMail.getText();
+                String mail = txtMail.getText();
                 String password = new String(txtPassword.getPassword());
+                //Que cree la variable  id para que se pueda guardar el id del usuario que se logue
+                
                 //comprueba si el usuario y la contraseña estan en la base de datos
-                if (usuario.isEmpty() || password.isEmpty()) {
+                if (mail.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
-                } else if (usuario.equals("USUARIO1") && password.equals("USUARIO1")) {
+                } else if (mail.equals("USUARIO1") && password.equals("USUARIO1")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
                     SwingUtilities.invokeLater(UserWindow::new);
                     dispose();
-                } else if (usuario.equals("ADMIN2") && password.equals("ADMIN2")) {
+                } else if (mail.equals("ADMIN2") && password.equals("ADMIN2")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
                     SwingUtilities.invokeLater(AdminWindow::new);
                     dispose();
-                } else if (usuario.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
+                } else if (mail.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
 
                     JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
                     SwingUtilities.invokeLater(EmployeeWindow::new);
@@ -82,12 +85,15 @@ public class LoginWindow extends AbstractWindow {
                 } else {
                     try {
 
-                        if (UserDAO.comprobarPassword(usuario, password) == true) {
+                        if (UserDAO.comprobarPassword(mail, password) == true) {
                             JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+                           
+                            UserDAO.setLoggedInUser(UserDAO.getUserDAO().get(mail));
+                            
                             SwingUtilities.invokeLater(UserWindow::new);
                             dispose();
 
-                        } else if (UserDAO.comprobarPassword(usuario, password) == false) {
+                        } else if (UserDAO.comprobarPassword(mail, password) == false) {
                             JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
                             vaciarPassword();
                         }

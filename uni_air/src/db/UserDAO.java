@@ -18,6 +18,7 @@ public class UserDAO implements Dao<User> {
 
     private static UserDAO userDAO;
     private final PreparedStatement getUserByIdStatement;
+    private final PreparedStatement getUserMailStatement;
     private final PreparedStatement getAllUsersStatement;
     private final PreparedStatement saveUserStatement;
     private final PreparedStatement updateUserStatement;
@@ -32,6 +33,7 @@ public class UserDAO implements Dao<User> {
         try {
             this.clearTableStatement = conn.prepareStatement("DELETE FROM USER");
             this.getUserByIdStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE DNI=?");
+            this.getUserMailStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, PASSWORD, USER_TYPE FROM USER WHERE Email=?");
             this.getAllUsersStatement = conn.prepareStatement("SELECT DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD FROM USER");
             this.saveUserStatement = conn.prepareStatement("INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, BIRTHDATE, USER_TYPE, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)");
             this.updateUserStatement = conn.prepareStatement("UPDATE USER SET NAME=?, SURNAME=?, EMAIL=?, BIRTHDATE=?, USER_TYPE=?, PASSWORD=? WHERE DNI=?");
@@ -118,21 +120,23 @@ public class UserDAO implements Dao<User> {
 
     @Override
     public User get(Object param) {
-        if (!(param instanceof Integer dni)) {
-            throw new InvalidParameterException("Parámetro inválido (se esperaba int).");
+        if (!(param instanceof Integer dni) || !(param instanceof String mail)  ) {
+            throw new InvalidParameterException("Parámetro inválido.");
         }
         try {
+        	getUserMailStatement.setString(1, mail);
             getUserByIdStatement.setInt(1, dni);
-            ResultSet rs = getUserByIdStatement.executeQuery();
-            if (rs.isBeforeFirst() && rs.next()) {
+            ResultSet rs2 = getUserMailStatement.executeQuery();
+            if ( rs2.isBeforeFirst() && rs2.next()) {
                 UserType userType;
-                int user_code = rs.getInt("USER_TYPE");
-                if (user_code <= UserType.values().length) {
-                    userType = UserType.values()[user_code];
+                int user_mail = rs2.getInt("USER_TYPE");
+                
+                if (user_mail <= UserType.values().length) {
+                    userType = UserType.values()[user_mail];
                 } else {
-                    throw new DBException("Tipo de usuario inválido encontrado en la base de datos: " + user_code);
+                    throw new DBException("Tipo de usuario inválido encontrado en la base de datos: " + user_mail);
                 }
-                return handleUserType(userType, rs);
+                return handleUserType(userType, rs2);
             }
         } catch (SQLException | InvalidParameterException e) {
             throw new DBException(e);
@@ -161,29 +165,7 @@ public class UserDAO implements Dao<User> {
         return users;
     }
 
-    //comprobar si mail esta en la base de datos
-    public boolean checkMail(String mail) {
-        try {
-            getUserByMailStatement.setString(1, mail);
-            ResultSet rs = getUserByMailStatement.executeQuery();
-            return rs.isBeforeFirst();
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
-    }
-//    public void save(Customer customer) {
-//        String query = "INSERT INTO USER (DNI, NAME, SURNAME, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?)";
-//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setInt(1, customer.getDni());
-//            stmt.setString(2, customer.getName());
-//            stmt.setString(3, customer.getSurname());
-//            stmt.setString(4, customer.getMail());
-//            stmt.setString(5, customer.getPassword());
-//            stmt.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new DBException(e);
-//        }
-//    }
+    
 
     @Override
 
