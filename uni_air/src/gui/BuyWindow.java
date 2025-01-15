@@ -179,7 +179,7 @@ public class BuyWindow extends JFrame {
         boolean creditCard = creditCardRadio.isSelected();
         String paymentMethod = creditCard ? "tarjeta de crédito" : "cuenta de PayPal";
         String payment = JOptionPane.showInputDialog(this, "Introduce tu " + paymentMethod + ".", "Datos de pago", JOptionPane.QUESTION_MESSAGE);
-        if (payment.isEmpty() || !payment.matches("^([0-9]*)$")) {
+        if (payment.isEmpty() || (!payment.matches("^([0-9]*)$") && creditCardRadio.isSelected()) || (!payment.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$") && paypalRadio.isSelected())) {
             JOptionPane.showMessageDialog(
                     this,
                     "El valor de la " + paymentMethod + " está vacío o es inválido.",
