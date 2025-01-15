@@ -37,8 +37,14 @@ public class LoginWindow extends AbstractWindow {
         getRootPane().setDefaultButton(btnIniciarSesion);
 
         JLabel lblTitulo = new JLabel("¡Bienvenido!");
+        lblTitulo.setForeground(Color.BLACK);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+
         JLabel lblMail = new JLabel("Introduce tu mail: ");
+        lblMail.setFont(new Font("Arial", Font.PLAIN, 14));
+
         JLabel lblPassword = new JLabel("Introduce tu contraseña: ");
+        lblPassword.setFont(new Font("Arial", Font.PLAIN, 14));
 
         txtMail = new JTextField(10);
         txtPassword = new JPasswordField(10);
@@ -53,9 +59,13 @@ public class LoginWindow extends AbstractWindow {
 
         pNorte.add(lblTitulo);
         pCentro.add(lblFoto);
+        pCentro.add(Box.createRigidArea(new Dimension(0, 20)));
         pCentro.add(lblMail);
+        pCentro.add(Box.createRigidArea(new Dimension(0, 5)));
         pCentro.add(txtMail);
+        pCentro.add(Box.createRigidArea(new Dimension(0, 10)));
         pCentro.add(lblPassword);
+        pCentro.add(Box.createRigidArea(new Dimension(0, 5)));
         pCentro.add(txtPassword);
         
        
