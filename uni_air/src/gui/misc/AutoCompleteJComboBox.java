@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 public class AutoCompleteJComboBox<E> extends PlainDocument {
+    private static final long serialVersionUID = 5786213283126342562L;
     private final JComboBox<E> comboBox;
     private final ComboBoxModel<E> model;
     private final JTextComponent editor;

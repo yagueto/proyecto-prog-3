@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class UserModel extends AbstractTableModel {
+    private static final long serialVersionUID = 2956751850557313789L;
     public final List<User> users;
 
     public UserModel(List<User> users) {
