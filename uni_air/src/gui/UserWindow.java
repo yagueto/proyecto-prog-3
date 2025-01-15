@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
+
+
 public class UserWindow extends AbstractWindow {
     private static final long serialVersionUID = 7345092960587394070L;
 
@@ -95,9 +98,9 @@ class FlightSearchPanel extends JPanel {
     }
 
     private static JPanel createSearchPanel() {
-        JPanel filtersPanel = new JPanel();
-        JPanel buttonsPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(filtersPanel, BoxLayout.Y_AXIS);
+            JPanel filtersPanel = new JPanel();
+            JPanel buttonsPanel = new JPanel();
+            BoxLayout boxLayout = new BoxLayout(filtersPanel, BoxLayout.Y_AXIS);
         filtersPanel.setLayout(boxLayout);
 
         buttonsPanel.setBackground(UIManager.getColor("ProgressBar.foreground"));
@@ -172,64 +175,66 @@ class FlightSearchPanel extends JPanel {
     }
 }
 
-/**
- * Panel para mostrar los vuelos comprados por el usuario
- */
 class FlightHistoryPanel extends JSplitPane {
 
     private static final long serialVersionUID = 560276176324109821L;
-    /**
-     *
-     */
-    JList<Flight> lista_vuelos = new JList<>();
-    // En vez de un Label lo cambiaré para incluir mejor toda la información del
-    // vuelo
-    JLabel label = new JLabel();
-    // JSplitPane panelDividido = new JSplitPane();
-    JPanel panel = new JPanel();
 
+    JList<Flight> lista_vuelos = new JList<>();
+    JTextArea flightDetailsField = new JTextArea();
     DefaultListModel<Flight> modelo;
 
     public FlightHistoryPanel() {
         this.setEnabled(false);
         this.setDividerLocation(0.5);
         this.setDividerSize(0);
-
+        JPanel panel = new JPanel();
         modelo = new DefaultListModel<>();
 
         lista_vuelos.setCellRenderer(new VueloListRenderer());
-        // Ponemos el modelo para la lista de vuelos
         lista_vuelos.setModel(modelo);
 
-        // Creamos 10 vuelos añadidos al modelo
-        // Para Obtener/Seleccionar un vuelo de la lista de vuelos
         lista_vuelos.getSelectionModel().addListSelectionListener(e -> {
-            // Cogemos un vuelo
+
             Flight v = lista_vuelos.getSelectedValue();
-            /*
-             * Ponemos los datos del Vuelo que queremos que aparezcan a la derecha de la
-             * pantalla al seleccionar el vuelo que queremos ver
-             */
-            label.setText("Origen: " + v.getOrigen() + " // Destino: " + v.getDestino());
+
+            if (v != null) {
+                flightDetailsField.setText("Vuelo: " + v.getCodigo() + "\n" +
+                        "------------------------------------------------------------------\n" +
+                        "✈ Origen:       " + v.getOrigen().getName() + "\n" +
+                        "✈ Destino:      " + v.getDestino().getName() + "\n" +
+                        "🕒 Despegue:     " + v.getFechaDespegue() + "\n" +
+                        "🕒 Aterrizaje:   " + v.getFechaAterrizaje() + "\n" +
+                        "👨‍✈️ Aerolínea:   " + v.getAirline().getName() + "\n" +
+                        "💲 Precio:       " + v.getPrecio() + " €" + "\n" +
+                        "------------------------------------------------------------------");
+            } else {
+                flightDetailsField.setText("");
+            }
         });
 
-        // Añadimos a la izquierda del panel dividido un panel de scroll con la lista
         this.setLeftComponent(new JScrollPane(lista_vuelos));
         this.getLeftComponent().setPreferredSize(new Dimension(350, 720));
 
-        // Añadimos el label que contiene la info de origen y destino del vuelo al panel
-        // y
-        // el mismo luego al panel dividido de la derecha
-        panel.add(label);
+        flightDetailsField.setForeground(Color.DARK_GRAY);
+        flightDetailsField.setBackground(new Color(240, 240, 240));
+        flightDetailsField.setOpaque(false);
+        flightDetailsField.setEditable(false);
+        flightDetailsField.setFont(new Font("Serif", Font.PLAIN, 22));
+
+        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel.add(flightDetailsField);
+
         this.setRightComponent(panel);
         this.setBackground(Color.BLACK);
-        //add(panelDividido);
+
+
 
         updateTableData();
     }
 
     protected void updateTableData() {
         Thread t = new Thread(() -> {
+            System.out.println("error updatetabledata");
             List<Booking> bookings = BookingDAO.getBookingDAO().getBy(UserDAO.getLoggedInUser().getDni(), BookingDAO.BookingField.USER);
             ArrayList<Flight> flights = new ArrayList<>();
             for (Booking booking : bookings) {
