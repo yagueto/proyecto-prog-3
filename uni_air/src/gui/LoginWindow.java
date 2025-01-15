@@ -67,22 +67,7 @@ public class LoginWindow extends AbstractWindow {
                 if (mail.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
-                } else if (mail.equals("USUARIO1") && password.equals("USUARIO1")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-                    SwingUtilities.invokeLater(UserWindow::new);
-                    dispose();
-                } else if (mail.equals("ADMIN2") && password.equals("ADMIN2")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como administrador");
-                    SwingUtilities.invokeLater(AdminWindow::new);
-                    dispose();
-                } else if (mail.equals("EMPLEADO3") && password.equals("EMPLEADO3")) {
-
-                    JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
-                    SwingUtilities.invokeLater(EmployeeWindow::new);
-                    dispose();
-                } else {
+                } else{
                     try {
 
                         if (UserDAO.comprobarPassword(mail, password) == true) {
