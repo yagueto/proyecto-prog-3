@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 
 public class LoginWindow extends AbstractWindow {
@@ -39,17 +40,24 @@ public class LoginWindow extends AbstractWindow {
 
         txtMail = new JTextField(10);
         txtPassword = new JPasswordField(10);
+        
+        Image Foto = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Imagen_avion_sobre_mar.png"))).getImage();
+        
+        JLabel lblFoto = new JLabel(new ImageIcon(Foto));
 
         pSur.add(btnIniciarSesion);
         pSur.add(btnCerrarSesion);
         pSur.add(btnRegistrarse);
 
         pNorte.add(lblTitulo);
-
+        pCentro.add(lblFoto);
         pCentro.add(lblMail);
         pCentro.add(txtMail);
         pCentro.add(lblPassword);
         pCentro.add(txtPassword);
+        
+       
+        
 
 
         btnCerrarSesion.addActionListener(e -> exit());
@@ -58,7 +66,7 @@ public class LoginWindow extends AbstractWindow {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String mail = txtMail.getText();
+                String mail = txtMail.getText().toLowerCase();
                 String password = new String(txtPassword.getPassword());
                 //Que cree la variable  id para que se pueda guardar el id del usuario que se logue
 
