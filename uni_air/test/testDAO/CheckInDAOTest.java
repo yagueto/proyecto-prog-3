@@ -16,13 +16,11 @@ import static org.junit.Assert.*;
 
 public class CheckInDAOTest {
 
-    private CheckInDAO checkInDAO = CheckInDAO.getCheckInDAO();
-    private BookingDAO bookingDAO = BookingDAO.getBookingDAO();
-    private UserDAO userDAO = UserDAO.getUserDAO();
-    private FlightDAO flightDAO = FlightDAO.getFlightDAO();
+    private final CheckInDAO checkInDAO = CheckInDAO.getCheckInDAO();
+    private final BookingDAO bookingDAO = BookingDAO.getBookingDAO();
+    private final UserDAO userDAO = UserDAO.getUserDAO();
+    private final FlightDAO flightDAO = FlightDAO.getFlightDAO();
 
-    private Customer customer;
-    private Flight flight;
     private Booking booking;
 
     @Before
@@ -34,8 +32,8 @@ public class CheckInDAOTest {
         Airport destination = new Airport("LAX", "LAX IA", "LOS ANGELES", "USA", 118.4085, 33.9416);
         Airline airline = new Airline("AA", "AMERICAN AIRLINES");
 
-        customer = new Customer(1, "John", "Doe", "johndoe@example.com", "password123", LocalDate.of(1990, 1, 1));
-        flight = new Flight("FL123", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 14, 0),
+        Customer customer = new Customer(1, "John", "Doe", "johndoe@example.com", "password123", LocalDate.of(1990, 1, 1));
+        Flight flight = new Flight("FL123", origin, destination, airline, LocalDateTime.of(2023, 11, 20, 14, 0),
                 LocalDateTime.of(2023, 11, 20, 18, 0), 100, 200
         );
         booking = new Booking(customer, flight, 1);
@@ -59,7 +57,6 @@ public class CheckInDAOTest {
             assertEquals("El asiento debería coincidir.", checkIn.getSeat(), retrievedCheckIn.getSeat());
             assertEquals("El ID de la reserva debería coincidir.", checkIn.getBooking().getId(), retrievedCheckIn.getBooking().getId());
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Falló al guardar el check-in: " + e.getMessage());
         }
     }
@@ -79,7 +76,6 @@ public class CheckInDAOTest {
             assertEquals("El ID debería ser el mismo.", checkIn.getId(), retrievedCheckIn.getId());
             assertEquals("El asiento debería ser el mismo.", checkIn.getSeat(), retrievedCheckIn.getSeat());
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Falló al recuperar el check-in: " + e.getMessage());
         }
     }

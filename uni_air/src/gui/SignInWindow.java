@@ -136,16 +136,9 @@ public class SignInWindow extends AbstractWindow {
             String mail = txtMail.getText();
             //char[] passwordChars = txtpasswordUsuario.getPassword();
             String password = new String(txtpasswordUsuario.getPassword());
-            String hashPassword = "";
+            String hashPassword;
             hashPassword = UserDAO.hashPassword(password);
             // String password = txtpasswordUsuario.getPassword().toString();
-           /* try {
-				String hashPassword= UserDAO.hashPassword(password);
-			} catch (NoSuchAlgorithmException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-            String hashPassword = hashPassword.toString();*/
 
             GregorianCalendar fechaNa = (GregorianCalendar) datePicker.getModel().getValue();
 

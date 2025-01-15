@@ -179,9 +179,9 @@ class FlightHistoryPanel extends JSplitPane {
 
     private static final long serialVersionUID = 560276176324109821L;
 
-    JList<Flight> lista_vuelos = new JList<>();
-    JTextArea flightDetailsField = new JTextArea();
-    DefaultListModel<Flight> modelo;
+    final JList<Flight> lista_vuelos = new JList<>();
+    final JTextArea flightDetailsField = new JTextArea();
+    final DefaultListModel<Flight> modelo;
 
     public FlightHistoryPanel() {
         this.setEnabled(false);

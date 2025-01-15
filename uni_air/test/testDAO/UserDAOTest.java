@@ -43,7 +43,6 @@ public class UserDAOTest {
             assertTrue("El usuario debería ser del tipo CUSTOMER.", retrievedUser instanceof Customer);
         } catch (Exception e) {
             fail("Falló al guardar o recuperar al usuario: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -62,7 +61,6 @@ public class UserDAOTest {
             assertTrue("El usuario debería ser del tipo EMPLOYEE.", retrievedUser instanceof Employee);
         } catch (Exception e) {
             fail("Falló al recuperar al usuario: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

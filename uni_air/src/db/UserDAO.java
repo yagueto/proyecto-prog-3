@@ -104,7 +104,7 @@ public class UserDAO implements Dao<User> {
 
     public static String hashPassword(String password) {
 
-        MessageDigest algoritmo = null;
+        MessageDigest algoritmo;
         try {
             algoritmo = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {

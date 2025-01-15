@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class BookingDAOTest {
 
-    BookingDAO bookingDAO = BookingDAO.getBookingDAO();
+    final BookingDAO bookingDAO = BookingDAO.getBookingDAO();
     Customer customer;
     Flight flight;
 
@@ -64,7 +64,6 @@ public class BookingDAOTest {
             assertEquals(flight.getCodigo(), retrievedBooking.getFlight().getCodigo());
 
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Inserción de datos fallida: " + e.getMessage());
         }
     }
@@ -86,7 +85,6 @@ public class BookingDAOTest {
             assertEquals("El dni del cliente debería coincidir.", booking.getCustomer().getDni(), retrievedBooking.getCustomer().getDni());
             assertEquals("El código del vuelo debería coincidir.", booking.getFlight().getCodigo(), retrievedBooking.getFlight().getCodigo());
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Error al recuperar la reserva: " + e.getMessage());
         }
     }
