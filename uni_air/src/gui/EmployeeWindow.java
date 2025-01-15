@@ -19,9 +19,9 @@ public class EmployeeWindow extends AbstractWindow {
         super();
         setTitle("Empleado");
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(createBorder("Empleado"));
-        this.add(panel, BorderLayout.NORTH);
+        this.add(panel);
 
         FlightModel vuelos = new FlightModel(FlightDAO.getFlightDAO().getAll(), TipoVentana.EMPLOYEE);
         JTable tabla = new JTable(vuelos);
@@ -30,14 +30,13 @@ public class EmployeeWindow extends AbstractWindow {
         TableColumn tableColumn = tabla.getColumnModel().getColumn(6);
 
         tableColumn.setCellEditor(new CellButtonRendererEditor("COMPRAR →", (int clickedRow) -> {
-            // Vuelo.getFlights().get(clickedRow).setPasajeros(Vuelo.getFlights().get(clickedRow).getPasajeros() - 1);
             SwingUtilities.invokeLater(() -> new CheckInWindow(this, vuelos.getFlights().get(clickedRow)));
             setVisible(false);
         }));
         // tableColumn.setCellRenderer(new CellButtonRendererEditor());
 
         JScrollPane scrollPane = new JScrollPane(tabla);
-        this.add(scrollPane);
+        panel.add(scrollPane);
 
 
         setVisible(true);

@@ -37,14 +37,11 @@ public class UserWindow extends AbstractWindow {
         FlightHistoryPanel flightHistoryPanel = new FlightHistoryPanel();
         JPanel flightSearchPanel = new FlightSearchPanel();
 
-        ChangeListener changeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
-                int index = sourceTabbedPane.getSelectedIndex();
-                if (index == 0) {
-                    flightHistoryPanel.updateTableData();
-                }
+        ChangeListener changeListener = e -> {
+            JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+            int index = sourceTabbedPane.getSelectedIndex();
+            if (index == 0) {
+                flightHistoryPanel.updateTableData();
             }
         };
 
@@ -115,8 +112,8 @@ class FlightSearchPanel extends JPanel {
         origenField.setPrototypeDisplayValue(prototypeAirport);
         destField.setPrototypeDisplayValue(prototypeAirport);
 
-        new AutoCompleteJComboBox<Airport>(origenField);
-        new AutoCompleteJComboBox<Airport>(destField);
+        new AutoCompleteJComboBox<>(origenField);
+        new AutoCompleteJComboBox<>(destField);
 
         JDatePicker datePicker = new JDatePicker();
 
