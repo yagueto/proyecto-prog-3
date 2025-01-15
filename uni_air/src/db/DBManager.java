@@ -69,7 +69,19 @@ public class DBManager implements LoadCSV {
     }
 
     public void createDB() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/db/initial_schema.sql"))))) {
+        System.out.println("Creando base de datos...");
+        executeSQL("/db/initial_schema.sql");
+        System.out.println("- Creadas tablas");
+        loadCSV(conn);
+        System.out.println("- Cargados vuelos de CSV");
+        executeSQL("/db/example_data.sql");
+        System.out.println("- Cargados datos iniciales");
+        System.out.println("...base de datos creada.");
+
+    }
+
+    public void executeSQL(String filepath) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(filepath))))) {
             Statement statement = conn.createStatement();
             StringBuilder query = new StringBuilder();
             String line;
@@ -80,11 +92,6 @@ public class DBManager implements LoadCSV {
                     query = new StringBuilder();
                 }
             }
-
-            System.out.println("Tablas creadas");
-
-            loadCSV(conn);
-
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuración de la base de datos y ésta no existe. No se puede continuar", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.exit(1);

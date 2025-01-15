@@ -150,7 +150,7 @@ public class SignInWindow extends AbstractWindow {
             GregorianCalendar fechaNa = (GregorianCalendar) datePicker.getModel().getValue();
 
             User usu = new Customer(dni, nombre, apellido, mail, hashPassword, fechaNa.toZonedDateTime().toLocalDate());
-            if (UserDAO.getUserDAO().get(dni) != null) {
+            if (UserDAO.getUserDAO().search(mail) != null) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, ese usuario ya existe", "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else {
                 UserDAO.getUserDAO().save(usu);

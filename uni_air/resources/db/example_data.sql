@@ -14,7 +14,10 @@ VALUES (1045, 'IB1234', 1),
        (1046, 'IB1234', 2),
        (1047, 'IB1234', 4);
 INSERT INTO "USER"
-VALUES (1, 'LUIS EDUARDO', 'FDEZ.', 'LUIS@ADMIN.CO', '1990-12-12', 'ABC', 0),
-       (2, 'EDUARDO LUIS', 'GONZÁLEZ', 'EDUARDO@ADMIN.CO', '1990-12-12', 'ABC', 0),
-       (4, 'PEPE', 'FDEZ.', 'PEPE@GMAIL.COM', '1990-12-12', 'ABC', 2);
+VALUES (1, 'LUIS EDUARDO', 'FDEZ.', 'luis@admin.co', '1990-12-12',
+        'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 0),
+       (2, 'EDUARDO LUIS', 'GONZÁLEZ', 'eduardo@admin.co', '1990-12-12',
+        'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 1),
+       (4, 'PEPE', 'FDEZ.', 'pepe@gmail.com', '1990-12-12',
+        'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 2);
 COMMIT;
