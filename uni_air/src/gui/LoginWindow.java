@@ -3,7 +3,6 @@ package gui;
 import db.DBException;
 import db.UserDAO;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -62,7 +61,7 @@ public class LoginWindow extends AbstractWindow {
                 String mail = txtMail.getText();
                 String password = new String(txtPassword.getPassword());
                 //Que cree la variable  id para que se pueda guardar el id del usuario que se logue
-                
+
                 //comprueba si el usuario y la contraseña estan en la base de datos
                 if (mail.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Introduce un nombre de usuario y una contraseña", "ERROR",
@@ -85,15 +84,15 @@ public class LoginWindow extends AbstractWindow {
                 } else {
                     try {
 
-                        if (UserDAO.comprobarPassword(mail, password) == true) {
+                        if (UserDAO.comprobarPassword(mail, password)) {
                             JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
-                           
+
                             UserDAO.setLoggedInUser(UserDAO.getUserDAO().get(mail));
-                            
+
                             SwingUtilities.invokeLater(UserWindow::new);
                             dispose();
 
-                        } else if (UserDAO.comprobarPassword(mail, password) == false) {
+                        } else if (!UserDAO.comprobarPassword(mail, password)) {
                             JOptionPane.showMessageDialog(null, "Nombre de usuario y/o contraseña incorrectos", "ERROR", JOptionPane.ERROR_MESSAGE);
                             vaciarPassword();
                         }
