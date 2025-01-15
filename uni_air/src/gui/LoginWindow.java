@@ -2,6 +2,8 @@ package gui;
 
 import db.DBException;
 import db.UserDAO;
+import domain.User;
+import domain.UserType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,11 +80,19 @@ public class LoginWindow extends AbstractWindow {
                     try {
 
                         if (UserDAO.comprobarPassword(mail, password)) {
-                            JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
+                            User user = UserDAO.getUserDAO().search(mail);
+                            UserDAO.setLoggedInUser(user);
 
-                            UserDAO.setLoggedInUser(UserDAO.getUserDAO().search(mail));
-
-                            SwingUtilities.invokeLater(UserWindow::new);
+                            if (User.getType(user) == UserType.ADMIN) {
+                                JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como admin");
+                                SwingUtilities.invokeLater(AdminWindow::new);
+                            } else if (User.getType(user) == UserType.EMPLOYEE) {
+                                JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como empleado");
+                                SwingUtilities.invokeLater(EmployeeWindow::new);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente");
+                                SwingUtilities.invokeLater(UserWindow::new);
+                            }
                             dispose();
 
                         } else if (!UserDAO.comprobarPassword(mail, password)) {
