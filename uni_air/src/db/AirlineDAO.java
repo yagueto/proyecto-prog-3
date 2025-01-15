@@ -123,7 +123,7 @@ public class AirlineDAO implements Dao<Airline> {
         try {
             deleteAllAirlinesStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBException(e);
         }
     }
 

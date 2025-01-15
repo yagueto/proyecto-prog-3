@@ -12,7 +12,7 @@ public class Flight {
 	private LocalDateTime fechaAterrizaje;
 	private int maxPasajeros;
 	private int precio;
-	private HashSet<String> occupied;
+	private final HashSet<String> occupied;
 
 	public Flight(String codigo, Airport origen, Airport destino, Airline airline, LocalDateTime fechaDespegue,
 				  LocalDateTime fechaAterrizaje, int maxPasajeros, int precio) {

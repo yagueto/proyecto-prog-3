@@ -113,7 +113,7 @@ public class AirportDAO implements Dao<Airport> {
         try {
             deleteAllAirportsStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBException(e);
         }
     }
 }

@@ -99,15 +99,20 @@ public class UserDAO implements Dao<User> {
                     return false; // El correo no existe
                 }
             }
-        } catch (SQLException | NoSuchAlgorithmException e) {
+        } catch (SQLException e) {
             // Manejar cualquier excepción SQL
             throw new DBException("Error al validar el usuario", e);
         }
     }
 
-    public static String hashPassword(String password) throws NoSuchAlgorithmException {
+    public static String hashPassword(String password) {
 
-        MessageDigest algoritmo = MessageDigest.getInstance("SHA-256");
+        MessageDigest algoritmo = null;
+        try {
+            algoritmo = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         byte[] hash = algoritmo.digest(password.getBytes());
         StringBuilder hexString = new StringBuilder();
         for (byte b : hash) {

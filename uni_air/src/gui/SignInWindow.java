@@ -7,7 +7,6 @@ import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.GregorianCalendar;
 
 
@@ -138,12 +137,7 @@ public class SignInWindow extends AbstractWindow {
             //char[] passwordChars = txtpasswordUsuario.getPassword();
             String password = new String(txtpasswordUsuario.getPassword());
             String hashPassword = "";
-            try {
-                hashPassword = UserDAO.hashPassword(password);
-            } catch (NoSuchAlgorithmException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+            hashPassword = UserDAO.hashPassword(password);
             // String password = txtpasswordUsuario.getPassword().toString();
            /* try {
 				String hashPassword= UserDAO.hashPassword(password);
