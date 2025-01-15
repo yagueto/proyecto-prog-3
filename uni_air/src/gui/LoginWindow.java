@@ -72,7 +72,7 @@ public class LoginWindow extends AbstractWindow {
                         if (UserDAO.comprobarPassword(mail, password)) {
                             JOptionPane.showMessageDialog(null, "Has iniciado sesión correctamente como usuario");
 
-                            UserDAO.setLoggedInUser(UserDAO.getUserDAO().get(mail));
+                            UserDAO.setLoggedInUser(UserDAO.getUserDAO().search(mail));
 
                             SwingUtilities.invokeLater(UserWindow::new);
                             dispose();

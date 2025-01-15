@@ -125,29 +125,53 @@ public class UserDAO implements Dao<User> {
 
     @Override
     public User get(Object param) {
-        if (!(param instanceof Integer dni) || !(param instanceof String mail)  ) {
+        if (!(param instanceof Integer dni)   ) {
             throw new InvalidParameterException("Parámetro inválido.");
         }
         try {
-        	getUserMailStatement.setString(1, mail);
+
             getUserByIdStatement.setInt(1, dni);
-            ResultSet rs2 = getUserMailStatement.executeQuery();
-            if ( rs2.isBeforeFirst() && rs2.next()) {
+            ResultSet rs1 = getUserMailStatement.executeQuery();
+            if ( rs1.isBeforeFirst() && rs1.next()) {
                 UserType userType;
-                int user_mail = rs2.getInt("USER_TYPE");
+                int user_mail = rs1.getInt("USER_TYPE");
                 
                 if (user_mail <= UserType.values().length) {
                     userType = UserType.values()[user_mail];
                 } else {
                     throw new DBException("Tipo de usuario inválido encontrado en la base de datos: " + user_mail);
                 }
-                return handleUserType(userType, rs2);
+                return handleUserType(userType, rs1);
             }
         } catch (SQLException | InvalidParameterException e) {
             throw new DBException(e);
         }
         return null;
     }
+    
+	public User search(Object param) {
+		
+		if (!(param instanceof String mail)) {
+            throw new InvalidParameterException("Parámetro inválido.");
+		}
+		try {
+			getUserMailStatement.setString(1, mail);
+			ResultSet rs = getUserMailStatement.executeQuery();
+			if (rs.isBeforeFirst() && rs.next()) {
+				UserType userType;
+				int user_type = rs.getInt("USER_TYPE");
+				if (user_type <= UserType.values().length) {
+					userType = UserType.values()[user_type];
+				} else {
+					throw new RuntimeException("Tipo de usuario inválido (" + user_type + ").");
+				}
+				return handleUserType(userType, rs);
+			}
+		} catch (SQLException | InvalidParameterException e) {
+			throw new DBException(e);
+		}
+		return null;
+	}
 
     @Override
     public List<User> getAll() {
