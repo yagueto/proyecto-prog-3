@@ -154,7 +154,9 @@ class UserManagementWindow extends JFrame {
 
                 if (okCxl == JOptionPane.OK_OPTION) {
                     String password = new String(pf.getPassword());
-                    // TODO: gestionar la nueva contraseña
+                    user.setPassword(UserDAO.hashPassword(password));
+
+                    UserDAO.getUserDAO().update(user);
                 }
                 break;
         }
