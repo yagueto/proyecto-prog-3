@@ -42,12 +42,21 @@ public class BookingDAO implements Dao<Booking> {
 
     @Override
     public Booking get(Object param) {
-        if (!(param instanceof Integer in)) {
-            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String) ID).");
+        if (!((param instanceof Integer) || (param instanceof String))) {
+            throw new InvalidParameterException("Parámetro de búsqueda inválido. (Se esperaba (String o int) ID).");
         }
         try {
-            getByIdStatement.setInt(1, in);
-            ResultSet rs = getByIdStatement.executeQuery();
+            ResultSet rs;
+            if (param instanceof Integer){
+                int in = (Integer) param;
+                getByIdStatement.setInt(1, in);
+                rs = getByIdStatement.executeQuery();
+            } else {
+                String in = (String) param;
+                PreparedStatement stm = conn.prepareStatement("SELECT * FROM BOOKING WHERE FLIGHT = ?;");
+                stm.setString(1, in);
+                rs = stm.executeQuery();
+            }
             if (rs.isBeforeFirst() && rs.next()) {
                 return new Booking(UserDAO.getUserDAO().get(rs.getInt("USER")), FlightDAO.getFlightDAO().get(rs.getString("FLIGHT")), rs.getInt("ID"));
             }

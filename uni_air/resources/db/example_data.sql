@@ -20,4 +20,6 @@ VALUES (1, 'LUIS EDUARDO', 'FDEZ.', 'luis@admin.co', '1990-12-12',
         'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 1),
        (4, 'PEPE', 'FDEZ.', 'pepe@gmail.com', '1990-12-12',
         'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad', 2);
+INSERT INTO "CHECK_IN"
+VALUES (1047, '1A');
 COMMIT;

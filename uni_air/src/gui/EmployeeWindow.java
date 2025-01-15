@@ -33,7 +33,6 @@ public class EmployeeWindow extends AbstractWindow {
             SwingUtilities.invokeLater(() -> new CheckInWindow(this, vuelos.getFlights().get(clickedRow)));
             setVisible(false);
         }));
-        // tableColumn.setCellRenderer(new CellButtonRendererEditor());
 
         JScrollPane scrollPane = new JScrollPane(tabla);
         panel.add(scrollPane);

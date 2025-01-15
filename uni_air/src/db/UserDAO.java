@@ -88,11 +88,8 @@ public class UserDAO implements Dao<User> {
                     String bdPassword = rs.getString("PASSWORD");
 
                     // Comparar la contraseña proporcionada con la almacenada
-                    if (bdPassword.equals(hashedInputpassword)) {
-                        return true; // La contraseña es correcta
-                    } else {
-                        return false; // La contraseña no es correcta
-                    }
+                    // La contraseña no es correcta
+                    return bdPassword.equals(hashedInputpassword); // La contraseña es correcta
 
 
                 } else {
@@ -131,7 +128,7 @@ public class UserDAO implements Dao<User> {
         try {
 
             getUserByIdStatement.setInt(1, dni);
-            ResultSet rs1 = getUserMailStatement.executeQuery();
+            ResultSet rs1 = getUserByIdStatement.executeQuery();
             if ( rs1.isBeforeFirst() && rs1.next()) {
                 UserType userType;
                 int user_mail = rs1.getInt("USER_TYPE");

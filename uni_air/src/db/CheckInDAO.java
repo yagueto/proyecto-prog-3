@@ -1,5 +1,6 @@
 package db;
 
+import domain.Booking;
 import domain.CheckIn;
 
 import java.security.InvalidParameterException;
@@ -13,20 +14,20 @@ import java.util.List;
 public class CheckInDAO implements Dao<CheckIn> {
     private static CheckInDAO checkInDAO;
 
+    private static Connection conn;
+
     private final PreparedStatement getByIdStatement;
     private final PreparedStatement getAllStatement;
-    //private final PreparedStatement searchStatement;
     private final PreparedStatement saveStatement;
     private final PreparedStatement updateStatement;
     private final PreparedStatement deleteStatement;
 
     private CheckInDAO() {
-        Connection conn = DBManager.getDBManager().conn;
+        conn = DBManager.getDBManager().conn;
         try {
             this.getByIdStatement = conn.prepareStatement("SELECT * FROM CHECK_IN WHERE BOOKING=?");
             this.getAllStatement = conn.prepareStatement("SELECT * FROM CHECK_IN");
             this.saveStatement = conn.prepareStatement("INSERT INTO CHECK_IN (BOOKING, SEAT) VALUES (?, ?)");
-            //this.searchStatement = conn.prepareStatement("");
             this.updateStatement = conn.prepareStatement("UPDATE CHECK_IN SET BOOKING=?, SEAT=? WHERE BOOKING=?");
             this.deleteStatement = conn.prepareStatement("DELETE FROM CHECK_IN WHERE BOOKING=?");
         } catch (SQLException e) {
@@ -104,5 +105,33 @@ public class CheckInDAO implements Dao<CheckIn> {
         } catch (SQLException e) {
             throw new DBException(e);
         }
+    }
+
+    public List<CheckIn> getBy(Object param) {
+        String flightCode = (String) param;
+        ArrayList<CheckIn> checkIns = new ArrayList<>();
+        try {
+            PreparedStatement bookingStmt = conn.prepareStatement("SELECT ID FROM BOOKING WHERE FLIGHT = ?");
+            bookingStmt.setString(1, flightCode);
+            ResultSet bookingRs = bookingStmt.executeQuery();
+            while (bookingRs.next()) {
+                int bookingId = bookingRs.getInt("ID");
+                PreparedStatement checkInStmt = conn.prepareStatement("SELECT * FROM CHECK_IN WHERE BOOKING = ?");
+                checkInStmt.setInt(1, bookingId);
+                ResultSet checkInRs = checkInStmt.executeQuery();
+                while (checkInRs.next()) {
+                    Booking booking = BookingDAO.getBookingDAO().get(bookingId);
+                    CheckIn checkIn = new CheckIn(booking, checkInRs.getString("SEAT"));
+                    checkIns.add(checkIn);
+                }
+                checkInStmt.close();
+                checkInRs.close();
+            }
+            bookingStmt.close();
+            bookingRs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching CheckIn records", e);
+        }
+        return checkIns;
     }
 }

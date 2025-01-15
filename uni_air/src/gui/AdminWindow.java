@@ -1,9 +1,6 @@
 package gui;
 
-import db.AirlineDAO;
-import db.AirportDAO;
-import db.FlightDAO;
-import db.UserDAO;
+import db.*;
 import domain.*;
 import domain.models.FlightModel;
 import domain.models.FlightModel.TipoVentana;
@@ -11,9 +8,15 @@ import domain.models.UserModel;
 import gui.misc.CellButtonRendererEditor;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class AdminWindow extends AbstractWindow {
     private static final long serialVersionUID = 8885137220929508082L;
@@ -27,6 +30,7 @@ public class AdminWindow extends AbstractWindow {
 
         JButton btnAnadirVuelo = new JButton("Añadir vuelo");
         JButton btnGestionUsuarios = new JButton("Gestionar usuarios");
+        JButton btnGestionCheckIn = new JButton("Gestionar Check-in");
         FlightModel vuelos = new FlightModel(FlightDAO.getFlightDAO().getAll(), TipoVentana.ADMIN);
 
         JTable tabla = new JTable(vuelos);
@@ -34,6 +38,7 @@ public class AdminWindow extends AbstractWindow {
 
         panelBotones.add(btnGestionUsuarios, BorderLayout.EAST);
         panelBotones.add(btnAnadirVuelo, BorderLayout.WEST);
+        panelBotones.add(btnGestionCheckIn, BorderLayout.CENTER);
 
         this.add(panel);
         panel.add(panelBotones, BorderLayout.SOUTH);
@@ -69,6 +74,17 @@ public class AdminWindow extends AbstractWindow {
 
         });
 
+        btnGestionCheckIn.addActionListener(e -> {
+            int valueAt = tabla.getSelectedRow();
+            if (valueAt != -1){
+                String flightIata = (String) tabla.getValueAt(valueAt, 0);
+                SwingUtilities.invokeLater(() -> {
+                    new CheckInAdmin(flightIata, this);
+                    this.setVisible(false);
+                });
+            }
+        });
+
         btnGestionUsuarios.addActionListener(e -> new UserManagementWindow());
         SwingUtilities.invokeLater(() -> vuelos.fireTableDataChanged());
 
@@ -76,6 +92,75 @@ public class AdminWindow extends AbstractWindow {
 
     }
 
+}
+
+class CheckInAdmin extends JFrame {
+    private Flight flight;
+    private ArrayList<CheckIn> checkIns;
+
+    public CheckInAdmin(String flightCode, Frame frame) {
+        this.setSize(640, 480);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.setTitle("Check-In");
+
+        this.flight = FlightDAO.getFlightDAO().get(flightCode);
+        this.checkIns = new ArrayList<>(CheckInDAO.getCheckInDAO().getBy(flightCode));
+
+        JPanel panel = new JPanel();
+        BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(layout);
+
+        Border border = BorderFactory.createEmptyBorder(60, 10, 40, 10);
+        panel.setBorder(BorderFactory.createTitledBorder(border, "CHECK-IN", TitledBorder.CENTER, TitledBorder.TOP, new Font("Arial", Font.PLAIN, 24)));
+
+        JPanel panelInfor = new JPanel();
+        JTextArea infor = new JTextArea();
+        infor.setText(
+                "Vuelo: " + this.flight.getCodigo() + "\n" +
+                        "Origen: " + this.flight.getOrigen().getName() + "\n" +
+                        "Destino: " + this.flight.getDestino().getName() + "\n" +
+                        "Pasajeros por pasar: " + checkIns.size()
+        );
+        infor.setEditable(false);
+        infor.setOpaque(false);
+        panelInfor.add(infor);
+        panel.add(panelInfor);
+
+        // Simplified table creation with check-in data
+        String[] columnNames = {"CheckIn ID", "User ID", "Passenger Name", "Seat Number"};
+        String[][] data = new String[checkIns.size()][4];
+
+        for (int i = 0; i < checkIns.size(); i++) {
+            CheckIn checkIn = checkIns.get(i);
+            Booking booking = BookingDAO.getBookingDAO().get(checkIn.getId());
+            data[i][0] = String.valueOf(checkIn.getId());
+            data[i][1] = String.valueOf(booking.getCustomer().getDni());
+            data[i][2] = String.valueOf(booking.getCustomer().getName());
+            data[i][3] = checkIn.getSeat();
+        }
+
+
+        // centrado de datos en JTable hecho con IAG
+        JTable checkInTable = new JTable(data, columnNames);
+        ((DefaultTableCellRenderer) checkInTable.getDefaultRenderer(Object.class)).setHorizontalAlignment(SwingConstants.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(checkInTable);
+        panel.add(scrollPane);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (frame != null) {
+                    frame.setVisible(true);
+                }
+                dispose();
+            }
+        });
+
+        this.add(panel);
+        this.setVisible(true);
+    }
 }
 
 class UserManagementWindow extends JFrame {
